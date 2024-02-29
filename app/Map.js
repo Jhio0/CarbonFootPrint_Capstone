@@ -23,18 +23,31 @@ export default function Map() {
         const allAssets = [...assetsNorthAmerica, ...assetsAsia];
   
         // Create GeoJSON features for each emissions source
-        const features = allAssets.map(source => ({
-          type: "Feature",
-          geometry: {
-            type: "Point",
-            coordinates: [source.Centroid.Geometry[0], source.Centroid.Geometry[1]] // Extract longitude and latitude
-          },
-          properties: {
-            name: source.Name,
-            province: source.Country,
-            co2: source.Emissions[0]?.['2021']?.find(emission => emission.co2)?.co2 // Extract CO2 emission for 2021
+        const features = allAssets.map(source => {
+          const { Emissions } = source;
+          let co2_2022 = 'N/A';
+          if (Emissions) {
+            for (let i = 0; i < Emissions.length; i++) {
+              if (Emissions[i]['2022']) {
+                co2_2022 = Emissions[i]['2022'].find(emission => emission.co2)?.co2 || 'N/A';
+                break;
+              }
+            }
           }
-        }));
+
+          return {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [source.Centroid.Geometry[0], source.Centroid.Geometry[1]] // Extract longitude and latitude
+            },
+            properties: {
+              name: source.Name,
+              province: source.Country,
+              co2_2022
+            }
+          };
+        });
   
         setGeojsonFeatures(features);
         setLoading(false);
@@ -71,8 +84,8 @@ export default function Map() {
               })
             )}
             onEachFeature={(feature, layer) => {
-              const { name, province, co2 } = feature.properties;
-              layer.bindPopup(`<b>${province}: ${name}</b><br>CO2 Emission (2021): ${co2 || 'N/A'} Tons`);
+              const { name, province, co2_2022 } = feature.properties;
+              layer.bindPopup(`<b>${province}: ${name}</b><br>CO2 Emission (2022): ${co2_2022} Tons`);
             }}
           />
         </MapContainer>
