@@ -1,41 +1,50 @@
 "use client"
 import "leaflet/dist/leaflet.css";
 import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import L from 'leaflet'; // Import Icon from leaflet
+import L from 'leaflet';
 import { useEffect, useState } from 'react';
 
 export default function Map() {
-  const [geojsonFeature, setGeojsonFeature] = useState(null);
+  const [geojsonFeatures, setGeojsonFeatures] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchEmissionsData = async () => {
       try {
-        const response = await fetch('https://api.v2.emissions-api.org/api/v2/carbonmonoxide/geo.json?country=US&begin=2019-05-01&end=2019-05-04');
-        const data = await response.json();
-
-        // Transform fetched data to match geojsonFeature structure
-        const transformedData = {
-          type: "FeatureCollection",
-          features: data.features.map(feature => ({
-            type: "Feature",
-            geometry: feature.geometry,
-            properties: {
-              timestamp: feature.properties.timestamp,
-              value: feature.properties.value
-            }
-          }))
-        };
-
-        setGeojsonFeature(transformedData);
-        setLoading(false); // Set loading to false when data fetching is complete
+        // Fetch emissions data for North American countries
+        const responseNorthAmerica = await fetch('https://api.climatetrace.org/v4/assets?continent=NA');
+        const { assets: assetsNorthAmerica } = await responseNorthAmerica.json();
+  
+        // Fetch emissions data for Asian countries
+        const responseAsia = await fetch('https://api.climatetrace.org/v4/assets?continent=AS');
+        const { assets: assetsAsia } = await responseAsia.json();
+  
+        // Combine emissions data for North America and Asia
+        const allAssets = [...assetsNorthAmerica, ...assetsAsia];
+  
+        // Create GeoJSON features for each emissions source
+        const features = allAssets.map(source => ({
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [source.Centroid.Geometry[0], source.Centroid.Geometry[1]] // Extract longitude and latitude
+          },
+          properties: {
+            name: source.Name,
+            province: source.Country,
+            co2: source.Emissions[0]?.['2021']?.find(emission => emission.co2)?.co2 // Extract CO2 emission for 2021
+          }
+        }));
+  
+        setGeojsonFeatures(features);
+        setLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
-        setLoading(false); // Set loading to false even if there's an error
+        console.error('Error fetching emissions data:', error);
+        setLoading(false);
       }
     };
-
-    fetchData();
+  
+    fetchEmissionsData();
   }, []);
 
   return (
@@ -43,29 +52,29 @@ export default function Map() {
       {loading ? (
         <div className="spinner"></div>
       ) : (
-        <MapContainer center={[48.8566, 2.3522]} zoom={4} style={{ width: '100%', height: '600px' }}>
+        <MapContainer center={[38, -97]} zoom={4} style={{ width: '100%', height: '600px' }}>
           <TileLayer 
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
           />
-          {geojsonFeature && (
-            <GeoJSON 
-              data={geojsonFeature}
-              onEachFeature={(feature, layer) => {
-                if (feature.properties && feature.properties.timestamp) {
-                  layer.bindPopup(`Timestamp: ${feature.properties.timestamp}<br>Value: ${feature.properties.value}`);
-                }
-              }}
-              pointToLayer={(feature, latlng) => (
-                L.circleMarker(latlng, {
-                  radius: 5,
-                  color: 'red',
-                  fillColor: '#f03',
-                  fillOpacity: 0.5,
-                })
-              )}
-            />
-          )}
+          <GeoJSON 
+            data={{
+              type: "FeatureCollection",
+              features: geojsonFeatures
+            }}
+            pointToLayer={(feature, latlng) => (
+              L.circleMarker(latlng, {
+                radius: 5,
+                color: 'red',
+                fillColor: '#f03',
+                fillOpacity: 0.5,
+              })
+            )}
+            onEachFeature={(feature, layer) => {
+              const { name, province, co2 } = feature.properties;
+              layer.bindPopup(`<b>${province}: ${name}</b><br>CO2 Emission (2021): ${co2 || 'N/A'} Tons`);
+            }}
+          />
         </MapContainer>
       )}
     </div>
