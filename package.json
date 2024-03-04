@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "deck.gl": "^8.9.34",
+    "firebase": "^10.8.1",
     "i18n-iso-countries": "^7.10.0",
     "leaflet": "^1.9.4",
     "leaflet.heat": "^0.2.0",
