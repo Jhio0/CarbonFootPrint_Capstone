@@ -50,3 +50,8 @@ body {
     transform: rotate(360deg);
   }
 }
+
+.search-input,
+.leaflet-control-geosearch .results > * {
+    color: black !important;
+}

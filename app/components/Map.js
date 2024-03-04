@@ -1,14 +1,14 @@
 "use client"
 import React, { useEffect, useState, useRef } from 'react';
-import "leaflet/dist/leaflet.css";
-import { MapContainer, TileLayer, GeoJSON } from 'react-leaflet';
-import L from 'leaflet';
 
+import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
+import L from 'leaflet';
+import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
+import 'leaflet-geosearch/dist/geosearch.css';
+import markerImage from '../img/marker.png';
 export default function Map() {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [searchInput, setSearchInput] = useState('');
-  const [searchResult, setSearchResult] = useState(null);
   const mapRef = useRef(null);
 
   useEffect(() => {
@@ -64,35 +64,51 @@ export default function Map() {
     fetchEmissionsData();
   }, []);
 
-  useEffect(() => {
-    setSearchResult(null); // Reset search result when search input changes
-  }, [searchInput]);
-
-  const handleSearch = () => {
-    const result = geojsonFeatures.find(feature => {
-      const { name, province } = feature.properties;
-      return name.toLowerCase().includes(searchInput.trim().toLowerCase()) || province.toLowerCase().includes(searchInput.trim().toLowerCase());
+  const SearchField = () => {
+    const map = useMap();
+    const provider = new OpenStreetMapProvider();
+    
+    // Create GeoSearchControl with green dot marker
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const searchControl = new GeoSearchControl({
+      provider,
+      style: 'bar',
+      classNames: {
+        input: 'search-input',
+        container: 'search-container',
+      },
+      marker: {
+        // Use green dot as marker
+        icon: L.divIcon({
+          className: 'green-dot',
+          html: '<div style="background-color: green; width: 10px; height: 10px; border-radius: 50%;"></div>',
+          iconSize: [10, 10]
+        }),
+        draggable: false,
+      },
+      popupFormat: ({ query, result }) => result.label,
+      resultFormat: ({ result }) => result.label,
+      maxMarkers: 1,
+      retainZoomLevel: false,
+      animateZoom: true,
+      autoClose: false,
+      searchLabel: 'Enter address',
+      keepResult: false,
+      updateMap: true,
     });
-    if (result) {
-      setSearchResult(result);
-      mapRef.current.setView([result.geometry.coordinates[1], result.geometry.coordinates[0]], 5);
-    } else {
-      console.log(`Asset/province ${searchInput} not found`);
-    }
+  
+    // Add GeoSearchControl to the map
+    useEffect(() => {
+      map.addControl(searchControl);
+      return () => map.removeControl(searchControl);
+    }, [map, searchControl]);
+  
+    return null;
   };
 
+  
   return (
     <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh' }}>
-      <div style={{ marginBottom: '20px' }}>
-        <input
-          className="text-black"
-          type="text"
-          placeholder="Search for an asset or province..."
-          value={searchInput}
-          onChange={e => setSearchInput(e.target.value)}
-        />
-        <button className="text-black" onClick={handleSearch}>Search</button>
-      </div>
       {loading ? (
         <div className="spinner"></div>
       ) : (
@@ -107,31 +123,12 @@ export default function Map() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
           />
-          {searchResult && (
-            <GeoJSON 
-              data={{
-                type: "FeatureCollection",
-                features: [searchResult]
-              }}
-              pointToLayer={(feature, latlng) => (
-                L.circleMarker(latlng, {
-                  radius: 5,
-                  color: 'blue',
-                  fillColor: '#3186cc',
-                  fillOpacity: 0.5,
-                })
-              )}
-              onEachFeature={(feature, layer) => {
-                const { name, province, co2_2022, owners } = feature.properties;
-                const ownerInfo = owners ? owners.map(owner => `<li>${owner.CompanyName}: ${owner.PercentageOfInterestCompany}%</li>`).join('') : 'None';
-                layer.bindPopup(`<b>${name}</b><br><b>Province:</b> ${province}<br><ul>Owners:<br>${ownerInfo}</ul><br>CO2 Emission (2022): ${co2_2022} Tons`);
-              }}
-            />
-          )}
+          
+
           <GeoJSON 
             data={{
               type: "FeatureCollection",
-              features: geojsonFeatures.filter(feature => feature !== searchResult) // Exclude search result from plotted data
+              features: geojsonFeatures
             }}
             pointToLayer={(feature, latlng) => (
               L.circleMarker(latlng, {
@@ -147,6 +144,7 @@ export default function Map() {
               layer.bindPopup(`<b>${name}</b><br><b>Province:</b> ${province}<br><ul>Owners:<br>${ownerInfo}</ul><br>CO2 Emission (2022): ${co2_2022} Tons`);
             }}
           />
+          <SearchField/>
         </MapContainer>
       )}
     </div>
