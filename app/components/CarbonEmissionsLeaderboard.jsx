@@ -10,14 +10,14 @@ export default function CarbonEmissionsLeaderboard() {
     const countryDataArray = [];
 
     // List of countries you want to include in the leaderboard
-    const countries = ['USA', 'CHN', 'IND', 'RUS', 'BRA']; // Example country ISO codes
+    const countries = ['CAN', 'USA', 'CHN', 'IND', 'RUS', 'BRA']; // Example country ISO codes
     const startDate = '2021';
     const endDate = '2020';
     
 
     useEffect(() => {
         const fetchDataForCountry = async (countryCode) => {
-            const url = `https://api.climatetrace.org/v4/country/emissions?&since=${startDate}&countries=${countryCode}`;
+            const url = `https://api.climatetrace.org/v4/country/emissions?&since=${startYear}&countries=${countryCode}`;
             const response = await fetch(url);
             if (!response.ok) {
               throw new Error(`Failed to fetch data: ${res.status} ${res.statusText}`);
@@ -48,23 +48,37 @@ export default function CarbonEmissionsLeaderboard() {
         };
 
         fetchData();
-    }, []);
+    }, [startYear]);
 
     return (
-        <div className='border-black border-4 p-20 bg-black'>
-            <h1 className='text-5xl text-white'>
+        <div className='border-black border-4 p-20 bg-black w-full h-full'>
+            <h1 className='text-2xl text-white'>
                 Carbon Emissions Leaderboard (2020)
             </h1>
             {loading ? (
                 <div>Loading...</div>
             ) : (
-                <ol>
-                    {emissionsData.map((item, index) => (
-                        <li key={index} className='text-white '>
-                            {item.country}: {item.emissions.toLocaleString()} tons of CO2
-                        </li>
-                    ))}
-                </ol>
+                <div>
+                    <div>
+                        <input
+                        type='range'
+                        min={2010}
+                        max={2022}
+                        value={startYear}
+                        className='range'
+                        onChange={(e) => setStartYear(e.target.value)}
+                        />
+                    </div>
+                    <div>
+                        <ol>
+                            {emissionsData.map((item, index) => (
+                                <li key={index} className='text-white '>
+                                    {item.country}: {item.emissions.toLocaleString()} tons of CO2
+                                </li>
+                            ))}
+                        </ol>
+                    </div>
+                </div>
             )}
         </div>
     );
