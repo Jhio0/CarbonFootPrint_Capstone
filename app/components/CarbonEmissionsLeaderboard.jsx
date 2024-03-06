@@ -2,20 +2,42 @@
 
 import React, { useEffect, useState } from 'react';
 
+
 export default function CarbonEmissionsLeaderboard() {
     const [loading, setLoading] = useState(true);
     const [emissionsData, setEmissionsData] = useState([]);
     const [startYear, setStartYear] = useState('2018');
-    const [endYear, setEndYear] = useState('2020');
-    const countryDataArray = [];
+    const [continent, setContinent] = useState('europe'); // [Africa, Americas, Asia, Europe, Oceania
 
-    // List of countries you want to include in the leaderboard
-    const countries = ['CAN', 'USA', 'CHN', 'IND', 'RUS', 'BRA']; // Example country ISO codes
-    const startDate = '2021';
-    const endDate = '2020';
-    
+    // Import the i18n-iso-countries package - for country name to code conversion
+    //  use this api: https://api.first.org/data/v1/countries
+    // var countries = require("i18n-iso-countries");
+
 
     useEffect(() => {
+
+        const fetchCountryCode = async () => {
+            try {
+                const response = await fetch(`https://restcountries.com/v3.1/region/${continent}`); // Fetch the data
+        
+                // Check if the request was successful
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+        
+                // Parse the JSON response
+                const data = await response.json();
+                console.log(data);
+                // Do something with the data
+                const cca3Array = data.map(country => country.cca3);
+                return cca3Array;
+            } catch (error) {
+                // Handle any errors that occurred during the fetch
+                console.error("There was a problem fetching the countries data:", error);
+            }
+        };
+    
+
         const fetchDataForCountry = async (countryCode) => {
             const url = `https://api.climatetrace.org/v4/country/emissions?&since=${startYear}&countries=${countryCode}`;
             const response = await fetch(url);
@@ -33,13 +55,15 @@ export default function CarbonEmissionsLeaderboard() {
         const fetchData = async () => {
             try {
                 // Fetch data for all countries
-                const promises = countries.map(fetchDataForCountry);
-                const results = await Promise.all(promises);
-
-                // Sort by emissions in descending order
-                results.sort((a, b) => b.emissions - a.emissions);
-
-                setEmissionsData(results);
+                const cca3Array = await fetchCountryCode();
+                if (cca3Array) {
+                    const promises = cca3Array.map(fetchDataForCountry);
+                    const results = await Promise.all(promises);
+                    results.sort((a, b) => b.emissions - a.emissions);
+                    setEmissionsData(results);
+                } else {
+                    throw new Error('Failed to fetch country codes');
+                }
             } catch (error) {
                 console.error('Error fetching emissions data:', error);
             } finally {
@@ -48,7 +72,7 @@ export default function CarbonEmissionsLeaderboard() {
         };
 
         fetchData();
-    }, [startYear]);
+    }, [startYear, continent]);
 
     return (
         <div className='border-black border-4 p-20 bg-black w-full h-full'>
@@ -62,12 +86,25 @@ export default function CarbonEmissionsLeaderboard() {
                     <div>
                         <input
                         type='range'
-                        min={2010}
+                        min={2015}
                         max={2022}
                         value={startYear}
                         className='range'
                         onChange={(e) => setStartYear(e.target.value)}
                         />
+                    </div>
+                    <div>
+                        <select
+                        value={continent}
+                        onChange={(e) => setContinent(e.target.value)}
+                        className='select'
+                        >
+                            <option value='Africa'>Africa</option>
+                            <option value='Americas'>Americas</option>
+                            <option value='Asia'>Asia</option>
+                            <option value='europe'>Europe</option>
+                            <option value='Oceania'>Oceania</option>
+                        </select>
                     </div>
                     <div>
                         <ol>
