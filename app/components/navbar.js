@@ -8,7 +8,7 @@ const navbarStyle = {
   alignItems: 'center',
   listStyle: 'none',
   padding: '20px',
-  backgroundColor: '#3a6139',
+  backgroundColor: '#212d33',
 };
 
 const navLinkStyle = {
@@ -73,12 +73,12 @@ const Navbar = () => {
           <ul className={navbarUlClassName}>
             <li className={`${navbarLiClassName}`} style={navbarLiFontSize}>
               <Link href="/" style={navLinkStyle}>
-                Create Entry 
+                Calculator 
               </Link>
             </li>
             <li className={`${navbarLiClassName}`} style={navbarLiFontSize}>
               <Link href="/" style={navLinkStyle}>
-                Entries 
+                Favorite 
               </Link>
             </li>
             <li className={`${navbarLiClassName}`} style={navbarLiFontSize} onClick={handleSignOut}>
