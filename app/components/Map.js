@@ -96,7 +96,13 @@ export default function Map() {
       {loading ? (
         <div className="spinner"></div>
       ) : (
-        <MapContainer center={[38, -97]} zoom={4} style={{ width: '100%', height: '600px' }} ref={mapRef} worldCopyJump={true}>
+        <MapContainer center={[38, -97]} zoom={4} style={{ width: '100%', height: '600px' }} ref={mapRef} worldCopyJump={true}  
+        maxBounds={[
+          [null, -180], // No restriction on the left
+          [null, 180],  // No restriction on the right
+          [90, -180],   // Top Left
+          [-90, 180]    // Bottom Right
+        ]}>
           <TileLayer 
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
