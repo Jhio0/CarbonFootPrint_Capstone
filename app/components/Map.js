@@ -8,34 +8,7 @@ import 'leaflet-geosearch/dist/geosearch.css';
 
 import { Chart as ChartJS, defaults } from "chart.js/auto";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
-
-
-
-const data = [
-  {
-    "label": "Ads",
-    "value": 32
-  },
-  {
-    "label": "Subscriptions",
-    "value": 45
-  }
-];
-
-const data2 = [
-  {
-    "label": "Ads",
-    "value": 32
-  },
-  {
-    "label": "Subscriptions",
-    "value": 45
-  },
-  {
-    "label": "Subscriptions",
-    "value": 23
-  }
-];
+import axios from 'axios'; // Import axios
 
 export default function Map() {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
@@ -45,21 +18,37 @@ export default function Map() {
   const mapRef = useRef(null);
 
   useEffect(() => {
-    const fetchEmissionsData = async () => {
+    const fetchData = async () => {
       try {
+        const provider = new OpenStreetMapProvider();
         // Fetch emissions data for North American countries
         const responseNorthAmerica = await fetch('https://api.climatetrace.org/v4/assets?continent=NA');
         const { assets: assetsNorthAmerica } = await responseNorthAmerica.json();
-  
-        // Fetch emissions data for Asian countries
-        const responseAsia = await fetch('https://api.climatetrace.org/v4/assets?continent=AS');
-        const { assets: assetsAsia } = await responseAsia.json();
-  
-        // Combine emissions data for North America and Asia
-        const allAssets = [...assetsNorthAmerica, ...assetsAsia];
-  
-        // Create GeoJSON features for each emissions source
-        const features = allAssets.map(source => {
+
+         // Fetch carbon emissions data for each North American country
+         const northAmericanCountries = ['CAN', 'USA', 'MEX'];
+         const promises = northAmericanCountries.map(async countryCode => {
+           const response = await fetch(`https://api.climatetrace.org/v4/country/emissions?&countries=${countryCode}`);
+           const emissionsData = await response.json();
+ 
+           // Convert country code to full country name
+           const countryName = countryCodeToName(countryCode);
+ 
+           const searchResult = await provider.search({ query: countryName });
+           let coordinates = [0, 0]; // Default coordinates
+           if (searchResult.length > 0) {
+             coordinates = [searchResult[0].x, searchResult[0].y]; // Extracting longitude and latitude
+           }
+ 
+           return { countryCode, countryName, coordinates, emissionsData };
+         });
+ 
+
+        // Wait for all promises to resolve
+        const emissionsResults = await Promise.all(promises);
+
+        // Create GeoJSON features for emissions data
+        const emissionsFeatures = assetsNorthAmerica.map(source => {
           const { Emissions } = source;
           let co2_2022 = 'N/A';
           if (Emissions) {
@@ -75,7 +64,7 @@ export default function Map() {
             type: "Feature",
             geometry: {
               type: "Point",
-              coordinates: [source.Centroid.Geometry[0], source.Centroid.Geometry[1]] // Extract longitude and latitude
+              coordinates: [source.Centroid.Geometry[0], source.Centroid.Geometry[1]]
             },
             properties: {
               name: source.Name,
@@ -85,19 +74,59 @@ export default function Map() {
             }
           };
         });
-  
-        setGeojsonFeatures(features);
+
+        // Create GeoJSON features for carbon emissions data
+        const carbonEmissionFeatures = emissionsResults.map(result => {
+        const { countryCode, countryName, coordinates, emissionsData } = result;
+        if (emissionsData.length > 0) {
+          const { emissions } = emissionsData[0];
+          const co2Emissions = emissions?.co2 || 'N/A'; // Extract CO2 emissions
+          return {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: coordinates // Use longitude and latitude
+            },
+            properties: {
+              countryCode: countryCode,
+              countryName: countryName,
+              co2Emissions: co2Emissions // Assign CO2 emissions
+            }
+          };
+        } else {
+          return null;
+        }
+        }).filter(feature => feature !== null);
+
+        // Merge features from both emissions data and carbon emissions data
+        const mergedFeatures = [...emissionsFeatures, ...carbonEmissionFeatures];
+
+        setGeojsonFeatures(mergedFeatures);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching emissions data:', error);
         setLoading(false);
       }
     };
-  
-    fetchEmissionsData()
-    
-    ;
+
+    fetchData();
   }, []);
+
+   // Function to convert country code to full country name
+   const countryCodeToName = (countryCode) => {
+    switch (countryCode) {
+      case 'CAN':
+        return 'Canada';
+      case 'USA':
+        return 'United States';
+      case 'MEX':
+        return 'Mexico';
+      // Add more country codes and names as needed
+      default:
+        return countryCode; // Return code itself if not found
+    }
+  };
+
   
   const handleFeatureClick = async (feature) => {
     try {
@@ -123,16 +152,23 @@ export default function Map() {
         { label: `${selectedAsset.name} - CH4 Emissions (Tons)`, value: ch4Emissions }
       ]);
 
-      // Update ownerEmissions state with the percentage emissions for each owner
+     // Update ownerEmissions state with the percentage emissions for each owner
+    if (selectedAsset.Owners && selectedAsset.Owners.length > 0) {
       const totalEmissions = parseFloat(co2Emissions) + parseFloat(ch4Emissions);
       const ownerPercentageEmissions = selectedAsset.Owners.map(owner => ({
         label: `${owner.CompanyName} - Percentage Emissions`,
         value: ((parseFloat(owner.PercentageOfInterestCompany) / 100) * totalEmissions).toFixed(2)
       }));
       setOwnerEmissions(ownerPercentageEmissions);
+    } else {
+      // If no owners, set ownerEmissions to an empty array
+      setOwnerEmissions([]);
+    }
     } catch (error) {
       console.error('Error fetching emissions data:', error);
     }
+
+    
   };
 
   // Function to find the closest asset to the clicked coordinates
@@ -152,21 +188,15 @@ export default function Map() {
   
     return closestAsset;
   };
-  // UseEffect to update the chart data when selectedData changes
-  useEffect(() => {
-    // Log the selectedData state to verify
-    console.log('Selected Data:', selectedData);
-  
-    // Update chart data here using selectedData
-  }, [selectedData]);
+
   
 
   const SearchField = () => {
     const map = useMap();
     const provider = new OpenStreetMapProvider();
-    
+
+  
     // Create GeoSearchControl with green dot marker
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const searchControl = new GeoSearchControl({
       provider,
       style: 'bar',
@@ -203,6 +233,7 @@ export default function Map() {
     return null;
   };
 
+  
   
   return (
     <div>
@@ -280,7 +311,7 @@ export default function Map() {
                 }}
                 />
             </div>
-            <div className='mr-[150px] m-10 bg-grey rounded-lg shadow-lg p-4 w-100 h-50px'>
+            <div className='mr-[150px] m-10 bg-grey rounded-lg shadow-lg p-4 w-100%'>
             <Bar
               data={{
                 labels: ownerEmissions.map((data) => data.label),
@@ -298,6 +329,14 @@ export default function Map() {
                 ],
               }}
               options={{
+                scales: {
+                  x: {
+                    display: false // Hide labels along the x-axis
+                  },
+                  y: {
+                    beginAtZero: true
+                  }
+                },
                 plugins: {
                   title: {
                     text: "Revenue Source",
@@ -314,3 +353,5 @@ export default function Map() {
 
   );
 }
+
+///fix the search make api for country codes 
