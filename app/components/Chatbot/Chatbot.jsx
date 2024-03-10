@@ -3,10 +3,9 @@ import { useState, useEffect } from "react";
 
 import OpenAI from "openai";
 
-
-
 const openai = new OpenAI({
-  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, // This is the default and can be omitted
+  apiKey: process.env.NEXT_PUBLIC_OPENAI_API_KEY, 
+  dangerouslyAllowBrowser: true,
 });
 
 // shoutout BugNinza on youtube for the tutorial: https://www.youtube.com/watch?v=G4VrgJ3Mzj4
@@ -39,9 +38,23 @@ export default function Chatbot() {
 
 
   return (
-    <div className="border-2 border-white bg-black flex flex-col">
-      <div>
-        <h1>Seedless: Your Environmental AI Buddy!</h1>
+    <div className="chatContainer border-2 border-white bg-black flex flex-col w-1/5 p-4 rounded-xl ">
+      <div className="headerContainer">
+        <h1 className="text-2xl pb-2">Seedless: Your Environmental AI Buddy!</h1>
+      </div>
+      <div className="chatHistoryContainer" style={{height:400}}>
+        {chatHistory.map((chat, index) => (
+          <div key={index} className={`${
+            chat.role === "user" ? "text-left" : "text-right"
+          } mb-2`}>
+            <div className={`rounded-m ${chat.role === "user" ? "bg-blue-300 text-blue-800" : "bg-green-300 text-green-800" }`}>
+              {chat.role === "user" ? "You: " : "Seedless: "}
+            </div>
+            <div className={`${chat.role === "user" ? "bg-blue-300 text-blue-800" : "bg-green-300 text-green-800" }`}>
+              {chat.content}
+            </div>
+          </div>
+        ))}
       </div>
       <div className="flex flex-row"> 
         <div>
@@ -51,12 +64,14 @@ export default function Chatbot() {
             onChange={(e) => setUserInput(e.target.value)}
           />
         </div>
-        <div>
-          <button onClick={handleUserInput}>Send</button>
-        </div> 
+        {isLoading ? (
+          <div className="animate-spin">Loading...</div>
+        ) : (
+          <div>
+            <button onClick={handleUserInput}>Send</button>
+          </div> 
+        )}
       </div>
-
-      <p>{response}</p>
     </div>
   );
 

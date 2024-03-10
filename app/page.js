@@ -7,10 +7,9 @@ import Chatbot from "./components/Chatbot/Chatbot.jsx";
 export default function Home() {
   return (
     <div>
+      {/* <Map />  */}
       <Chatbot />
-      {/* <Map /> */}
       {/* <CarbonEmissionsLeaderboard /> */}
-      {/* <openAITest /> */}
     </div>
   );
 }
