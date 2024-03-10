@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import React, { useEffect, useState, useRef } from 'react';
 
@@ -8,10 +9,13 @@ import 'leaflet-geosearch/dist/geosearch.css';
 
 import { Chart as ChartJS, defaults } from "chart.js/auto";
 import { Bar, Doughnut, Line } from "react-chartjs-2";
-import axios from 'axios'; // Import axios
+
+import { countryCodeToName, countryCodes } from './items/countryUtils';
+
 
 export default function Map() {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
+  const [geojsonFeaturesCountry, setGeojsonFeaturesCountry] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedData, setSelectedData] = useState([]);
   const [ownerEmissions, setOwnerEmissions] = useState([]);
@@ -24,29 +28,33 @@ export default function Map() {
         // Fetch emissions data for North American countries
         const responseNorthAmerica = await fetch('https://api.climatetrace.org/v4/assets?continent=NA');
         const { assets: assetsNorthAmerica } = await responseNorthAmerica.json();
-
-         // Fetch carbon emissions data for each North American country
-         const northAmericanCountries = ['CAN', 'USA', 'MEX'];
-         const promises = northAmericanCountries.map(async countryCode => {
-           const response = await fetch(`https://api.climatetrace.org/v4/country/emissions?&countries=${countryCode}`);
-           const emissionsData = await response.json();
- 
-           // Convert country code to full country name
-           const countryName = countryCodeToName(countryCode);
- 
-           const searchResult = await provider.search({ query: countryName });
-           let coordinates = [0, 0]; // Default coordinates
-           if (searchResult.length > 0) {
-             coordinates = [searchResult[0].x, searchResult[0].y]; // Extracting longitude and latitude
-           }
- 
-           return { countryCode, countryName, coordinates, emissionsData };
-         });
- 
-
-        // Wait for all promises to resolve
-        const emissionsResults = await Promise.all(promises);
-
+  
+        // Define a function to fetch emissions data for a single country with a delay
+        const fetchEmissionsDataWithDelay = async (countryCode) => {
+          const response = await fetch(`https://api.climatetrace.org/v4/country/emissions?&countries=${countryCode}`);
+          const emissionsData = await response.json();
+          
+          // Convert country code to full country name
+          const countryName = countryCodeToName(countryCode);
+  
+          const searchResult = await provider.search({ query: countryName });
+          let coordinates = [0, 0]; // Default coordinates
+          if (searchResult.length > 0) {
+            coordinates = [searchResult[0].x, searchResult[0].y]; // Extracting longitude and latitude
+          }
+  
+          return { countryCode, countryName, coordinates, emissionsData };
+        };
+  
+        // Fetch carbon emissions data for each North American country with a delay
+        const emissionsResults = [];
+        for (const countryCode of countryCodes) {
+          const result = await fetchEmissionsDataWithDelay(countryCode);
+          emissionsResults.push(result);
+          // Introduce a delay of 1 second before making the next request
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+  
         // Create GeoJSON features for emissions data
         const emissionsFeatures = assetsNorthAmerica.map(source => {
           const { Emissions } = source;
@@ -59,7 +67,7 @@ export default function Map() {
               }
             }
           }
-
+  
           return {
             type: "Feature",
             geometry: {
@@ -74,58 +82,45 @@ export default function Map() {
             }
           };
         });
-
+  
         // Create GeoJSON features for carbon emissions data
         const carbonEmissionFeatures = emissionsResults.map(result => {
-        const { countryCode, countryName, coordinates, emissionsData } = result;
-        if (emissionsData.length > 0) {
-          const { emissions } = emissionsData[0];
-          const co2Emissions = emissions?.co2 || 'N/A'; // Extract CO2 emissions
-          return {
-            type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: coordinates // Use longitude and latitude
-            },
-            properties: {
-              countryCode: countryCode,
-              countryName: countryName,
-              co2Emissions: co2Emissions // Assign CO2 emissions
-            }
-          };
-        } else {
-          return null;
-        }
+          const { countryCode, countryName, coordinates, emissionsData } = result;
+          if (emissionsData.length > 0) {
+            const { emissions } = emissionsData[0];
+            const co2Emissions = emissions?.co2 || 'N/A'; // Extract CO2 emissions
+            return {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: coordinates // Use longitude and latitude
+              },
+              properties: {
+                countryCode: countryCode,
+                countryName: countryName,
+                co2Emissions: co2Emissions // Assign CO2 emissions
+              }
+            };
+          } else {
+            return null;
+          }
         }).filter(feature => feature !== null);
-
+  
         // Merge features from both emissions data and carbon emissions data
-        const mergedFeatures = [...emissionsFeatures, ...carbonEmissionFeatures];
-
+        const mergedFeatures = [...emissionsFeatures];
+  
         setGeojsonFeatures(mergedFeatures);
+        setGeojsonFeaturesCountry(carbonEmissionFeatures);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching emissions data:', error);
         setLoading(false);
       }
     };
-
+  
     fetchData();
   }, []);
 
-   // Function to convert country code to full country name
-   const countryCodeToName = (countryCode) => {
-    switch (countryCode) {
-      case 'CAN':
-        return 'Canada';
-      case 'USA':
-        return 'United States';
-      case 'MEX':
-        return 'Mexico';
-      // Add more country codes and names as needed
-      default:
-        return countryCode; // Return code itself if not found
-    }
-  };
 
   
   const handleFeatureClick = async (feature) => {
@@ -271,6 +266,25 @@ export default function Map() {
                 const { name, province, co2_2022, owners } = feature.properties;
                 const ownerInfo = owners ? owners.map(owner => `<li>${owner.CompanyName}: ${owner.PercentageOfInterestCompany}%</li>`).join('') : 'None';
                 layer.bindPopup(`<b>${name}</b><br><b>Province:</b> ${province}<br><ul>Owners:<br>${ownerInfo}</ul><br>CO2 Emission (2022): ${co2_2022} Tons`);
+                layer.on('click', () => handleFeatureClick(feature));
+              }}
+            />
+            <GeoJSON 
+              data={{
+                type: "FeatureCollection",
+                features: geojsonFeaturesCountry
+              }}
+              pointToLayer={(feature, latlng) => (
+                L.circleMarker(latlng, {
+                  radius: 5,
+                  color: 'purple',
+                  fillColor: '#800080',
+                  fillOpacity: 0.5,
+                }).on('click', () => handleFeatureClick(feature)) 
+              )}
+              onEachFeature={(feature, layer) => {
+                const { countryName, co2Emissions } = feature.properties;
+                layer.bindPopup(`<b>Country:</b> ${countryName}<br><b>CO2 Emission:</b> ${co2Emissions} Tons`);
                 layer.on('click', () => handleFeatureClick(feature));
               }}
             />
