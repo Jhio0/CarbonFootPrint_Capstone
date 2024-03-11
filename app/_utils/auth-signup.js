@@ -24,7 +24,9 @@ export const AuthSignUp = () => {
 
   const buttonStyle = {
     padding: '10px 15px', 
-    cursor: 'pointer' 
+    cursor: 'pointer',
+    backgroundColor: '#212d33',
+    borderRadius: '8px',
   };
   
   
