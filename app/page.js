@@ -9,6 +9,7 @@ export default function Home() {
     <div>
       <NavBar/>
       <Map />
+      {/* hello test */}
       <NewsBar />
     </div>
   );
