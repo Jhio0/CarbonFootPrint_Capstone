@@ -7,7 +7,6 @@ import NewsBar from "./components/newsTab.js";
 export default function Home() {
   return (
     <div>
-      <NavBar/>
       <Map />
       {/* hello test */}
       <NewsBar />
