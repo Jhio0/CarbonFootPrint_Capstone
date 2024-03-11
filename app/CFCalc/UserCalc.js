@@ -107,6 +107,7 @@ const UserCalc = ({ updateEmissions }) => {
   const [electricityEmission, setElectricityEmissions] = useState(0);
   const [naturalGasEmission, setNaturalGasEmissions] = useState(0);
   const [flights, setFlights] = useState([]);
+  const [totalEmissions, setTotalEmissions] = useState(0);
 
   // Update to handle flight emissions
   const handleFlightEmissionsChange = (emissions) => {
@@ -137,7 +138,7 @@ const UserCalc = ({ updateEmissions }) => {
       naturalGasEmission +
       flightEmissions +
       vehicleEmissions;
-    console.log("Total Emissions: ", totalEmissions); // Log the total emissions
+    setTotalEmissions(totalEmissions);
     // Add your calculation logic for other tabs here
 
     setElectricityEmissions(electricityEmission);
@@ -264,6 +265,7 @@ const UserCalc = ({ updateEmissions }) => {
         flightEmission={flightEmissions} // Pass flight emissions to the chart
         vehicleEmission={vehicleEmissions} // Pass vehicle emissions to the chart
       />
+      <div>Total Emissions: {totalEmissions.toFixed(2)} kg CO2e</div>
     </div>
   );
 };

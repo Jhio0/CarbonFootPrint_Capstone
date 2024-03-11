@@ -8,12 +8,6 @@ const EmissionDonutChart = ({
   flightEmission,
   vehicleEmission,
 }) => {
-  const totalEmission =
-    Number(electricityEmission) +
-    Number(naturalGasEmission) +
-    Number(flightEmission) +
-    Number(vehicleEmission);
-
   const data = {
     labels: ["Electricity", "Natural Gas", "Flights", "Vehicle"],
     datasets: [
@@ -64,11 +58,6 @@ const EmissionDonutChart = ({
             return label;
           },
         },
-      },
-      subtitle: {
-        display: true,
-        text: `Total: ${totalEmission.toFixed(2)} kg CO2e`,
-        position: "bottom",
       },
     },
     cutout: "70%",

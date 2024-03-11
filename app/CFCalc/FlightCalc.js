@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import airportsData from "./Airports.json"; // Ensure this path is correct
 
 // Function to calculate distance between two lat/lon points in km
