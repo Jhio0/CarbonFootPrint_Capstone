@@ -18,10 +18,12 @@ export default function ReportPage() {
     // Handler to process the report submission
 
     const loadReports = async () => {
-        const reports = await getReports(user.uid);
-        console.log("Reports", reports);
-        setReports(reports);
-    }
+        if (typeof window !== 'undefined') {
+            const reports = await getReports(user.uid);
+            console.log("Reports", reports);
+            setReports(reports);
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -55,12 +57,8 @@ export default function ReportPage() {
     };
 
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            loadReports();
-        }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        loadReports();
     }, [user]);
-
     
 
     return (
