@@ -21,10 +21,6 @@ function Page() {
           Home
         </Link>
         <UserCalc updateEmissions={updateEmissions} />
-        <EmissionDonutChart
-          electricityEmission={emissions.electricityEmission}
-          naturalGasEmission={emissions.naturalGasEmission}
-        />
       </div>
     </main>
   );

@@ -2,17 +2,29 @@ import React from "react";
 import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
 
-const EmissionDonutChart = ({ electricityEmission, naturalGasEmission }) => {
-  const totalEmission = electricityEmission + naturalGasEmission;
-
+const EmissionDonutChart = ({
+  electricityEmission,
+  naturalGasEmission,
+  flightEmission,
+}) => {
+  const totalEmission =
+    electricityEmission + naturalGasEmission + flightEmission;
   const data = {
-    labels: ["Electricity", "Natural Gas"],
+    labels: ["Electricity", "Natural Gas", "Flights"],
     datasets: [
       {
         label: "Carbon Emissions",
-        data: [electricityEmission, naturalGasEmission],
-        backgroundColor: ["rgba(54, 162, 235, 0.2)", "rgba(255, 206, 86, 0.2)"],
-        borderColor: ["rgba(54, 162, 235, 1)", "rgba(255, 206, 86, 1)"],
+        data: [electricityEmission, naturalGasEmission, flightEmission],
+        backgroundColor: [
+          "rgba(54, 162, 235, 0.2)",
+          "rgba(255, 206, 86, 0.2)",
+          "rgba(153, 102, 255, 0.2)", // Color for flights
+        ],
+        borderColor: [
+          "rgba(54, 162, 235, 1)",
+          "rgba(255, 206, 86, 1)",
+          "rgba(153, 102, 255, 1)", // Border color for flights
+        ],
         borderWidth: 1,
       },
     ],
@@ -43,7 +55,7 @@ const EmissionDonutChart = ({ electricityEmission, naturalGasEmission }) => {
       },
       subtitle: {
         display: true,
-        text: `Total: ${totalEmission.toFixed(2)} kg CO2e`,
+        text: `Total: ${totalEmission} kg CO2e`,
         position: "bottom",
       },
     },
