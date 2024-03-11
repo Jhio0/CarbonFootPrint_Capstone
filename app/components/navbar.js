@@ -72,13 +72,13 @@ const Navbar = () => {
         ) : (
           <ul className={navbarUlClassName}>
             <li className={`${navbarLiClassName}`} style={navbarLiFontSize}>
-              <Link href="/" style={navLinkStyle}>
+              <Link href="/CFCalc" style={navLinkStyle}>
                 Calculator 
               </Link>
             </li>
             <li className={`${navbarLiClassName}`} style={navbarLiFontSize}>
-              <Link href="/" style={navLinkStyle}>
-                Favorite 
+              <Link href="/reports" style={navLinkStyle}>
+                Reports
               </Link>
             </li>
             <li className={`${navbarLiClassName}`} style={navbarLiFontSize} onClick={handleSignOut}>
