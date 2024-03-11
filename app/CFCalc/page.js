@@ -1,23 +1,25 @@
 "use client";
+import React, { useState } from "react";
 import Link from "next/link";
+import UserCalc from "./UserCalc";
 
 function Page() {
+  const [emissions, setEmissions] = useState({
+    electricityEmission: 0,
+    naturalGasEmission: 0,
+  });
+
+  const updateEmissions = (electricityEmission, naturalGasEmission) => {
+    setEmissions({ electricityEmission, naturalGasEmission });
+  };
+
   return (
-    <main className="bg-gray-900 mb-4 py-4 px-8 rounded flex">
-      <div>
+    <main className="bg-gray-900 min-h-screen w-full flex flex-col justify-center items-center">
+      <div className="bg-slate-800">
         <Link href="/" className="font-bold">
           Home
         </Link>
-        <h1 className="text-white">Carbon Footprint Calculator</h1>
-        <iframe
-          width="710"
-          height="1300"
-          frameborder="0"
-          marginwidth="0"
-          marginheight="0"
-          scrolling="no"
-          src="https://calculator.carbonfootprint.com/calculator.aspx"
-        ></iframe>
+        <UserCalc updateEmissions={updateEmissions} />
       </div>
     </main>
   );
