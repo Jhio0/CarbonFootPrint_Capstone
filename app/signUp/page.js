@@ -7,7 +7,8 @@ export default function SignUp(){
     const gridContainerStyle = {
         display: 'grid',
         height: '100vh',
-        backgroundColor: '#ebdfbc',
+        background: `url('signupbi.gif')`,  
+        backgroundSize: 'cover',
         gridTemplateColumns: 'repeat(5, 1fr)',
         gridTemplateRows: 'repeat(6, 1fr)',
         padding: '10px',
@@ -24,12 +25,14 @@ export default function SignUp(){
     }
     const SignUpInputStyle = {
         gridArea: '1 / 3 / 5 / 5',
-        backgroundColor:"red",
+        backgroundColor: 'rgba(33, 45, 51, 0.5)',
 
     }
     const SignUpDisplayStyle = {
         gridArea: '1 / 1 / 5 / 3',
-        backgroundColor:"yellow",
+        backgroundColor: '#212d33',
+        padding:'20PX',
+        letterSpacing: '4px',
 
     }
     return (
