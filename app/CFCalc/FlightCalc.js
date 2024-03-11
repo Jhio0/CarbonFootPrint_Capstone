@@ -16,27 +16,15 @@ function calculateDistance(lat1, lon1, lat2, lon2) {
   return R * c;
 }
 
-const FlightsCalc = ({ onFlightEmissionsChange }) => {
-  const [airports, setAirports] = useState([]);
+const FlightsCalc = ({ flights = [], setFlights, onFlightEmissionsChange }) => {
   const [origin, setOrigin] = useState("");
   const [destination, setDestination] = useState("");
-  const [flights, setFlights] = useState([]);
-
-  useEffect(() => {
-    // Assuming the JSON structure and fields are correctly defined as shown previously
-    setAirports(airportsData);
-    const totalEmissions = flights.reduce(
-      (acc, flight) => acc + flight.emissions,
-      0
-    );
-    onFlightEmissionsChange(totalEmissions);
-  }, [flights, onFlightEmissionsChange]);
 
   const addFlight = () => {
-    const originAirport = airports.find(
+    const originAirport = airportsData.find(
       (airport) => airport.iata_code === origin
     );
-    const destinationAirport = airports.find(
+    const destinationAirport = airportsData.find(
       (airport) => airport.iata_code === destination
     );
 
@@ -51,18 +39,31 @@ const FlightsCalc = ({ onFlightEmissionsChange }) => {
       destinationAirport.latitude_deg,
       destinationAirport.longitude_deg
     );
-
-    // Assuming an average flight speed of 800 km/h
-    const flightTime = distance / 800;
+    const flightTime = distance / 800; // Assuming average speed
     const emissions = flightTime * 250; // 250 kg of CO2 per hour
 
-    setFlights([...flights, { origin, destination, emissions }]);
+    const newFlight = { origin, destination, emissions };
+    const updatedFlights = [...flights, newFlight];
+    setFlights(updatedFlights);
+
+    const totalEmissions = updatedFlights.reduce(
+      (acc, flight) => acc + flight.emissions,
+      0
+    );
+    onFlightEmissionsChange(totalEmissions);
     setOrigin("");
     setDestination("");
   };
 
   const removeFlight = (index) => {
-    setFlights(flights.filter((_, i) => i !== index));
+    const updatedFlights = flights.filter((_, i) => i !== index);
+    setFlights(updatedFlights);
+
+    const totalEmissions = updatedFlights.reduce(
+      (acc, flight) => acc + flight.emissions,
+      0
+    );
+    onFlightEmissionsChange(totalEmissions);
   };
 
   return (
@@ -79,6 +80,7 @@ const FlightsCalc = ({ onFlightEmissionsChange }) => {
         onChange={(e) => setDestination(e.target.value.toUpperCase())}
         placeholder="To (IATA Code)"
       />
+      <br />
       <button onClick={addFlight}>Add Flight</button>
       {flights.map((flight, index) => (
         <div key={index}>

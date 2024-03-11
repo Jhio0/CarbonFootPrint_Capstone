@@ -106,6 +106,7 @@ const UserCalc = ({ updateEmissions }) => {
   const [vehicleEmissions, setVehicleEmissions] = useState(0);
   const [electricityEmission, setElectricityEmissions] = useState(0);
   const [naturalGasEmission, setNaturalGasEmissions] = useState(0);
+  const [flights, setFlights] = useState([]);
 
   // Update to handle flight emissions
   const handleFlightEmissionsChange = (emissions) => {
@@ -216,13 +217,19 @@ const UserCalc = ({ updateEmissions }) => {
             onChange={(e) => setNaturalGasUsed(e.target.value)}
             placeholder="Natural gas used (units)"
           />
+          <br />
+          <button onClick={calculateEmissions}>Calculate</button>
         </div>
       )}
 
       {activeTab === "Flights" && (
         <div>
           <h2>Flights</h2>
-          <FlightsCalc onFlightEmissionsChange={handleFlightEmissionsChange} />
+          <FlightsCalc
+            flights={flights}
+            setFlights={setFlights}
+            onFlightEmissionsChange={handleFlightEmissionsChange}
+          />
         </div>
       )}
 
@@ -243,14 +250,13 @@ const UserCalc = ({ updateEmissions }) => {
             <option value="Motorcycle">Motorcycle</option>
             <option value="TruckSUV">Truck/SUV</option>
           </select>
+          <br />
           <button onClick={calculateVehicleEmissions}>
             Calculate Vehicle Emissions
           </button>
           <p>Total Vehicle Emissions: {vehicleEmissions.toFixed(2)} kg CO2e</p>
         </div>
       )}
-
-      <button onClick={calculateEmissions}>Calculate</button>
 
       <EmissionDonutChart
         electricityEmission={electricityEmission}
