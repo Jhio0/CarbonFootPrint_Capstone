@@ -101,6 +101,11 @@ const UserCalc = ({ updateEmissions }) => {
   const [electricityUsed, setElectricityUsed] = useState("");
   const [naturalGasUsed, setNaturalGasUsed] = useState("");
   const [flightEmissions, setFlightEmissions] = useState(0);
+  const [mileage, setMileage] = useState("");
+  const [vehicleType, setVehicleType] = useState("Car");
+  const [vehicleEmissions, setVehicleEmissions] = useState(0);
+  const [electricityEmission, setElectricityEmissions] = useState(0);
+  const [naturalGasEmission, setNaturalGasEmissions] = useState(0);
 
   // Update to handle flight emissions
   const handleFlightEmissionsChange = (emissions) => {
@@ -114,6 +119,7 @@ const UserCalc = ({ updateEmissions }) => {
   const calculateEmissions = () => {
     let electricityEmission = 0;
     let naturalGasEmission = 0;
+    let vehicleEmissions = 0;
 
     // Example calculation from Home tab
     if (country && region) {
@@ -126,11 +132,26 @@ const UserCalc = ({ updateEmissions }) => {
       }
     }
     const totalEmissions =
-      electricityEmission + naturalGasEmission + flightEmissions;
+      electricityEmission +
+      naturalGasEmission +
+      flightEmissions +
+      vehicleEmissions;
     console.log("Total Emissions: ", totalEmissions); // Log the total emissions
     // Add your calculation logic for other tabs here
 
-    updateEmissions(electricityEmission, naturalGasEmission);
+    setElectricityEmissions(electricityEmission);
+    setNaturalGasEmissions(naturalGasEmission);
+  };
+
+  const calculateVehicleEmissions = () => {
+    const v_emissionFactors = {
+      Car: 0.197,
+      Motorcycle: 0.113,
+      TruckSUV: 0.372,
+    };
+    const emissions =
+      parseFloat(mileage) * (v_emissionFactors[vehicleType] || 0);
+    setVehicleEmissions(emissions);
   };
 
   return (
@@ -205,14 +226,37 @@ const UserCalc = ({ updateEmissions }) => {
         </div>
       )}
 
-      {activeTab === "Vehicle" && <div>{/* Vehicle tab content */}</div>}
+      {activeTab === "Vehicle" && (
+        <div>
+          <h2>Vehicle Emissions</h2>
+          <input
+            type="number"
+            value={mileage}
+            onChange={(e) => setMileage(e.target.value)}
+            placeholder="Mileage (Km)"
+          />
+          <select
+            value={vehicleType}
+            onChange={(e) => setVehicleType(e.target.value)}
+          >
+            <option value="Car">Car</option>
+            <option value="Motorcycle">Motorcycle</option>
+            <option value="TruckSUV">Truck/SUV</option>
+          </select>
+          <button onClick={calculateVehicleEmissions}>
+            Calculate Vehicle Emissions
+          </button>
+          <p>Total Vehicle Emissions: {vehicleEmissions.toFixed(2)} kg CO2e</p>
+        </div>
+      )}
 
       <button onClick={calculateEmissions}>Calculate</button>
 
       <EmissionDonutChart
-        electricityEmission={electricityUsed} // Assuming these are calculated elsewhere
-        naturalGasEmission={naturalGasUsed}
+        electricityEmission={electricityEmission}
+        naturalGasEmission={naturalGasEmission}
         flightEmission={flightEmissions} // Pass flight emissions to the chart
+        vehicleEmission={vehicleEmissions} // Pass vehicle emissions to the chart
       />
     </div>
   );

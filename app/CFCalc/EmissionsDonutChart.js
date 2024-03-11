@@ -6,24 +6,36 @@ const EmissionDonutChart = ({
   electricityEmission,
   naturalGasEmission,
   flightEmission,
+  vehicleEmission,
 }) => {
   const totalEmission =
-    electricityEmission + naturalGasEmission + flightEmission;
+    Number(electricityEmission) +
+    Number(naturalGasEmission) +
+    Number(flightEmission) +
+    Number(vehicleEmission);
+
   const data = {
-    labels: ["Electricity", "Natural Gas", "Flights"],
+    labels: ["Electricity", "Natural Gas", "Flights", "Vehicle"],
     datasets: [
       {
         label: "Carbon Emissions",
-        data: [electricityEmission, naturalGasEmission, flightEmission],
+        data: [
+          electricityEmission,
+          naturalGasEmission,
+          flightEmission,
+          vehicleEmission,
+        ],
         backgroundColor: [
-          "rgba(54, 162, 235, 0.2)",
           "rgba(255, 206, 86, 0.2)",
+          "rgba(54, 162, 235, 0.2)",
           "rgba(153, 102, 255, 0.2)", // Color for flights
+          "rgba(255, 99, 132, 0.2)", // Color for vehicle
         ],
         borderColor: [
-          "rgba(54, 162, 235, 1)",
           "rgba(255, 206, 86, 1)",
+          "rgba(54, 162, 235, 1)",
           "rgba(153, 102, 255, 1)", // Border color for flights
+          "rgba(255, 99, 132, 1)", // Border color for vehicle
         ],
         borderWidth: 1,
       },
@@ -55,7 +67,7 @@ const EmissionDonutChart = ({
       },
       subtitle: {
         display: true,
-        text: `Total: ${totalEmission} kg CO2e`,
+        text: `Total: ${totalEmission.toFixed(2)} kg CO2e`,
         position: "bottom",
       },
     },

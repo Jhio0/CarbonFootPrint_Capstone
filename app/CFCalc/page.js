@@ -2,7 +2,6 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import UserCalc from "./UserCalc";
-import EmissionDonutChart from "./EmissionsDonutChart";
 
 function Page() {
   const [emissions, setEmissions] = useState({
