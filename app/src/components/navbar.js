@@ -44,9 +44,6 @@ const Navbar = () => {
         }
     };
 
-      
-
-
   return (
     <div className="navbar" style={navbarStyle}>
       <h1 style={navbarLiFontSize}>CarboonFootPrint</h1>

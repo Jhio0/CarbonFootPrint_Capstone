@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Nav from "./Nav";
 import { useNavigate } from "react-router-dom";
 
+//Need a post editor
+
 //Store all the posts created
 const threadList = [];
 
@@ -27,7 +29,7 @@ const Home = () => {
         checkUser();
     }, [navigate]);
 
-    return <>{/*--the UI elements*/}</>;
+    return <>{/*UI elements*/}</>;
     };
     return (
         <>

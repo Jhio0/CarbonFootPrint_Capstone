@@ -6,7 +6,7 @@ const app = express();
 app.use(bodyParser.json());
 
 // Initialize Firebase Admin SDK
-// To be completed
+// Entry strings need to be completed
 const serviceAccount = require('./path/to/serviceAccountKey.json');
 firebaseAdmin.initializeApp({
   credential: firebaseAdmin.credential.cert(serviceAccount),
@@ -15,6 +15,8 @@ firebaseAdmin.initializeApp({
 
 // Firebase Firestore instance
 const firestore = firebaseAdmin.firestore();
+
+//Post for log in, user id from google auth
 
 // Route for creating a new post
 app.post('/api/posts', async (req, res) => {
