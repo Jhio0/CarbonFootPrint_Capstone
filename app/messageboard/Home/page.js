@@ -1,3 +1,4 @@
+"use client"
 import React, { useState, useEffect } from "react";
 import Nav from "./Nav";
 import { useNavigate } from "react-router-dom";
