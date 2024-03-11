@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "deck.gl": "^8.9.34",
+    "firebase-admin": "^12.0.0",
     "i18n-iso-countries": "^7.10.0",
     "leaflet": "^1.9.4",
     "leaflet-control-geocoder": "^2.4.0",
