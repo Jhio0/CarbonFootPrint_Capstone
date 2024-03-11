@@ -7,13 +7,10 @@ import L from 'leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
 
-import { Chart as ChartJS, defaults } from "chart.js/auto";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
-
-import { countryCodeToName, countryCodes } from './items/countryUtils';
+import { countryCodeToName, countryCodes } from '../components/items/countryUtils';
 
 
-export default function Map() {
+export default function MapReport() {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
   const [geojsonFeaturesCountry, setGeojsonFeaturesCountry] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -309,77 +306,6 @@ export default function Map() {
             <SearchField/>
           </MapContainer>
         )}
-
-        <div className="flex justify-center"> 
-          <div className='flex'>
-            <div className='ml-[150px] bg-grey rounded-lg shadow-lg  w-100 h-50px' >
-            <Doughnut
-                data={{
-                  labels: selectedData.map((data) => data.label),
-                  datasets: [
-                    {
-                      label: "Emissions",
-                      data: selectedData.map((data) => data.value),
-                      backgroundColor: [
-                        "rgba(43, 63, 229, 0.8)",
-                        "rgba(250, 192, 19, 0.8)",
-                        "rgba(253, 135, 135, 0.8)",
-                      ],
-                      borderColor: [
-                        "rgba(43, 63, 229, 0.8)",
-                        "rgba(250, 192, 19, 0.8)",
-                        "rgba(253, 135, 135, 0.8)",
-                      ],
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    title: {
-                      display: true,
-                      text: "Emission Data",
-                    },
-                  },
-                }}
-                />
-            </div>
-            <div className='mr-[150px] m-10 bg-grey rounded-lg shadow-lg p-4 w-100%'>
-            <Bar
-              data={{
-                labels: ownerEmissions.map((data) => data.label),
-                datasets: [
-                  {
-                    label: "Count",
-                    data: ownerEmissions.map((data) => data.value),
-                    backgroundColor: [
-                      "rgba(43, 63, 229, 0.8)",
-                      "rgba(250, 192, 19, 0.8)",
-                      "rgba(253, 135, 135, 0.8)",
-                    ],
-                    borderRadius: 5,
-                  },
-                ],
-              }}
-              options={{
-                scales: {
-                  x: {
-                    display: false // Hide labels along the x-axis
-                  },
-                  y: {
-                    beginAtZero: true
-                  }
-                },
-                plugins: {
-                  title: {
-                    text: "Revenue Source",
-                  },
-                },
-              }}
-              />
-            </div>
-          </div>
-        </div>
-        
       </div>
     </div>
 

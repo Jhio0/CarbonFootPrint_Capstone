@@ -1,7 +1,7 @@
 "use client"
 import React, { useState, useEffect } from "react";
 import Nav from "./Nav";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 
 //Store all the posts created
 const threadList = [];
@@ -16,17 +16,17 @@ const Home = () => {
         setThread("");
 
         //Check if user is authenticated, if not return to login.
-        const navigate = useNavigate();
-        useEffect(() => {
-        const checkUser = () => {
-            if (!localStorage.getItem("_id")) {
-                navigate("/");
-            } else {
-                console.log("Authenticated");
-            }
-        };
-        checkUser();
-    }, [navigate]);
+    //     const navigate = useNavigate();
+    //     useEffect(() => {
+    //     const checkUser = () => {
+    //         if (!localStorage.getItem("_id")) {
+    //             navigate("/");
+    //         } else {
+    //             console.log("Authenticated");
+    //         }
+    //     };
+    //     checkUser();
+    // }, [navigate]);
 
     return <>{/*--the UI elements*/}</>;
     };
@@ -44,12 +44,12 @@ const Home = () => {
                     <div className='thread__item' key={thread.id}>
                         <p>{thread.title}</p>
                         <div className='react__container'>
-                            <Likes numberOfLikes={thread.likes.length} threadId={thread.id} />
+                            {/* <Likes numberOfLikes={thread.likes.length} threadId={thread.id} />
                             <Comments
                                 numberOfComments={thread.replies.length}
                                 threadId={thread.id}
                                 title={thread.title}
-                            />
+                            /> */}
                         </div>
                     </div>
                 ))}
