@@ -58,6 +58,7 @@ export default function ReportPage() {
         if (typeof window !== 'undefined') {
             loadReports();
         }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [user]);
 
     
