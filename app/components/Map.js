@@ -1,14 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import React, { useEffect, useState, useRef } from 'react';
-
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
 
-import { Chart as ChartJS, defaults } from "chart.js/auto";
-import { Bar, Doughnut, Line } from "react-chartjs-2";
+import DoughnutChart from './Chart/Doughnut.js';
+import BarChart from './Chart/BarChart.js';
+
+import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
+Chart.register(ArcElement, Tooltip, Legend);
 
 import { countryCodeToName, countryCodes } from './items/countryUtils';
 
@@ -129,7 +131,8 @@ export default function Map() {
       const { coordinates } = feature.geometry;
       const [longitude, latitude] = coordinates;
   
-      // Fetching emissions data for the clicked coordinates
+      // Fetching emissions data for the clicked coordinates with a delay
+      await new Promise(resolve => setTimeout(resolve, 1000));
       const response = await fetch(`https://api.climatetrace.org/v4/assets?latitude=${latitude}&longitude=${longitude}`);
       const { assets } = await response.json();
   
@@ -146,24 +149,41 @@ export default function Map() {
         { label: `${selectedAsset.name} - CO2 Emissions (Tons)`, value: co2Emissions },
         { label: `${selectedAsset.name} - CH4 Emissions (Tons)`, value: ch4Emissions }
       ]);
-
-     // Update ownerEmissions state with the percentage emissions for each owner
-    if (selectedAsset.Owners && selectedAsset.Owners.length > 0) {
-      const totalEmissions = parseFloat(co2Emissions) + parseFloat(ch4Emissions);
-      const ownerPercentageEmissions = selectedAsset.Owners.map(owner => ({
-        label: `${owner.CompanyName} - Percentage Emissions`,
-        value: ((parseFloat(owner.PercentageOfInterestCompany) / 100) * totalEmissions).toFixed(2)
-      }));
-      setOwnerEmissions(ownerPercentageEmissions);
-    } else {
-      // If no owners, set ownerEmissions to an empty array
-      setOwnerEmissions([]);
-    }
+  
+      // Update ownerEmissions state with the percentage emissions for each owner
+      if (selectedAsset.Owners && selectedAsset.Owners.length > 0) {
+        const totalEmissions = parseFloat(co2Emissions) + parseFloat(ch4Emissions);
+        const ownerPercentageEmissions = selectedAsset.Owners.map(owner => ({
+          label: `${owner.CompanyName} - Percentage Emissions`,
+          value: ((parseFloat(owner.PercentageOfInterestCompany) / 100) * totalEmissions).toFixed(2)
+        }));
+        setOwnerEmissions(ownerPercentageEmissions);
+      } else {
+        // If no owners, set ownerEmissions to an empty array
+        setOwnerEmissions([]);
+      }
+  
+      // If the clicked feature is a country, fetch emissions data for that country and update selectedData
+      if (feature.properties.countryCode && feature.properties.countryName) {
+        const { countryCode, countryName } = feature.properties;
+  
+        // Fetch emissions data for the clicked country with a delay
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        const countryResponse = await fetch(`https://api.climatetrace.org/v4/country/emissions?&countries=${countryCode}`);
+        const countryEmissionsData = await countryResponse.json();
+  
+        // Extract CO2 emissions for the clicked country
+        const countryCo2Emissions = countryEmissionsData.length > 0 ? countryEmissionsData[0]?.emissions?.co2 || 'N/A' : 'N/A';
+  
+        // Update selectedData state with the fetched CO2 emissions data for the selected country
+        setSelectedData([
+          ...selectedData,
+          { label: `${countryName} - CO2 Emissions (Tons)`, value: countryCo2Emissions }
+        ]);
+      }
     } catch (error) {
       console.error('Error fetching emissions data:', error);
     }
-
-    
   };
 
   // Function to find the closest asset to the clicked coordinates
@@ -245,7 +265,7 @@ export default function Map() {
           ]}>
             <TileLayer 
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-              url="https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+              url={`https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=97162abb-de48-4413-a227-44ce4cfb0cd3`}
             />
             
 
@@ -295,77 +315,15 @@ export default function Map() {
         <div className="flex justify-center"> 
           <div className='flex'>
             <div className='ml-[150px] bg-grey rounded-lg shadow-lg  w-100 h-50px' >
-            <Doughnut
-                data={{
-                  labels: selectedData.map((data) => data.label),
-                  datasets: [
-                    {
-                      label: "Emissions",
-                      data: selectedData.map((data) => data.value),
-                      backgroundColor: [
-                        "rgba(43, 63, 229, 0.8)",
-                        "rgba(250, 192, 19, 0.8)",
-                        "rgba(253, 135, 135, 0.8)",
-                      ],
-                      borderColor: [
-                        "rgba(43, 63, 229, 0.8)",
-                        "rgba(250, 192, 19, 0.8)",
-                        "rgba(253, 135, 135, 0.8)",
-                      ],
-                    },
-                  ],
-                }}
-                options={{
-                  plugins: {
-                    title: {
-                      display: true,
-                      text: "Emission Data",
-                    },
-                  },
-                }}
-                />
+              <DoughnutChart selectedData={selectedData} />
             </div>
             <div className='mr-[150px] m-10 bg-grey rounded-lg shadow-lg p-4 w-100%'>
-            <Bar
-              data={{
-                labels: ownerEmissions.map((data) => data.label),
-                datasets: [
-                  {
-                    label: "Count",
-                    data: ownerEmissions.map((data) => data.value),
-                    backgroundColor: [
-                      "rgba(43, 63, 229, 0.8)",
-                      "rgba(250, 192, 19, 0.8)",
-                      "rgba(253, 135, 135, 0.8)",
-                    ],
-                    borderRadius: 5,
-                  },
-                ],
-              }}
-              options={{
-                scales: {
-                  x: {
-                    display: false // Hide labels along the x-axis
-                  },
-                  y: {
-                    beginAtZero: true
-                  }
-                },
-                plugins: {
-                  title: {
-                    text: "Revenue Source",
-                  },
-                },
-              }}
-              />
+              <BarChart ownerEmissions={ownerEmissions} />
             </div>
           </div>
         </div>
-        
       </div>
     </div>
 
   );
 }
-
-///fix the search make api for country codes 

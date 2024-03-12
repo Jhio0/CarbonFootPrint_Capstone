@@ -1,4 +1,3 @@
-
 "use client"
 import React, { useState, useEffect } from "react";
 import AppBar from '@mui/material/AppBar';
@@ -15,17 +14,20 @@ import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link'; // Import Link from Next.js
-
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-const pages = ['Services', 'About', 'Blog'];
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout'];
+
+import { useRouter } from 'next/navigation';
+import { UserAuth } from '../context/AuthContext';
+
+const pages = ['CFCalc', 'reports', 'Blog'];
+const settings = ['Profile', 'Account', 'Dashboard', 'Logout', 'Login'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
   const [anchorElUser, setAnchorElUser] = useState(null);
-  const [user, logOut] = UserAuth(); // Assuming UserAuth is imported
-
+  
+  const { user, logOut } = UserAuth(); // Assuming UserAuth is imported
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -128,7 +130,7 @@ function ResponsiveAppBar() {
               >
                 {pages.map((page) => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Link href={`/${page.toLowerCase()}`}>
+                    <Link href={`/${page}`}>
                       <Typography textAlign="center">{page}</Typography>
                     </Link>
                   </MenuItem>
@@ -161,14 +163,14 @@ function ResponsiveAppBar() {
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  <Link href={`/${page.toLowerCase()}`}>
+                  <Link href={`/${page}`}>
                     {page}
                   </Link>
                 </Button>
               ))}
             </Box>
 
-            <<Box sx={{ flexGrow: 0 }}>
+            <Box sx={{ flexGrow: 0 }}>
           <Tooltip title="Open settings">
             <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
               <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
@@ -190,16 +192,30 @@ function ResponsiveAppBar() {
             open={Boolean(anchorElUser)}
             onClose={handleCloseUserMenu}
           >
-            {settings.map((setting) => (
-              setting === 'Logout' ?
-              <MenuItem key={setting} onClick={handleSignOut}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-              :
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center">{setting}</Typography>
-              </MenuItem>
-            ))}
+           {settings.map((setting) => {
+              switch (setting) {
+                case 'Logout':
+                  return (
+                    <MenuItem key={setting} onClick={handleSignOut}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  );
+                case 'Login':
+                  return (
+                    <MenuItem key={setting}>
+                      <Link href="/logIn">
+                        <Typography textAlign="center">{setting}</Typography>
+                      </Link>
+                    </MenuItem>
+                  );
+                default:
+                  return (
+                    <MenuItem key={setting} onClick={handleCloseUserMenu}>
+                      <Typography textAlign="center">{setting}</Typography>
+                    </MenuItem>
+                  );
+              }
+            })}
           </Menu>
         </Box>  
           </Toolbar>
@@ -210,4 +226,3 @@ function ResponsiveAppBar() {
 }
 
 export default ResponsiveAppBar;
-
