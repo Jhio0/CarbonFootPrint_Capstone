@@ -16,6 +16,7 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link'; // Import Link from Next.js
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
+
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 
@@ -129,7 +130,7 @@ function ResponsiveAppBar() {
               >
                 {pages.map((page) => (
                   <MenuItem key={page} onClick={handleCloseNavMenu}>
-                    <Link href={`/${page.toLowerCase()}`}>
+                    <Link href={`/${page}`}>
                       <Typography textAlign="center">{page}</Typography>
                     </Link>
                   </MenuItem>
@@ -162,7 +163,7 @@ function ResponsiveAppBar() {
                   onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: 'white', display: 'block' }}
                 >
-                  <Link href={`/${page.toLowerCase()}`}>
+                  <Link href={`/${page}`}>
                     {page}
                   </Link>
                 </Button>
