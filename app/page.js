@@ -1,14 +1,21 @@
 "use client"
 import "leaflet/dist/leaflet.css";
-import Map from "./components/Map.js"; // Assuming Map.js is in the same directory
 import NavBar from "./components/navbar.js";
 import NewsBar from "./components/newsTab.js";
+
+import dynamic from 'next/dynamic';
+
+const MapWithNoSSR = dynamic(() => import("./components/Map.js"), {
+  ssr: false
+});
+
+// Use MapWithNoSSR in your component or page
+
 
 export default function Home() {
   return (
     <div>
-      <NavBar/>
-      <Map />
+      <MapWithNoSSR />
       {/* hello test */}
       <NewsBar />
     </div>
