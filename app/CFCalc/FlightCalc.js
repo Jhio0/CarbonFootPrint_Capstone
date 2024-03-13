@@ -75,6 +75,7 @@ const FlightsCalc = ({ flights = [], setFlights, onFlightEmissionsChange }) => {
         onChange={(e) => setOrigin(e.target.value.toUpperCase())}
         placeholder="From (IATA Code)"
       />
+      <br />
       <input
         type="text"
         value={destination}
@@ -82,12 +83,15 @@ const FlightsCalc = ({ flights = [], setFlights, onFlightEmissionsChange }) => {
         placeholder="To (IATA Code)"
       />
       <br />
-      <button onClick={addFlight}>Add Flight</button>
+      <button className="btn btn-outline" onClick={addFlight}>Add Flight</button>
       {flights.map((flight, index) => (
-        <div key={index}>
-          Flight from {flight.origin} to {flight.destination}:{" "}
-          {flight.emissions.toFixed(2)} kg CO2
-          <button onClick={() => removeFlight(index)}>Remove</button>
+        <div key={index} className="card w-96 bg-base-100 shadow-xl">
+          <h2 className="card-title">Flight: {flight.origin} to {flight.destination}
+          </h2>
+          <p>{flight.emissions.toFixed(2)} kg CO2</p>
+          <div className="card-actions justify-end">
+            <button className="btn btn-error" onClick={() => removeFlight(index)}>Remove</button>
+          </div> 
         </div>
       ))}
     </div>

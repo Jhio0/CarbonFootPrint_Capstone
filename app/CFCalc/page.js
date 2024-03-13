@@ -15,10 +15,7 @@ function Page() {
 
   return (
     <main className="bg-gray-900 min-h-screen w-full flex flex-col justify-center items-center">
-      <div className="bg-slate-800">
-        <Link href="/" className="font-bold">
-          Home
-        </Link>
+      <div className="bg-base-300">
         <UserCalc updateEmissions={updateEmissions} />
       </div>
     </main>

@@ -158,115 +158,137 @@ const UserCalc = ({ updateEmissions }) => {
   };
 
   return (
-    <div>
-      <div className="tabs">
-        {["Location", "Home", "Flights", "Vehicle"].map((tabName) => (
-          <button
-            key={tabName}
-            className={`tab tab-bordered ${
-              activeTab === tabName ? "tab-active" : ""
-            }`}
-            onClick={() => handleTabChange(tabName)}
-          >
-            {tabName}
-          </button>
-        ))}
-      </div>
-
-      {activeTab === "Location" && (
-        <div>
-          <h2>Location</h2>
-          <select
-            value={country}
-            onChange={(e) => {
-              setCountry(e.target.value);
-              setRegion(""); // Reset region when country changes
-            }}
-          >
-            <option value="Canada">Canada</option>
-            <option value="USA">USA</option>
-          </select>
-          <br />
-          <select
-            value={region}
-            onChange={(e) => setRegion(e.target.value)}
-            disabled={!country}
-          >
-            <option value="">Select your province/state</option>
-            {country &&
-              Object.keys(emissionFactors[country]).map((regionKey) => (
-                <option key={regionKey} value={regionKey}>
-                  {regionKey}
-                </option>
+    
+    <div className="flex w-full">
+      <div className="grid h-full flex-grow card bg-base-300 rounded-box place-items-center">
+      <div role="tablist" className="tabs tabs-bordered">
+              {["Location", "Home", "Flights", "Vehicle"].map((tabName) => (
+                <button
+                  key={tabName}
+                  className={`tab tab-bordered ${
+                    activeTab === tabName ? "tab-active" : ""
+                  }`}
+                  onClick={() => handleTabChange(tabName)}
+                >
+                  {tabName}
+                </button>
               ))}
-          </select>
-        </div>
-      )}
+            </div>
 
-      {activeTab === "Home" && (
-        <div>
-          <h2>Home</h2>
-          <input
-            type="number"
-            value={electricityUsed}
-            onChange={(e) => setElectricityUsed(e.target.value)}
-            placeholder="Electricity used (kWh)"
-          />
-          <br />
-          <input
-            type="number"
-            value={naturalGasUsed}
-            onChange={(e) => setNaturalGasUsed(e.target.value)}
-            placeholder="Natural gas used (units)"
-          />
-          <br />
-          <button onClick={calculateEmissions}>Calculate</button>
-        </div>
-      )}
+            {activeTab === "Location" && (
+              <div>
+                <label className="form-control w-full max-w-xs">
+                  <div className="label">
+                    <span className="label-text">Country</span>
+                  </div>
+                  <select
+                    value={country}
+                    onChange={(e) => {
+                      setCountry(e.target.value);
+                      setRegion(""); // Reset region when country changes
+                    }}>
+                    <option value="Canada">Canada</option>
+                    <option value="USA">USA</option>
+                  </select>
+                </label>
+                <label className="form-control w-full max-w-xs">
+                  <div className="label">
+                    <span className="label-text">Region</span>
+                  </div>
+                  <select
+                  value={region}
+                  onChange={(e) => setRegion(e.target.value)}
+                  disabled={!country}
+                >
+                  <option value="">Select your province/state</option>
+                  {country &&
+                    Object.keys(emissionFactors[country]).map((regionKey) => (
+                      <option key={regionKey} value={regionKey}>
+                        {regionKey}
+                      </option>
+                    ))}
+                </select>
+                </label>
+              </div>
+            )}
 
-      {activeTab === "Flights" && (
-        <div>
-          <h2>Flights</h2>
-          <FlightsCalc
-            flights={flights}
-            setFlights={setFlights}
-            onFlightEmissionsChange={handleFlightEmissionsChange}
-          />
-        </div>
-      )}
+            {activeTab === "Home" && (
+              <div>
+                <input
+                  type="number"
+                  value={electricityUsed}
+                  onChange={(e) => setElectricityUsed(e.target.value)}
+                  placeholder="Electricity used (kWh)"
+                />
+                <br />
+                <input
+                  type="number"
+                  value={naturalGasUsed}
+                  onChange={(e) => setNaturalGasUsed(e.target.value)}
+                  placeholder="Natural gas used (units)"
+                />
+                <br />
+                <button className="btn btn-outline" onClick={calculateEmissions}>Calculate</button>
+              </div>
+            )}
 
-      {activeTab === "Vehicle" && (
-        <div>
-          <h2>Vehicle Emissions</h2>
-          <input
-            type="number"
-            value={mileage}
-            onChange={(e) => setMileage(e.target.value)}
-            placeholder="Mileage (Km)"
-          />
-          <select
-            value={vehicleType}
-            onChange={(e) => setVehicleType(e.target.value)}
-          >
-            <option value="Car">Car</option>
-            <option value="Motorcycle">Motorcycle</option>
-            <option value="TruckSUV">Truck/SUV</option>
-          </select>
-          <br />
-          <button onClick={calculateVehicleEmissions}>
-            Calculate Vehicle Emissions
-          </button>
-          <p>Total Vehicle Emissions: {vehicleEmissions.toFixed(2)} kg CO2e</p>
-        </div>
-      )}
+            {activeTab === "Flights" && (
+              <div>
+                <h2>Flights</h2>
+                <FlightsCalc
+                  flights={flights}
+                  setFlights={setFlights}
+                  onFlightEmissionsChange={handleFlightEmissionsChange}
+                />
+              </div>
+            )}
 
-      <EmissionDonutChart
-        electricityEmission={electricityEmission}
-        naturalGasEmission={naturalGasEmission}
-        flightEmission={flightEmissions} // Pass flight emissions to the chart
-        vehicleEmission={vehicleEmissions} // Pass vehicle emissions to the chart
-      />
-      <div>Total Emissions: {totalEmissions.toFixed(2)} kg CO2e</div>
+            {activeTab === "Vehicle" && (
+              <div>
+                <h2>Vehicle Emissions</h2>
+                <select
+                  value={vehicleType}
+                  onChange={(e) => setVehicleType(e.target.value)}
+                >
+                  <option value="Car">Car</option>
+                  <option value="Motorcycle">Motorcycle</option>
+                  <option value="TruckSUV">Truck/SUV</option>
+                </select>
+                <br />
+                <input
+                  type="number"
+                  value={mileage}
+                  onChange={(e) => setMileage(e.target.value)}
+                  placeholder="Mileage (Km)"
+                />
+                <br />
+                
+                <button className="btn btn-outline" onClick={calculateVehicleEmissions}>
+                  Calculate
+                </button>
+                <p>Total Vehicle Emissions: {vehicleEmissions.toFixed(2)} kg CO2e</p>
+              </div>
+            )}
+      </div>
+      <div className="divider divider-horizontal"></div> {/*middle line*/}
+      <div className="grid h-full flex-grow card bg-base-300 rounded-box place-items-center">
+        <div className="stats shadow">
+          <div className="stat">
+            <div className="stat-title">Total Emissions</div>
+            <div className="stat-value">{totalEmissions.toFixed(2)} kg CO2e</div>
+            <div className="stat-desc"></div>
+          </div>
+        </div>
+        <EmissionDonutChart
+          electricityEmission={electricityEmission}
+          naturalGasEmission={naturalGasEmission}
+          flightEmission={flightEmissions} // Pass flight emissions to the chart
+          vehicleEmission={vehicleEmissions} // Pass vehicle emissions to the chart
+        />
+      </div>
+      
+
+      
     </div>
   );
 };
