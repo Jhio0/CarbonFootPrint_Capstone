@@ -21,3 +21,7 @@ export default function Home() {
     </div>
   );
 }
+
+// //Adam Smith 
+// U: AdaSmith20224@gmail.com
+// P: HelloCanyoueee22
