@@ -6,20 +6,23 @@ import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
-
 import { countryCodeToName, countryCodes } from '../components/items/countryUtils';
+
 import 'leaflet-easybutton/src/easy-button'
 import 'leaflet-easybutton/src/easy-button.css'
 
+import "font-awesome/css/font-awesome.min.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faMapMarked } from '@fortawesome/free-solid-svg-icons';
 
-export default function MapReport() {
+import {useLocation} from './LocationContext';
+
+export default function MapReport({ onLocationSelect }) {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
   const [geojsonFeaturesCountry, setGeojsonFeaturesCountry] = useState([]);
   const [loading, setLoading] = useState(true);
   const mapRef = useRef(null);
-  const markerRef = useRef(null);
+  
+  const { setLocation } = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -180,68 +183,116 @@ export default function MapReport() {
   const SearchField = () => {
     const map = useMap();
     const provider = new OpenStreetMapProvider();
-  
+
     useEffect(() => {
-      const searchControl = new GeoSearchControl({
-        provider,
-        style: 'bar',
-        autoComplete: true,
-        autoCompleteDelay: 250,
-        showMarker: true,
-        showPopup: false,
-        marker: {
-          // Use green dot as marker
-          icon: L.divIcon({
-            className: 'green-dot',
-            html: '<div style="background-color: green; width: 10px; height: 10px; border-radius: 50%;"></div>',
-            iconSize: [10, 10]
-          }),
-          draggable: false,
-        },
-        popupFormat: ({ query, result }) => result.label,
-        resultFormat: ({ result }) => result.label,
-        maxMarkers: 1,
-        retainZoomLevel: false,
-        animateZoom: true,
-        autoClose: false,
-        searchLabel: 'Enter address',
-        keepResult: false,
-        updateMap: true,
-      });
-  
-      // Add event listener to the search control to log coordinates
-      map.on('geosearch/showlocation', (event) => {
-        console.log(`Selected location: Latitude ${event.location.y}, Longitude ${event.location.x}`);
-      });
-  
-      // Add GeoSearchControl to the map
-      map.addControl(searchControl);
-  
-      return () => {
-        // Remove GeoSearchControl and event listener when component unmounts
-        map.removeControl(searchControl);
-        map.off('geosearch/showlocation');
-      };
+        const searchControl = new GeoSearchControl({
+            provider,
+            style: 'bar',
+            autoComplete: true,
+            autoCompleteDelay: 250,
+            showMarker: true,
+            showPopup: false,
+            marker: {
+                icon: customMarkerIcon, // Use custom marker icon
+                draggable: false,
+            },
+            popupFormat: ({ query, result }) => result.label,
+            resultFormat: ({ result }) => result.label,
+            maxMarkers: 1,
+            retainZoomLevel: false,
+            animateZoom: true,
+            autoClose: false,
+            searchLabel: 'Enter address',
+            keepResult: false,
+            updateMap: true,
+        });
+
+        // Add event listener to the search control to log coordinates
+        map.on('geosearch/showlocation', (event) => {
+            console.log(`Selected location: Latitude ${event.location.y}, Longitude ${event.location.x}`);
+            const { y: lat, x: lng } = event.location; // Extract lat and lng from event.location
+            const locationString = `Latitude: ${lat}, Longitude: ${lng}`;
+            setLocation(locationString);
+
+            // Check if lat and lng are valid numbers before creating the marker
+            if (!isNaN(lat) && !isNaN(lng)) {
+                // Remove any existing markers from the map
+                map.eachLayer((layer) => {
+                    if (layer instanceof L.Marker) {
+                        map.removeLayer(layer);
+                    }
+                });
+
+                // Create a marker with a popup containing the delete button
+                const marker = L.marker([lat, lng], { icon: customMarkerIcon, draggable: false }).addTo(map);
+                const popupContent = document.createElement('div');
+                popupContent.innerHTML = `
+                    <p>Latitude: ${lat}</p>
+                    <p>Longitude: ${lng}</p>
+                    <button class="delete-button">Delete</button>
+                `;
+                marker.bindPopup(popupContent).openPopup();
+
+                // Attach event listener to the delete button
+                popupContent.querySelector('.delete-button').addEventListener('click', () => {
+                    map.closePopup(); // Close the popup
+                    map.removeLayer(marker); // Remove the marker from the map
+                });
+            } else {
+                console.error('Invalid coordinates:', event.location);
+            }
+        });
+
+        // Add GeoSearchControl to the map
+        map.addControl(searchControl);
+
+        return () => {
+            // Remove GeoSearchControl and event listener when component unmounts
+            map.removeControl(searchControl);
+            map.off('geosearch/showlocation');
+        };
     }, [map, provider]);
-  
+
     return null;
-  };
+};
 
   // Function to create a marker on map click
-  const createMarkerOnClick = (evt) => {
-    L.marker([evt.latlng.lat, evt.latlng.lng], markerOptions).addTo(mapRef.current);
-  };
+  const customMarkerIcon = L.divIcon({
+    html: '<i class="fa fa-map-marker fa-lg"></i>', // Use Font Awesome icon // Optional CSS class for styling
+    iconSize: [20, 20],
+    className: 'myDivIcon'
+  });
 
-  // Define marker options
-  const markerOptions = {
-    draggable: false
+  
+  
+  const createMarkerOnClick = (evt) => {
+    console.log('Marker created at:', evt.latlng.lat, evt.latlng.lng);
+    const { lat, lng } = evt.latlng;
+    const locationString = `Latitude: ${lat}, Longitude: ${lng}`;  // Format the location as a string
+    setLocation(locationString);
+  
+    // Create a marker with a popup containing the delete button
+    const marker = L.marker([lat, lng], { icon: customMarkerIcon, draggable: false }).addTo(mapRef.current);
+    const popupContent = document.createElement('div');
+    popupContent.innerHTML = `
+      <p>Latitude: ${lat}</p>
+      <p>Longitude: ${lng}</p>
+      <button class="delete-button">Delete</button>
+    `;
+    marker.bindPopup(popupContent).openPopup();
+  
+    // Attach event listener to the delete button
+    popupContent.querySelector('.delete-button').addEventListener('click', () => {
+      mapRef.current.closePopup(); // Close the popup
+      mapRef.current.removeLayer(marker); // Remove the marker from the map
+    });
   };
 
   // Toggle button configuration
   const toggle = L.easyButton({
     states: [{
       stateName: 'enable-markers',
-      icon: "'<div><FontAwesomeIcon icon={faMapMarked} className='bg-black w-full h-full' /></div>'",
+      icon: "fa-map-marker",
       title: 'Enable markers on click',
       onClick: function(control) {
         control.state('disable-markers');
@@ -249,7 +300,7 @@ export default function MapReport() {
       }
     }, {
       stateName: 'disable-markers',
-      icon: "'<div><FontAwesomeIcon icon={faMapMarked} className='bg-black w-full h-full' /></div>'",
+      icon: "fa-map-marker",
       title: 'Disable markers on click',
       onClick: function(control) {
         control.state('enable-markers');
@@ -326,7 +377,6 @@ export default function MapReport() {
             <SearchField/>
           </MapContainer>
         )}
-        <div><FontAwesomeIcon icon={faMapMarked} className='bg-black w-20px h-20px' /></div>
       </div>
 
   );
