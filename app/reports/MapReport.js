@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
+import Image from 'next/image';
 import React, { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
@@ -7,13 +8,18 @@ import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
 
 import { countryCodeToName, countryCodes } from '../components/items/countryUtils';
+import 'leaflet-easybutton/src/easy-button'
+import 'leaflet-easybutton/src/easy-button.css'
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faMapMarked } from '@fortawesome/free-solid-svg-icons';
 
 export default function MapReport() {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
   const [geojsonFeaturesCountry, setGeojsonFeaturesCountry] = useState([]);
   const [loading, setLoading] = useState(true);
   const mapRef = useRef(null);
+  const markerRef = useRef(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -174,46 +180,89 @@ export default function MapReport() {
   const SearchField = () => {
     const map = useMap();
     const provider = new OpenStreetMapProvider();
-
   
-    // Create GeoSearchControl with green dot marker
-    const searchControl = new GeoSearchControl({
-      provider,
-      style: 'bar',
-      classNames: {
-        input: 'search-input',
-        container: 'search-container',
-      },
-      marker: {
-        // Use green dot as marker
-        icon: L.divIcon({
-          className: 'green-dot',
-          html: '<div style="background-color: green; width: 10px; height: 10px; border-radius: 50%;"></div>',
-          iconSize: [10, 10]
-        }),
-        draggable: false,
-      },
-      popupFormat: ({ query, result }) => result.label,
-      resultFormat: ({ result }) => result.label,
-      maxMarkers: 1,
-      retainZoomLevel: false,
-      animateZoom: true,
-      autoClose: false,
-      searchLabel: 'Enter address',
-      keepResult: false,
-      updateMap: true,
-    });
-  
-    // Add GeoSearchControl to the map
     useEffect(() => {
-        map.addControl(searchControl);
-        return () => map.removeControl(searchControl);
-      }, [map, searchControl]);
-    
+      const searchControl = new GeoSearchControl({
+        provider,
+        style: 'bar',
+        autoComplete: true,
+        autoCompleteDelay: 250,
+        showMarker: true,
+        showPopup: false,
+        marker: {
+          // Use green dot as marker
+          icon: L.divIcon({
+            className: 'green-dot',
+            html: '<div style="background-color: green; width: 10px; height: 10px; border-radius: 50%;"></div>',
+            iconSize: [10, 10]
+          }),
+          draggable: false,
+        },
+        popupFormat: ({ query, result }) => result.label,
+        resultFormat: ({ result }) => result.label,
+        maxMarkers: 1,
+        retainZoomLevel: false,
+        animateZoom: true,
+        autoClose: false,
+        searchLabel: 'Enter address',
+        keepResult: false,
+        updateMap: true,
+      });
+  
+      // Add event listener to the search control to log coordinates
+      map.on('geosearch/showlocation', (event) => {
+        console.log(`Selected location: Latitude ${event.location.y}, Longitude ${event.location.x}`);
+      });
+  
+      // Add GeoSearchControl to the map
+      map.addControl(searchControl);
+  
+      return () => {
+        // Remove GeoSearchControl and event listener when component unmounts
+        map.removeControl(searchControl);
+        map.off('geosearch/showlocation');
+      };
+    }, [map, provider]);
+  
     return null;
   };
 
-  
+  // Function to create a marker on map click
+  const createMarkerOnClick = (evt) => {
+    L.marker([evt.latlng.lat, evt.latlng.lng], markerOptions).addTo(mapRef.current);
+  };
+
+  // Define marker options
+  const markerOptions = {
+    draggable: false
+  };
+
+  // Toggle button configuration
+  const toggle = L.easyButton({
+    states: [{
+      stateName: 'enable-markers',
+      icon: "'<div><FontAwesomeIcon icon={faMapMarked} className='bg-black w-full h-full' /></div>'",
+      title: 'Enable markers on click',
+      onClick: function(control) {
+        control.state('disable-markers');
+        mapRef.current.on('click', createMarkerOnClick);
+      }
+    }, {
+      stateName: 'disable-markers',
+      icon: "'<div><FontAwesomeIcon icon={faMapMarked} className='bg-black w-full h-full' /></div>'",
+      title: 'Disable markers on click',
+      onClick: function(control) {
+        control.state('enable-markers');
+        mapRef.current.off('click', createMarkerOnClick);
+      }
+    }]
+  });
+
+  useEffect(() => {
+    if (mapRef.current) {
+      toggle.addTo(mapRef.current);
+    }
+  }, [mapRef.current]); // Add the toggle button to the map
 
   
   
@@ -277,7 +326,10 @@ export default function MapReport() {
             <SearchField/>
           </MapContainer>
         )}
+        <div><FontAwesomeIcon icon={faMapMarked} className='bg-black w-20px h-20px' /></div>
       </div>
 
   );
 }
+
+//import 'leaflet-easybutton/src/easy-button'
