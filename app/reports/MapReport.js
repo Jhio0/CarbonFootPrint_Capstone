@@ -254,7 +254,7 @@ export default function MapReport({ onLocationSelect }) {
     }, [map, provider]);
 
     return null;
-};
+  };
 
   // Function to create a marker on map click
   const customMarkerIcon = L.divIcon({
@@ -300,7 +300,7 @@ export default function MapReport({ onLocationSelect }) {
       }
     }, {
       stateName: 'disable-markers',
-      icon: "fa-map-marker",
+      icon: "<i class='fa fa-map-marker' style='color: red;'></i>",
       title: 'Disable markers on click',
       onClick: function(control) {
         control.state('enable-markers');

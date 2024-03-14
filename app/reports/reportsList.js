@@ -100,7 +100,7 @@ export default function ReportPage() {
                             className="text-black"
                         />
                     </div>
-                    <button className="text-black" type="submit">Submit Report</button>
+                    <button className="text-black" onSubmit={addReport} type="submit">Submit Report</button>
                 </form>
 
                 <div className="reportsContainer">
