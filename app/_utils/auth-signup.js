@@ -2,7 +2,8 @@
 import { auth } from "./firebase";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from "react";
-import { useRouter } from 'next/navigation';  
+import { addAccount } from "../account/_services/account-service.js";
+import { useNavigate } from "react-router-dom";
 
 export const AuthSignUp = () => {
   const [email, setEmail] = useState("");
@@ -10,15 +11,20 @@ export const AuthSignUp = () => {
 
   const signUp = async () => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) =>{
-        const user = userCredential.user;
-        window.alert('User signed up successfully!'); 
-        console.log(user);
-      });
-    } catch (error) {
-      window.alert(` Sign up failed: ${error.message}`); 
-      console.error("Sign up failed:", error.message);
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      const account = {
+        email: email,
+        username: username,
+        firstName: firstName,
+        lastName: lastName,
+      };
+
+      await addAccount(user.uid, account)
+    }
+    catch (error) {
+      console.log(error);
     }
   };
 
@@ -29,14 +35,14 @@ export const AuthSignUp = () => {
     borderRadius: '8px',
   };
   
-  
-  
   const inputStyle = {
     color: 'black',
     marginBottom: '10px',
     padding: '8px',
   };
     
+
+
   return (
     <div style={{ textAlign: 'center', marginTop: '20vh' }}>
       <form>

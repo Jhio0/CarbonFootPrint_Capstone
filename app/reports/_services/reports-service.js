@@ -3,7 +3,7 @@ import { collection, getDocs, addDoc, query } from "firebase/firestore";
 
 export const addReport = async(userId, report) => {
     try{
-        const itemCol = collection(db, `users/${userId}/items`);
+        const itemCol = collection(db, `users/${userId}/reports`);
         const docRef = await addDoc(itemCol, report);
         return docRef.id;
     }
@@ -14,7 +14,7 @@ export const addReport = async(userId, report) => {
 
 export const getReports = async(userId) => {
     try{
-        const itemCol = collection(db, `users/${userId}/items`);
+        const itemCol = collection(db, `users/${userId}/reports`);
         const querySnapshot = await getDocs(itemCol);
         const reports = [];
         querySnapshot.forEach((doc) => {
