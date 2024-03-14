@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useState, useEffect } from "react";
 import { addReport, getReports } from "../_services/reports-service";
 import { UserAuth  } from "../context/AuthContext.js";
@@ -19,10 +18,12 @@ export default function ReportPage() {
     // Handler to process the report submission
 
     const loadReports = async () => {
-        const reports = await getReports(user.uid);
-        console.log("Reports", reports);
-        setReports(reports);
-    }
+        if (typeof window !== 'undefined') {
+            const reports = await getReports(user.uid);
+            console.log("Reports", reports);
+            setReports(reports);
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();

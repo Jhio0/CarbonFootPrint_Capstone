@@ -1,3 +1,4 @@
+"use client"
 import React, { useState } from "react";
 import FlightsCalc from "./FlightCalc";
 import EmissionDonutChart from "./EmissionsDonutChart";

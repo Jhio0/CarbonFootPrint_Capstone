@@ -19,21 +19,26 @@ const NewsTab = () => {
                                     News artical 1
                                 </a>
                             </div>
-                            
                     </div>
                     <div className="flex items-center">
                             <div className="flex-shrink-0">
-                                <h1>News artical 2</h1>
+                                <a href="/">
+                                    News artical 1
+                                </a>
                             </div>
                     </div>
                     <div className="flex items-center">
                             <div className="flex-shrink-0">
-                                <h1>News artical 3</h1>
+                                <a href="/">
+                                    News artical 1
+                                </a>
                             </div>
                     </div>
                     <div className="flex items-center">
                             <div className="flex-shrink-0">
-                                <h1>News artical 4</h1>
+                                <a href="/">
+                                    News artical 1
+                                </a>
                             </div>
                     </div>
                 </div>
