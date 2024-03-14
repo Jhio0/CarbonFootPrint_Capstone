@@ -57,7 +57,12 @@ export default function ReportPage() {
     };
 
     useEffect(() => {
-        loadReports();
+        if (user) {
+            loadReports();
+        }
+        else{
+            return;
+        }
     }, [user]);
     
 
