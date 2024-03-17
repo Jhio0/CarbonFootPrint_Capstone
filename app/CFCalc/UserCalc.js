@@ -1,7 +1,11 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import FlightsCalc from "./FlightCalc";
 import EmissionDonutChart from "./EmissionsDonutChart";
+//firebase
+import { doc, setDoc } from "firebase/firestore";
+import { auth, db } from "/app/_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
+import { onAuthStateChanged } from "firebase/auth";
 const emissionFactors = {
   Canada: {
     "Alberta (AB)": {
@@ -110,9 +114,70 @@ const UserCalc = ({ updateEmissions }) => {
   const [flights, setFlights] = useState([]);
   const [totalEmissions, setTotalEmissions] = useState(0);
 
+  const [currentUser, setCurrentUser] = useState(null);
+  //firebase
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        console.log("User is signed in:", user);
+        setCurrentUser(user);
+      } else {
+        console.log("No user signed in.");
+        setCurrentUser(null);
+      }
+    });
+
+    return unsubscribe; // Cleanup subscription
+  }, []);
+
+  const saveEmissionData = async () => {
+    if (!currentUser) {
+      console.log("No user signed in.");
+      return;
+    }
+
+    try {
+      await setDoc(
+        doc(db, "emissionsData", currentUser.uid),
+        {
+          electricityEmission,
+          naturalGasEmission,
+          flightEmissions,
+          vehicleEmissions,
+          totalEmissions,
+        },
+        { merge: true }
+      ); // Use merge to avoid overwriting other fields
+
+      alert("Emissions data saved successfully.");
+    } catch (error) {
+      alert("Error saving emissions data: ", error);
+    }
+  };
+
+  useEffect(() => {
+    updateTotalEmissions(); // This recalculates total emissions whenever relevant states change
+  }, [
+    electricityEmission,
+    naturalGasEmission,
+    flightEmissions,
+    vehicleEmissions,
+    totalEmissions,
+  ]);
+
+  const updateTotalEmissions = () => {
+    const updatedTotalEmissions =
+      parseFloat(electricityEmission) +
+      parseFloat(naturalGasEmission) +
+      parseFloat(flightEmissions) +
+      parseFloat(vehicleEmissions);
+    setTotalEmissions(updatedTotalEmissions);
+  };
+
   // Update to handle flight emissions
   const handleFlightEmissionsChange = (emissions) => {
     setFlightEmissions(emissions);
+    updateTotalEmissions();
   };
 
   const handleTabChange = (tabName) => {
@@ -120,30 +185,22 @@ const UserCalc = ({ updateEmissions }) => {
   };
 
   const calculateEmissions = () => {
-    let electricityEmission = 0;
-    let naturalGasEmission = 0;
-    let vehicleEmissions = 0;
+    let electricityCalc = 0;
+    let naturalGasCalc = 0;
 
     // Example calculation from Home tab
     if (country && region) {
       const factors = emissionFactors[country][region];
       if (factors) {
-        electricityEmission =
+        electricityCalc =
           parseFloat(electricityUsed) *
           (factors.generation + factors.transmission);
-        naturalGasEmission = parseFloat(naturalGasUsed) * factors.naturalGas;
+        naturalGasCalc = parseFloat(naturalGasUsed) * factors.naturalGas;
       }
     }
-    const totalEmissions =
-      electricityEmission +
-      naturalGasEmission +
-      flightEmissions +
-      vehicleEmissions;
-    setTotalEmissions(totalEmissions);
-    // Add your calculation logic for other tabs here
-
-    setElectricityEmissions(electricityEmission);
-    setNaturalGasEmissions(naturalGasEmission);
+    setElectricityEmissions(electricityCalc);
+    setNaturalGasEmissions(naturalGasCalc);
+    updateTotalEmissions();
   };
 
   const calculateVehicleEmissions = () => {
@@ -155,12 +212,13 @@ const UserCalc = ({ updateEmissions }) => {
     const emissions =
       parseFloat(mileage) * (v_emissionFactors[vehicleType] || 0);
     setVehicleEmissions(emissions);
+    updateTotalEmissions();
   };
 
   return (
     <div className="flex w-full min-h-screen my-5 ">
-      <div className="ml-10 grid h-full flex-grow card bg-base-300 rounded-box place-items-center">
-        <div role="tablist" className="tabs tabs-bordered">
+      <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center ml-5">
+        <div role="tablist" className="tabs tabs-bordered mb-5">
           {["Location", "Home", "Flights", "Vehicle"].map((tabName) => (
             <button
               key={tabName}
@@ -234,6 +292,7 @@ const UserCalc = ({ updateEmissions }) => {
               placeholder="Natural gas used (GJ)"
             />
             <br />
+            <br />
             <button className="btn btn-outline" onClick={calculateEmissions}>
               Calculate
             </button>
@@ -274,21 +333,28 @@ const UserCalc = ({ updateEmissions }) => {
               placeholder="Enter Mileage in Km"
             />
             <br />
-
+            <br />
             <button
               className="btn btn-outline"
               onClick={calculateVehicleEmissions}
             >
               Calculate
             </button>
-            <p>
+
+            <p className="mt-5 stat-desc">
               Total Vehicle Emissions: {vehicleEmissions.toFixed(2)} kg CO2e
             </p>
           </div>
         )}
+        <button
+          className="btn btn-outline btn-success mt-10"
+          onClick={saveEmissionData}
+        >
+          Save Results
+        </button>
       </div>
       <div className="divider divider-horizontal"></div> {/*middle line*/}
-      <div className="grid w-96 h-full flex-grow card bg-base-300 rounded-box place-items-center">
+      <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center">
         <div className="stats shadow">
           <div className="stat">
             <div className="stat-title">Total Emissions</div>
@@ -298,12 +364,14 @@ const UserCalc = ({ updateEmissions }) => {
             <div className="stat-desc"></div>
           </div>
         </div>
-        <EmissionDonutChart
-          electricityEmission={electricityEmission}
-          naturalGasEmission={naturalGasEmission}
-          flightEmission={flightEmissions} // Pass flight emissions to the chart
-          vehicleEmission={vehicleEmissions} // Pass vehicle emissions to the chart
-        />
+        <div className="size-[448px]">
+          <EmissionDonutChart
+            electricityEmission={electricityEmission}
+            naturalGasEmission={naturalGasEmission}
+            flightEmission={flightEmissions}
+            vehicleEmission={vehicleEmissions}
+          />
+        </div>
       </div>
     </div>
   );

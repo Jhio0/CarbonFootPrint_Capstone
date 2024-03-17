@@ -94,14 +94,16 @@ const FlightsCalc = ({ flights = [], setFlights, onFlightEmissionsChange }) => {
       <br />
 
       {flights.map((flight, index) => (
-        <div key={index} className="card w-86 my-5 bg-base-100 shadow-xl">
-          <h2 className="card-title">
+        <div key={index} className="card w-86 my-5 bg-base-100 shadow-xl p-3">
+          <h2 className="card-title font-medium">
             Flight: {flight.origin} to {flight.destination}
           </h2>
-          <p>{flight.emissions.toFixed(2)} kg CO2</p>
+          <p className="stat-desc text-base">
+            {flight.emissions.toFixed(2)} kg CO2
+          </p>
           <div className="card-actions justify-end">
             <button
-              className="btn btn-error"
+              className="btn btn-outline btn-error"
               onClick={() => removeFlight(index)}
             >
               Remove
