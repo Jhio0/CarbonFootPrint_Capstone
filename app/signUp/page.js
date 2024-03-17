@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { AuthSignUp } from '../_utils/auth-signup';
+import { AuthSignUp } from './/auth-signup';
 
 export default function SignUp(){
 

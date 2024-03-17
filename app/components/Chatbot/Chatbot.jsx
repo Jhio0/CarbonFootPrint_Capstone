@@ -16,14 +16,24 @@ export default function Chatbot() {
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
+  const aiContext = "Your name is Sprout. Your main goal is to provide suggestions to users on how to reduce their carbon emissions.";
+
+
   const handleUserInput = async () => {
     setIsLoading(true);
     setChatHistory((chatHistory) => 
     [...chatHistory, 
     {role: 'user', content: userInput }]);
 
+
+    const messagesWithBaseContext = [
+      { role: "system", content: aiContext },
+      ...chatHistory,
+      { role: "user", content: userInput },
+    ];
+
     const chatCompletion = await openai.chat.completions.create({
-      messages: [...chatHistory, {role: 'assistant', content: userInput}],
+      messages: messagesWithBaseContext,
       model: "gpt-3.5-turbo",
     });
   
@@ -41,7 +51,7 @@ export default function Chatbot() {
   return (
     <div className="chatContainer border-2 border-white bg-black flex flex-col w-1/5 p-4 rounded-xl ">
       <div className="headerContainer">
-        <h1 className="text-2xl pb-2">Seedless: Your Environmental AI Buddy!</h1>
+        <h1 className="text-2xl pb-2">Sprout: Your Environmental AI Buddy!</h1>
       </div>
       <div className="chatHistoryContainer" style={{height:400}}>
         {chatHistory.map((chat, index) => (
@@ -77,13 +87,3 @@ export default function Chatbot() {
   );
 
 }
-
-// async function main() {
-//   const embedding = await openai.embeddings.create({
-//     model: "text-embedding-ada-002",
-//     input: "The quick brown fox jumped over the lazy dog",
-//   });
-
-//   console.log(embedding);
-// }
-// main();
