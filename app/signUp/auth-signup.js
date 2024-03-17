@@ -1,27 +1,20 @@
 "use client"
-import { auth } from "./firebase";
+import { auth } from "../_utils/firebase.js";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useState } from "react";
-import { addAccount } from "../account/_services/account-service.js";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 
 export const AuthSignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  const signUp = async () => {
+  const signUp = async (e) => {
     try {
+      e.preventDefault();
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-      const user = userCredential.user;
-
-      const account = {
-        email: email,
-        username: username,
-        firstName: firstName,
-        lastName: lastName,
-      };
-
-      await addAccount(user.uid, account)
+      const userId = userCredential.user.uid;
+      router.push(`signUp/${userId}`);
     }
     catch (error) {
       console.log(error);
@@ -40,8 +33,10 @@ export const AuthSignUp = () => {
     marginBottom: '10px',
     padding: '8px',
   };
-    
 
+  useEffect(() => {
+    console.log(router); // Log the router object to inspect its properties
+  }, [router]);
 
   return (
     <div style={{ textAlign: 'center', marginTop: '20vh' }}>
@@ -50,6 +45,7 @@ export const AuthSignUp = () => {
           <input
             style={inputStyle}
             placeholder="Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
