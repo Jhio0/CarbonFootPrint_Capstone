@@ -2,8 +2,10 @@
 import "leaflet/dist/leaflet.css";
 import NavBar from "./components/navbar.js";
 import NewsBar from "./components/newsTab.js";
+import Chatbot from "./components/Chatbot/Chatbot.jsx";
 
 import dynamic from 'next/dynamic';
+import { Chat } from "@mui/icons-material";
 
 const MapWithNoSSR = dynamic(() => import("./components/Map.js"), {
   ssr: false
@@ -18,6 +20,7 @@ export default function Home() {
       <MapWithNoSSR />
       {/* hello test */}
       <NewsBar />
+      <Chatbot />
     </div>
   );
 }
