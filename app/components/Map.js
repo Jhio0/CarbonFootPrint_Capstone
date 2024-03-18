@@ -256,7 +256,7 @@ export default function Map() {
         {loading ? (
           <div className="spinner"></div>
         ) : (
-          <MapContainer center={[38, -97]} zoom={4} style={{ width: '100%', height: '470px' }} ref={mapRef} worldCopyJump={true}  
+          <MapContainer center={[38, -97]} zoom={4}  ref={mapRef} worldCopyJump={true}  
           maxBounds={[
             [null, -180], // No restriction on the left
             [null, 180],  // No restriction on the right
@@ -308,20 +308,26 @@ export default function Map() {
                 layer.on('click', () => handleFeatureClick(feature));
               }}
             />
+            {/* Overlaying content */}
+              <div className="flex justify-center" style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 1000 }}> 
+                <div className='flex flex-col'>
+                  <div className='min-h-3/4 h-auto w-full bg-gray-400 flex justify-center items-center flex-wrap rounded-md
+                      backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100'>
+                      <div className='mr-[150px] ml-10 bg-grey rounded-lg shadow-lg p-4 w-100%'>
+                      <DoughnutChart selectedData={selectedData} />
+                  </div>
+                  </div>
+                  <div className='min-h-3/4 h-auto w-full bg-gray-400 flex justify-center items-center flex-wrap rounded-md
+                      backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100'>
+                      <div className='mr-[150px] ml-10 bg-grey rounded-lg shadow-lg p-4 w-100%'>
+                        <BarChart ownerEmissions={ownerEmissions} />
+                      </div>
+                  </div>
+                </div>
+              </div>
             <SearchField/>
           </MapContainer>
         )}
-
-        <div className="flex justify-center"> 
-          <div className='flex'>
-            <div className='ml-[150px] bg-grey rounded-lg shadow-lg  w-100 h-50px' >
-              <DoughnutChart selectedData={selectedData} />
-            </div>
-            <div className='mr-[150px] m-10 bg-grey rounded-lg shadow-lg p-4 w-100%'>
-              <BarChart ownerEmissions={ownerEmissions} />
-            </div>
-          </div>
-        </div>
       </div>
     </div>
 
