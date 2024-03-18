@@ -54,8 +54,8 @@ export const AuthContextProvider = ({ children }) => {
       setUser(currentUser);
     });
     return () => unsubscribe();
-  }, []); // Removed 'user' from the dependency array
-  
+  }, []);
+
   return (
     <AuthContext.Provider value={{ user, logOut, onLogin, googleSignIn, signUp }}>
       {children}
