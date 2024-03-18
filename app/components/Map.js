@@ -252,11 +252,15 @@ export default function Map() {
   
   return (
     <div>
-      <div >
+      <div className='flex flex-col'>
         {loading ? (
-          <div className="spinner"></div>
+          <div className='items-center justify-center'>
+            <div className="spinner"></div>
+          </div>
         ) : (
-          <MapContainer center={[38, -97]} zoom={4} style={{ width: '100%', height: '470px' }} ref={mapRef} worldCopyJump={true}  
+
+        <div>
+          <MapContainer center={[38, -97]} zoom={4} style={{ width: '100%', height: '700px' }} ref={mapRef} worldCopyJump={true}  
           maxBounds={[
             [null, -180], // No restriction on the left
             [null, 180],  // No restriction on the right
@@ -310,9 +314,10 @@ export default function Map() {
             />
             <SearchField/>
           </MapContainer>
+          </div>
         )}
 
-        <div className="flex justify-center"> 
+        <div className="flex justify-center mt-200"> 
           <div className='flex'>
             <div className='ml-[150px] bg-grey rounded-lg shadow-lg  w-100 h-50px' >
               <DoughnutChart selectedData={selectedData} />
@@ -322,6 +327,7 @@ export default function Map() {
             </div>
           </div>
         </div>
+
       </div>
     </div>
 

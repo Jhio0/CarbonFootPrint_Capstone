@@ -2,7 +2,7 @@
 import "leaflet/dist/leaflet.css";
 import NavBar from "./components/navbar.js";
 import NewsBar from "./components/newsTab.js";
-import Chatbot from "./components/Chatbot/Chatbot.jsx";
+import ChatBubble from "./components/ChatBubble/ChatBubble.jsx";
 
 import dynamic from 'next/dynamic';
 import { Chat } from "@mui/icons-material";
@@ -20,7 +20,7 @@ export default function Home() {
       <MapWithNoSSR />
       {/* hello test */}
       <NewsBar />
-      <Chatbot />
+      <ChatBubble />
     </div>
   );
 }
