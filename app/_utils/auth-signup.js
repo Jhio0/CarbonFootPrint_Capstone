@@ -5,16 +5,20 @@ import { useState } from "react";
 import { useRouter } from 'next/navigation';  
 
 export const AuthSignUp = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-
-  const signUp = async () => {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+  //const { user } = UserAuth();
+  
+  const signUp = async (e) => {
+    e.preventDefault();
     try {
       await createUserWithEmailAndPassword(auth, email, password)
       .then((userCredential) =>{
         const user = userCredential.user;
         window.alert('User signed up successfully!'); 
         console.log(user);
+        router.push('/');
       });
     } catch (error) {
       window.alert(` Sign up failed: ${error.message}`); 

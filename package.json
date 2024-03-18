@@ -12,7 +12,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.12",
-    "@mui/material": "^5.15.12",
+    "@mui/material": "^5.15.13",
     "chart.js": "^4.4.2",
     "deck.gl": "^8.9.34",
     "encoding": "^0.1.13",
@@ -31,7 +31,8 @@
     "react-circular-progressbar": "^2.1.0",
     "react-dom": "^18",
     "react-leaflet": "^4.2.1",
-    "react-leaflet-cluster": "^2.1.0"
+    "react-leaflet-cluster": "^2.1.0",
+    "vue": "^3.4.21"
   },
   "devDependencies": {
     "@types/node": "20.11.25",

@@ -13,7 +13,6 @@ export const AuthLogin = () => {
     e.preventDefault();
     try {
       await onLogin(email, password);
-      router.push('/');
     } catch (error) {
       console.error('Login failed', error);
       window.alert(`Login failed: ${error.message}`);

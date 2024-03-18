@@ -16,13 +16,12 @@ import AdbIcon from '@mui/icons-material/Adb';
 import Link from 'next/link'; // Import Link from Next.js
 import { ThemeProvider, createTheme } from '@mui/material/styles';
 
-
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 
-const pages = ['Home','News','logIn','signUp'];
-const pagesauth = ['Home','News','calculator','CFCalc', 'reports',]
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout',];
+const pages = ['Home','feed','logIn','signUp'];
+const pagesauth = ['Home','feed','CFCalc', 'reports',]
+const settings = ['Profile', 'Settings', 'Logout','Testdb'];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -30,6 +29,8 @@ function ResponsiveAppBar() {
   
   const { user, logOut } = UserAuth(); // Assuming UserAuth is imported
   const [loading, setLoading] = useState(true);
+
+  const router = useRouter();
 
   useEffect(() => {
     const checkAuthentication = async () => {
@@ -223,14 +224,30 @@ function ResponsiveAppBar() {
                               <Typography textAlign="center">{setting}</Typography>
                             </MenuItem>
                           );
-                        case 'Login':
+                        case 'Profile':
                           return (
                             <MenuItem key={setting}>
-                              <Link href="/logIn">
+                              <Link href="/profile">
                                 <Typography textAlign="center">{setting}</Typography>
                               </Link>
                             </MenuItem>
                           );
+                          case 'Settings':
+                            return (
+                              <MenuItem key={setting}>
+                                <Link href="/settings">
+                                  <Typography textAlign="center">{setting}</Typography>
+                                </Link>
+                              </MenuItem>
+                            );
+                          case 'Testdb':
+                            return (
+                              <MenuItem key={setting}>
+                                <Link href="/test">
+                                  <Typography textAlign="center">{setting}</Typography>
+                                </Link>
+                              </MenuItem>
+                            );
                         default:
                           return (
                             <MenuItem key={setting} onClick={handleCloseUserMenu}>
