@@ -5,17 +5,19 @@ import { auth } from '../_utils/firebase';
 
 export const ProfileDiv1 = () => {
     const [displayName, setDisplayName] = useState(null); // State to store user's display name
-    //const { user } = UserAuth();
+    const [photoURL, setPhotoURL] = useState(null); // State to store user's photo URL
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
             // This function will be called whenever the authentication state changes
             if (user) {
-                // If a user is logged in, set their display name
+                // If a user is logged in, set their display name and photo URL
                 setDisplayName(user.displayName);
+                setPhotoURL(user.photoURL); // Set the photo URL
             } else {
-                // If no user is logged in, set displayName to null
+                // If no user is logged in, set displayName and photoURL to null
                 setDisplayName(null);
+                setPhotoURL(null);
             }
         });
     
@@ -24,7 +26,7 @@ export const ProfileDiv1 = () => {
     }, []); // Empty dependency array means this effect runs only once, after the component mounts
 
     const profileDivContainerStyle = {
-        backgroundColor: 'blue',
+        backgroundColor: '#212d33',        
         borderRadius: '6px',
         width: '100%',
         display: 'inline-Block',
@@ -38,6 +40,10 @@ export const ProfileDiv1 = () => {
 
     const profileImageStyle = {
         marginTop: '17px',
+        display: 'flex',
+        justifyContent: 'center', // Center horizontally
+        alignItems: 'center', // Center vertically
+        borderRadius: '50%' // Apply border radius to make it circular
     }
     
     const profileDescStyle = {
@@ -51,7 +57,7 @@ export const ProfileDiv1 = () => {
             </div>
 
             <figure style={profileImageStyle}>
-                {/* Your profile image */}
+                {photoURL && <img src={photoURL} alt="Profile" style={profileImageStyle} />} {/* Render the profile image if photoURL exists */}
             </figure>
 
             <div style={profileDescStyle}>

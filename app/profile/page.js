@@ -29,7 +29,7 @@ export default function Profile() {
     return (
         <Container>
             {user ? (
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ paddingTop: 4, paddingBottom: 4 }}>
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ paddingTop: 4, paddingBottom: 4,height: '100vh', }}>
                     <Grid item xs={12} sm={11} md={4} lg={3}>
                         <ProfileDiv1 />
                     </Grid>

@@ -21,7 +21,7 @@ import { UserAuth } from '../context/AuthContext';
 
 const pages = ['Home','feed','logIn','signUp'];
 const pagesauth = ['Home','feed','CFCalc', 'reports',]
-const settings = ['Profile', 'Settings', 'Logout','Testdb'];
+const settings = ['Profile', 'Settings', 'Logout',];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -236,14 +236,6 @@ function ResponsiveAppBar() {
                             return (
                               <MenuItem key={setting}>
                                 <Link href="/settings">
-                                  <Typography textAlign="center">{setting}</Typography>
-                                </Link>
-                              </MenuItem>
-                            );
-                          case 'Testdb':
-                            return (
-                              <MenuItem key={setting}>
-                                <Link href="/test">
                                   <Typography textAlign="center">{setting}</Typography>
                                 </Link>
                               </MenuItem>

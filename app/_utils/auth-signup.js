@@ -3,67 +3,58 @@ import { auth } from "./firebase";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState } from "react";
 import { useRouter } from 'next/navigation';  
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 export const AuthSignUp = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  //const { user } = UserAuth();
   
   const signUp = async (e) => {
     e.preventDefault();
     try {
-      await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) =>{
-        const user = userCredential.user;
-        window.alert('User signed up successfully!'); 
-        console.log(user);
-        router.push('/');
-      });
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+      window.alert('User signed up successfully!'); 
+      console.log(user);
+      router.push('/');
     } catch (error) {
-      window.alert(` Sign up failed: ${error.message}`); 
+      window.alert(`Sign up failed: ${error.message}`); 
       console.error("Sign up failed:", error.message);
     }
   };
 
-  const buttonStyle = {
-    padding: '10px 15px', 
-    cursor: 'pointer',
-    backgroundColor: '#212d33',
-    borderRadius: '8px',
-  };
-  
-  
-  
-  const inputStyle = {
-    color: 'black',
-    marginBottom: '10px',
-    padding: '8px',
-  };
-    
   return (
     <div style={{ textAlign: 'center', marginTop: '20vh' }}>
       <form>
+        <TextField
+          style={{ marginBottom: '10px' }}
+          label="Email"
+          variant="outlined"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+        <br />
+        <TextField 
+          style={{ marginBottom: '10px' }}
+          label="Password"
+          variant="outlined"
+          type="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
         <div>
-          <input
-            style={inputStyle}
-            placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <div>
-          <input
-            style={inputStyle}
-            placeholder="Password"
-            type="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-        </div>
-        <div>
-          <button onClick={signUp} style={buttonStyle}>Sign Up</button>
+          <Button
+            variant="contained"
+            onClick={signUp}
+            style={{ backgroundColor: '#212d33', color: 'white', width: '200px', marginTop: '10px' }}
+          >
+            Sign Up
+          </Button>
         </div>
       </form>
     </div>
   );
-  
 };
