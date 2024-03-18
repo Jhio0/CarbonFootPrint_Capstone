@@ -140,14 +140,14 @@ export default function ReportPage() {
             <div className="reportsContainer">
                 {/* Display the reports here */}
                 {/* fix this, pass props like the web dev 2 assignments */}
-                {/* {reports.map((report) => (
+                {reports.map((report) => (
                     <div key={report.id} className="p-3 bg-gray-800 rounded-md m-3">
                         <h2>{report.title}</h2>
                         <p>{report.text}</p>
                         <p>{report.date}</p>
                         <p>{report.location}</p>
                     </div>
-                ))} */}
+                ))}
             </div>
         </div>
     );
