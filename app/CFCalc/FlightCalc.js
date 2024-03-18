@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import React, { useState } from "react";
 import airportsData from "./Airports.json"; // Ensure this path is correct
 
@@ -69,25 +69,46 @@ const FlightsCalc = ({ flights = [], setFlights, onFlightEmissionsChange }) => {
 
   return (
     <div>
+      <span className="label-text">Origin</span>
       <input
+        className="input input-bordered w-full max-w-xs"
         type="text"
         value={origin}
         onChange={(e) => setOrigin(e.target.value.toUpperCase())}
-        placeholder="From (IATA Code)"
+        placeholder="Enter Origin IATA Code"
       />
+      <br />
+      <span className="label-text">Destination</span>
       <input
+        className="input input-bordered w-full max-w-xs"
         type="text"
         value={destination}
         onChange={(e) => setDestination(e.target.value.toUpperCase())}
-        placeholder="To (IATA Code)"
+        placeholder="Destination Origin IATA Code"
       />
       <br />
-      <button onClick={addFlight}>Add Flight</button>
+      <br />
+      <button className="btn btn-outline" onClick={addFlight}>
+        Add Flight
+      </button>
+      <br />
+
       {flights.map((flight, index) => (
-        <div key={index}>
-          Flight from {flight.origin} to {flight.destination}:{" "}
-          {flight.emissions.toFixed(2)} kg CO2
-          <button onClick={() => removeFlight(index)}>Remove</button>
+        <div key={index} className="card w-86 my-5 bg-base-100 shadow-xl p-3">
+          <h2 className="card-title font-medium">
+            Flight: {flight.origin} to {flight.destination}
+          </h2>
+          <p className="stat-desc text-base">
+            {flight.emissions.toFixed(2)} kg CO2
+          </p>
+          <div className="card-actions justify-end">
+            <button
+              className="btn btn-outline btn-error"
+              onClick={() => removeFlight(index)}
+            >
+              Remove
+            </button>
+          </div>
         </div>
       ))}
     </div>
