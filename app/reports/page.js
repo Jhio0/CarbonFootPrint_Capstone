@@ -11,11 +11,15 @@ export default function ReportPage() {
     const [date, setDate] = useState("");
     const [location, setLocation] = useState("");
     const [reports, setReports] = useState([]);
-    const reportsList = [...reports]
+    // const [reportsUtil, newReportsUtil] = useState(reports);
 
     const { user } = UserAuth(); // Get the user from the auth hook
 
     // Handler to process the report submission
+
+    const handleAddReport = (event) => {
+        newReportsUtil([...reports, event])
+    } 
 
     const loadReports = async () => {
         if (typeof window !== 'undefined') {
@@ -42,10 +46,9 @@ export default function ReportPage() {
         };
     
         try {
-            console.log("Submitting report", report);
-            console.log("User", user.uid);
             const reportId = await addReport(user.uid, report);
             console.log('Report added with ID:', reportId);
+            handleAddReport(report);
             setTitle("");
             setText("");
             setDate("");
@@ -63,14 +66,14 @@ export default function ReportPage() {
         else{
             return;
         }
-    }, [user]);
+    }, [user, reports]);
     
 
     return (
-        <div className="bg-black">
-            <h1>Submit a Report</h1>
+        <div className='bg-gray-900 w-full justify-center items-center p-20 m-auto flex flex-col'>
+            <h1 className="text-2xl">Submit a Report</h1>
             <form onSubmit={handleSubmit}>
-                <div>
+                <div className="p-2">
                     <label htmlFor="title">Title:</label>
                     <input
                         type="text"
@@ -80,7 +83,7 @@ export default function ReportPage() {
                         className="text-black"
                     />
                 </div>
-                <div>
+                <div className="p-2">
                     <label htmlFor="text">Text:</label>
                     <textarea
                         id="text"
@@ -89,7 +92,7 @@ export default function ReportPage() {
                         className="text-black"
                     />
                 </div>
-                <div>
+                <div className="p-2">
                     <label htmlFor="date">Date:</label>
                     <input
                         type="date"
@@ -99,7 +102,7 @@ export default function ReportPage() {
                         className="text-black"
                     />
                 </div>
-                <div>
+                <div className="p-2">
                     <label htmlFor="location">Location:</label>
                     <input
                         type="text"
@@ -115,7 +118,7 @@ export default function ReportPage() {
             <div className="reportsContainer">
                 {/* Display the reports here */}
                 {/* fix this, pass props like the web dev 2 assignments */}
-                {reportsList.map((report) => (
+                {reports.map((report) => (
                     <div key={report.id}>
                         <h2>{report.title}</h2>
                         <p>{report.text}</p>
