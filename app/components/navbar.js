@@ -20,8 +20,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 
-const pages = ['News','logIn','signUp'];
-const pagesauth = ['News','CFCalc', 'reports',]
+const pages = ['logIn','signUp'];
+const pagesauth = ['CFCalc', 'reports',]
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout',];
 
 function ResponsiveAppBar() {

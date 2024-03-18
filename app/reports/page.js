@@ -87,7 +87,7 @@ export default function ReportPage() {
                                     id="title"
                                     value={title}
                                     onChange={(e) => setTitle(e.target.value)}
-                                    className="text-white input border-2 border-gray-500"
+                                    className="text-white input"
                                 />
                             </div>
                         </div>
@@ -114,7 +114,7 @@ export default function ReportPage() {
                                     id="date"
                                     value={date}
                                     onChange={(e) => setDate(e.target.value)}
-                                    className="text-black"
+                                    className="text-white input"
                                 />
                             </div>
                         </div>
@@ -128,11 +128,11 @@ export default function ReportPage() {
                                     id="location"
                                     value={location}
                                     onChange={(e) => setLocation(e.target.value)}
-                                    className="text-black"
+                                    className="text-white input"
                                 />
                             </div>
                         </div>
-                        <button className="btn" onSubmit={addReport} type="submit">Submit Report</button>
+                        <button className="btn mt-2 ml-2" onSubmit={addReport} type="submit">Submit Report</button>
                     </form>
                 </div>
             </div>
