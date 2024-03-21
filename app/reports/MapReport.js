@@ -1,27 +1,28 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
+import Image from 'next/image';
 import React, { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
+import { countryCodeToName, countryCodes } from '../components/items/countryUtils';
 
-import DoughnutChart from './Chart/Doughnut.js';
-import BarChart from './Chart/BarChart.js';
+import 'leaflet-easybutton/src/easy-button'
+import 'leaflet-easybutton/src/easy-button.css'
 
-import { Chart, ArcElement, Tooltip, Legend } from 'chart.js';
-Chart.register(ArcElement, Tooltip, Legend);
+import "font-awesome/css/font-awesome.min.css";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
-import { countryCodeToName, countryCodes } from './items/countryUtils';
+import {useLocation} from './LocationContext';
 
-
-export default function Map() {
+export default function MapReport({ onLocationSelect }) {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
   const [geojsonFeaturesCountry, setGeojsonFeaturesCountry] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedData, setSelectedData] = useState([]);
-  const [ownerEmissions, setOwnerEmissions] = useState([]);
   const mapRef = useRef(null);
+  
+  const { setLocation } = useLocation();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -139,30 +140,6 @@ export default function Map() {
       // Find the closest asset to the clicked coordinates
       const selectedAsset = findClosestAsset(assets, longitude, latitude);
   
-      // Extracting CO2 and CH4 emissions for the year 2022
-      const emissions2022 = selectedAsset.Emissions?.find(emission => emission["2022"]);
-      const co2Emissions = emissions2022?.["2022"]?.find(emission => emission.co2)?.co2 || 'N/A';
-      const ch4Emissions = emissions2022?.["2022"]?.find(emission => emission.ch4)?.ch4 || 'N/A';
-  
-      // Update selectedData state with the fetched emissions data for the selected asset
-      setSelectedData([
-        { label: `${selectedAsset.name} - CO2 Emissions (Tons)`, value: co2Emissions },
-        { label: `${selectedAsset.name} - CH4 Emissions (Tons)`, value: ch4Emissions }
-      ]);
-  
-      // Update ownerEmissions state with the percentage emissions for each owner
-      if (selectedAsset.Owners && selectedAsset.Owners.length > 0) {
-        const totalEmissions = parseFloat(co2Emissions) + parseFloat(ch4Emissions);
-        const ownerPercentageEmissions = selectedAsset.Owners.map(owner => ({
-          label: `${owner.CompanyName} - Percentage Emissions`,
-          value: ((parseFloat(owner.PercentageOfInterestCompany) / 100) * totalEmissions).toFixed(2)
-        }));
-        setOwnerEmissions(ownerPercentageEmissions);
-      } else {
-        // If no owners, set ownerEmissions to an empty array
-        setOwnerEmissions([]);
-      }
-  
       // If the clicked feature is a country, fetch emissions data for that country and update selectedData
       if (feature.properties.countryCode && feature.properties.countryName) {
         const { countryCode, countryName } = feature.properties;
@@ -176,10 +153,7 @@ export default function Map() {
         const countryCo2Emissions = countryEmissionsData.length > 0 ? countryEmissionsData[0]?.emissions?.co2 || 'N/A' : 'N/A';
   
         // Update selectedData state with the fetched CO2 emissions data for the selected country
-        setSelectedData([
-          ...selectedData,
-          { label: `${countryName} - CO2 Emissions (Tons)`, value: countryCo2Emissions }
-        ]);
+        console.log(`${countryName} - CO2 Emissions (Tons):`, countryCo2Emissions);
       }
     } catch (error) {
       console.error('Error fetching emissions data:', error);
@@ -210,48 +184,140 @@ export default function Map() {
     const map = useMap();
     const provider = new OpenStreetMapProvider();
 
-  
-    // Create GeoSearchControl with green dot marker
-    const searchControl = new GeoSearchControl({
-      provider,
-      style: 'bar',
-      classNames: {
-        input: 'search-input',
-        container: 'search-container',
-      },
-      marker: {
-        // Use green dot as marker
-        icon: L.divIcon({
-          className: 'green-dot',
-          html: '<div style="background-color: green; width: 10px; height: 10px; border-radius: 50%;"></div>',
-          iconSize: [10, 10]
-        }),
-        draggable: false,
-      },
-      popupFormat: ({ query, result }) => result.label,
-      resultFormat: ({ result }) => result.label,
-      maxMarkers: 1,
-      retainZoomLevel: false,
-      animateZoom: true,
-      autoClose: false,
-      searchLabel: 'Enter address',
-      keepResult: false,
-      updateMap: true,
-    });
-  
-    // Add GeoSearchControl to the map
     useEffect(() => {
-      map.addControl(searchControl);
-      return () => map.removeControl(searchControl);
-    }, [map, searchControl]);
-  
+        const searchControl = new GeoSearchControl({
+            provider,
+            style: 'bar',
+            autoComplete: true,
+            autoCompleteDelay: 250,
+            showMarker: true,
+            showPopup: false,
+            marker: {
+                icon: customMarkerIcon, // Use custom marker icon
+                draggable: false,
+            },
+            popupFormat: ({ query, result }) => result.label,
+            resultFormat: ({ result }) => result.label,
+            maxMarkers: 1,
+            retainZoomLevel: false,
+            animateZoom: true,
+            autoClose: false,
+            searchLabel: 'Enter address',
+            keepResult: false,
+            updateMap: true,
+        });
+
+        // Add event listener to the search control to log coordinates
+        map.on('geosearch/showlocation', (event) => {
+            console.log(`Selected location: Latitude ${event.location.y}, Longitude ${event.location.x}`);
+            const { y: lat, x: lng } = event.location; // Extract lat and lng from event.location
+            const locationString = `Latitude: ${lat}, Longitude: ${lng}`;
+            setLocation(locationString);
+
+            // Check if lat and lng are valid numbers before creating the marker
+            if (!isNaN(lat) && !isNaN(lng)) {
+                // Remove any existing markers from the map
+                map.eachLayer((layer) => {
+                    if (layer instanceof L.Marker) {
+                        map.removeLayer(layer);
+                    }
+                });
+
+                // Create a marker with a popup containing the delete button
+                const marker = L.marker([lat, lng], { icon: customMarkerIcon, draggable: false }).addTo(map);
+                const popupContent = document.createElement('div');
+                popupContent.innerHTML = `
+                    <p>Latitude: ${lat}</p>
+                    <p>Longitude: ${lng}</p>
+                    <button class="delete-button">Delete</button>
+                `;
+                marker.bindPopup(popupContent).openPopup();
+
+                // Attach event listener to the delete button
+                popupContent.querySelector('.delete-button').addEventListener('click', () => {
+                    map.closePopup(); // Close the popup
+                    map.removeLayer(marker); // Remove the marker from the map
+                });
+            } else {
+                console.error('Invalid coordinates:', event.location);
+            }
+        });
+
+        // Add GeoSearchControl to the map
+        map.addControl(searchControl);
+
+        return () => {
+            // Remove GeoSearchControl and event listener when component unmounts
+            map.removeControl(searchControl);
+            map.off('geosearch/showlocation');
+        };
+    }, [map, provider]);
+
     return null;
   };
+
+  // Function to create a marker on map click
+  const customMarkerIcon = L.divIcon({
+    html: '<i class="fa fa-map-marker fa-lg"></i>', // Use Font Awesome icon // Optional CSS class for styling
+    iconSize: [20, 20],
+    className: 'myDivIcon'
+  });
+
+  
+  
+  const createMarkerOnClick = (evt) => {
+    console.log('Marker created at:', evt.latlng.lat, evt.latlng.lng);
+    const { lat, lng } = evt.latlng;
+    const locationString = `Latitude: ${lat}, Longitude: ${lng}`;  // Format the location as a string
+    setLocation(locationString);
+  
+    // Create a marker with a popup containing the delete button
+    const marker = L.marker([lat, lng], { icon: customMarkerIcon, draggable: false }).addTo(mapRef.current);
+    const popupContent = document.createElement('div');
+    popupContent.innerHTML = `
+      <p>Latitude: ${lat}</p>
+      <p>Longitude: ${lng}</p>
+      <button class="delete-button">Delete</button>
+    `;
+    marker.bindPopup(popupContent).openPopup();
+  
+    // Attach event listener to the delete button
+    popupContent.querySelector('.delete-button').addEventListener('click', () => {
+      mapRef.current.closePopup(); // Close the popup
+      mapRef.current.removeLayer(marker); // Remove the marker from the map
+    });
+  };
+
+  // Toggle button configuration
+  const toggle = L.easyButton({
+    states: [{
+      stateName: 'enable-markers',
+      icon: "fa-map-marker",
+      title: 'Enable markers on click',
+      onClick: function(control) {
+        control.state('disable-markers');
+        mapRef.current.on('click', createMarkerOnClick);
+      }
+    }, {
+      stateName: 'disable-markers',
+      icon: "<i class='fa fa-map-marker' style='color: red;'></i>",
+      title: 'Disable markers on click',
+      onClick: function(control) {
+        control.state('enable-markers');
+        mapRef.current.off('click', createMarkerOnClick);
+      }
+    }]
+  });
+
+  useEffect(() => {
+    if (mapRef.current) {
+      toggle.addTo(mapRef.current);
+    }
+  }, [mapRef.current]); // Add the toggle button to the map
 
   
   
   return (
-    <div>
       <div >
         {loading ? (
           <div className="spinner"></div>
@@ -308,28 +374,12 @@ export default function Map() {
                 layer.on('click', () => handleFeatureClick(feature));
               }}
             />
-            {/* Overlaying content */}
-              <div className="flex justify-center" style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 1000 }}> 
-                <div className='flex flex-col'>
-                  <div className='min-h-3/4 h-auto w-full bg-gray-400 flex justify-center items-center flex-wrap rounded-md
-                      backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100'>
-                      <div className='m-10 w-100%'>
-                        <DoughnutChart selectedData={selectedData} />
-                      </div>
-                  </div>
-                  <div className='min-h-3/4 h-auto w-full bg-gray-400 flex justify-center items-center flex-wrap rounded-md
-                      backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100'>
-                      <div className='m-10 w-100%'>
-                        <BarChart ownerEmissions={ownerEmissions} />
-                      </div>
-                  </div>
-                </div>
-              </div>
             <SearchField/>
           </MapContainer>
         )}
       </div>
-    </div>
 
   );
 }
+
+//import 'leaflet-easybutton/src/easy-button'
