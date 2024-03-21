@@ -2,6 +2,8 @@
 import { useState } from 'react';
 import { UserAuth } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';  
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 export const AuthLogin = () => {
   const { onLogin, googleSignIn } = UserAuth();  
@@ -13,7 +15,6 @@ export const AuthLogin = () => {
     e.preventDefault();
     try {
       await onLogin(email, password);
-      router.push('/');
     } catch (error) {
       console.error('Login failed', error);
       window.alert(`Login failed: ${error.message}`);
@@ -29,48 +30,44 @@ export const AuthLogin = () => {
     }
   };
 
-  const inputStyle = {
-    color: 'black',
-    padding: '8px',
-    marginBottom: '10px',
-    width: '200px', 
-  };
-
   return (
     <div style={{ textAlign: 'center', marginTop: '20vh' }}>
       <form onSubmit={handleSubmit}>
-        <input
-          style={inputStyle}
-          placeholder="Email"
+        <TextField
+          style={{ marginBottom: '10px' }}
+          label="Email"
+          variant="outlined"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <br />
-        <input
-          style={inputStyle}
-          placeholder="Password"
+        <TextField
+          style={{ marginBottom: '10px' }}
+          label="Password"
+          variant="outlined"
           type="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <br />
-        <div style={{margin:'20px'}}>
-          <button
+        <div>
+          <Button
+            variant="contained"
             type="submit"
-            style={{ padding: '10px 15px', cursor: 'pointer', backgroundColor: '#212d33',  borderRadius: '8px', marginBottom: '10px',}}
+            style={{ backgroundColor: '#212d33', color: 'white', width: '200px', marginTop: '10px'}}
           >
             Login
-          </button>
+          </Button>
         </div>
       </form>
-      <button
-            type="submit"
-            style={{ padding: '10px 15px', cursor: 'pointer', backgroundColor: '#212d33',  borderRadius: '8px',}}
-            onClick={handleGoogleSubmit}
+      <Button
+        variant="contained"
+        onClick={handleGoogleSubmit}
+        style={{ backgroundColor: '#212d33', color: 'white', width: '200px', marginTop: '10px' }}
       >
         Login With Google
-      </button>
+      </Button>
     </div>
   );
 };
+

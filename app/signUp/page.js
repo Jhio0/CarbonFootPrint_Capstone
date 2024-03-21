@@ -1,14 +1,19 @@
 'use client';
 import React from 'react';
-import { AuthSignUp } from './/auth-signup';
-
+import { AuthSignUp } from '../_utils/auth-signup';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Typography from '@mui/material/Typography';
 export default function SignUp(){
+
+    const backgroundStyle = {
+        background: `url('signupbi.gif')`,  
+        backgroundSize: 'cover',
+    }
 
     const gridContainerStyle = {
         display: 'grid',
         height: '100vh',
-        background: `url('signupbi.gif')`,  
-        backgroundSize: 'cover',
         gridTemplateColumns: 'repeat(5, 1fr)',
         gridTemplateRows: 'repeat(6, 1fr)',
         padding: '10px',
@@ -35,16 +40,31 @@ export default function SignUp(){
         letterSpacing: '4px',
 
     }
+    const SignUpDisplayH1 = {
+        padding: '5px',
+        marginTop: '10vh'
+    };
+
+    const SignUpDisplayH2 = {
+        padding: '5px',
+    };
+
     return (
-    <div style={gridContainerStyle}>
-        <div style={SignUpContainerStyle}>
-            <div style={SignUpInputStyle}>
-                <AuthSignUp/>
-            </div>
-            <div style={SignUpDisplayStyle}>
-            </div>
+        <div style={backgroundStyle}>
+
+            <Grid style={gridContainerStyle}>
+                <Grid style={SignUpContainerStyle}>
+                    <div style={SignUpInputStyle}>
+                        <AuthSignUp/>
+                    </div>
+                    <div style={SignUpDisplayStyle}>
+                        <Typography variant="h3" style={SignUpDisplayH1}>Sign up now</Typography>
+                        <br/>
+                        <Typography variant="h5" style={SignUpDisplayH2}>Help save the world by minimizing your carbon footprint</Typography>
+                    </div>
+                </Grid>
+            </Grid>
+
         </div>
-        
-    </div>
     );
 }
