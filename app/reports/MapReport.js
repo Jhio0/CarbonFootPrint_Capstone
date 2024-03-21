@@ -322,7 +322,7 @@ export default function MapReport({ onLocationSelect }) {
         {loading ? (
           <div className="spinner"></div>
         ) : (
-          <MapContainer center={[38, -97]} zoom={4} style={{ width: '100%', height: '475px' }} ref={mapRef} worldCopyJump={true}  
+          <MapContainer center={[38, -97]} zoom={4}  ref={mapRef} worldCopyJump={true}  
           maxBounds={[
             [null, -180], // No restriction on the left
             [null, 180],  // No restriction on the right

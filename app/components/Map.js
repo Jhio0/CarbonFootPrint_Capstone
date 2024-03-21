@@ -313,13 +313,13 @@ export default function Map() {
                 <div className='flex flex-col'>
                   <div className='min-h-3/4 h-auto w-full bg-gray-400 flex justify-center items-center flex-wrap rounded-md
                       backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100'>
-                      <div className='mr-[150px] ml-10 bg-grey rounded-lg shadow-lg p-4 w-100%'>
-                      <DoughnutChart selectedData={selectedData} />
-                  </div>
+                      <div className='m-10 w-100%'>
+                        <DoughnutChart selectedData={selectedData} />
+                      </div>
                   </div>
                   <div className='min-h-3/4 h-auto w-full bg-gray-400 flex justify-center items-center flex-wrap rounded-md
                       backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100'>
-                      <div className='mr-[150px] ml-10 bg-grey rounded-lg shadow-lg p-4 w-100%'>
+                      <div className='m-10 w-100%'>
                         <BarChart ownerEmissions={ownerEmissions} />
                       </div>
                   </div>
