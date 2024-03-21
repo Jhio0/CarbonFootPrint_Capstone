@@ -30,7 +30,7 @@ export const ProfileDiv1 = () => {
         borderRadius: '6px',
         width: '100%',
         display: 'inline-Block',
-        height: '100%'
+        height: '100vh'
     };
 
     const nameStyle = {

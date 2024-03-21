@@ -6,6 +6,7 @@ import { ProfileDiv1 } from './profilediv';
 import { ProfileDiv2 } from './profilediv2';
 import { UserAuth } from '../context/AuthContext'; // Assuming you have an AuthContext
 import { useRouter } from 'next/navigation';  
+import { useState, useEffect } from "react";
 
 
 export default function Profile() {
@@ -29,7 +30,7 @@ export default function Profile() {
     return (
         <Container>
             {user ? (
-                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ paddingTop: 4, paddingBottom: 4,height: '100vh', }}>
+                <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ paddingTop: 4, paddingBottom: 4,height: '100%', }}>
                     <Grid item xs={12} sm={11} md={4} lg={3}>
                         <ProfileDiv1 />
                     </Grid>
@@ -39,7 +40,6 @@ export default function Profile() {
                 </Grid>
             ) : (
                 <div>
-                    {/* Render something else if the user is not authenticated */}
                     <p>Please sign in to view your profile.</p>
                 </div>
             )}

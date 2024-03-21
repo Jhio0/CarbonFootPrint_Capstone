@@ -4,7 +4,13 @@ import { collection, getDocs, addDoc, query } from "firebase/firestore";
 export const addReport = async(userId, report) => {
     try{
         const itemCol = collection(db, `users/${userId}/reports`);
-        const docRef = await addDoc(itemCol, report);
+        const docRef = await addDoc(itemCol, {
+            title: report.title,
+            text: report.text,
+            date: report.date,
+            location: report.location,
+            private: report.private,
+        });
         return docRef.id;
     }
     catch(error){

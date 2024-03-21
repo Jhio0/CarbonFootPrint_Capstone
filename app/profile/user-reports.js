@@ -5,15 +5,18 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions } from '@mui/material';
 import { useEffect, useState } from 'react';
-import { getReports } from '../_services/reports-service';
+import { getReports } from '../reports/_services/reports-service';
+import { UserAuth  } from "../context/AuthContext.js";
 
 export const UserReports = () => {
   const [reports, setReports] = useState([]);
+  const { user } = UserAuth(); // Get the user from the auth hook
 
   const fetchReports = async () => {
     try {
-      const reportsData = await getReports();
+      const reportsData = await getReports(user.uid);
       setReports(reportsData);
+      console.log("Reports", reports);
     } catch (error) {
       console.error('Error fetching reports:', error);
     }
@@ -21,10 +24,10 @@ export const UserReports = () => {
 
   useEffect(() => {
     fetchReports();
-  }, []);
+  }, [user]);
 
 
-  if (!reports || reports.length === 0) {
+  if (!reports) {
     return null;
   }
 
@@ -37,7 +40,7 @@ export const UserReports = () => {
             <CardMedia
               component="img"
               height="140"
-              image={report.image}
+              src="/reportsdefault.jpg" 
               alt="Report Image"
             />
             <CardContent>
@@ -49,6 +52,9 @@ export const UserReports = () => {
               </Typography>
               <Typography variant="body2" component="div">
                 {report.location}
+              </Typography>
+              <Typography variant="body2" component="div">
+                {report.text}
               </Typography>
               <Typography variant="body2" color="text.secondary">
                 {report.description}
