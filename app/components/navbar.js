@@ -415,7 +415,7 @@ function ResponsiveAppBar() {
                   >
                     {settingsauth.map((setting) => {
                       switch (setting) {
-                        case 'Log out':
+                        case 'Logout':
                           return (
                             <MenuItem key={setting} onClick={handleSignOut}>
                               <Typography textAlign="center">{setting}</Typography>

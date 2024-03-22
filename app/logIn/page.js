@@ -5,13 +5,13 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { UserAuth } from '../context/AuthContext';
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/router';
 
 export default function LogIn() {
     const { user } = UserAuth();
     const [loading, setLoading] = useState(true);
-  
-    const router = useRouter();
-  
+    
     useEffect(() => {
       const checkAuthentication = async () => {
         await new Promise((resolve) => setTimeout(resolve, 50));
@@ -20,16 +20,14 @@ export default function LogIn() {
       checkAuthentication();
     }, [user]);
   
+
+    if (loading) {
+        // Render loading indicator or placeholder content while authentication is in progress
+        return <div>Loading...</div>;
+    }
+
+    
     console.log('User:', user);
-  
-    const handleSignOut = async () => {
-      try {
-        await logOut();
-        router.push("/");
-      } catch (error) {
-        console.error('Logout failed', error);
-      }
-    };
 
     const backgroundStyle = {
         background: `url('loginbi.gif')`,  

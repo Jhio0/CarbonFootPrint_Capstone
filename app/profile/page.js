@@ -6,8 +6,6 @@ import { ProfileDiv1 } from './profilediv';
 import { ProfileDiv2 } from './profilediv2';
 import { UserAuth } from '../context/AuthContext'; // Assuming you have an AuthContext
 import { useRouter } from 'next/navigation';  
-import { useState, useEffect } from "react";
-
 
 export default function Profile() {
     const { user } = UserAuth();
