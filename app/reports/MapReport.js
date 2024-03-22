@@ -5,14 +5,16 @@ import React, { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
-import 'leaflet-geosearch/dist/geosearch.css';
+//import 'leaflet-geosearch/dist/geosearch.css';
 import { countryCodeToName, countryCodes } from '../components/items/countryUtils';
 
-import 'leaflet-easybutton/src/easy-button'
-import 'leaflet-easybutton/src/easy-button.css'
-
-import "font-awesome/css/font-awesome.min.css";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+//import 'leaflet-easybutton/src/easy-button'
+//import 'leaflet-easybutton/src/easy-button.css'
+import 'leaflet-geosearch'
+import 'leaflet-easybutton'
+import '@fortawesome/fontawesome-free'
+//import "font-awesome/css/font-awesome.min.css";
+//import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {useLocation} from './LocationContext';
 

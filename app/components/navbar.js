@@ -19,8 +19,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 
-const pages = ['Home','feed',];
-const pagesauth = ['Home','feed','CFCalc', 'reports',]
+const pages = ['Home','Feed',];
+const pagesauth = ['Home','Feed','CFCalc', 'Reports',]
 const settings = ['Log In', 'Sign Up'];
 const settingsauth = ['Profile', 'Settings', 'Logout',];
 function ResponsiveAppBar() {
