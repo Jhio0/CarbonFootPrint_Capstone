@@ -3,6 +3,8 @@ import { auth } from "../_utils/firebase.js";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/navigation';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 export const AuthSignUp = () => {
   const [email, setEmail] = useState("");
@@ -21,19 +23,6 @@ export const AuthSignUp = () => {
     }
   };
 
-  const buttonStyle = {
-    padding: '10px 15px', 
-    cursor: 'pointer',
-    backgroundColor: '#212d33',
-    borderRadius: '8px',
-  };
-  
-  const inputStyle = {
-    color: 'black',
-    marginBottom: '10px',
-    padding: '8px',
-  };
-
   useEffect(() => {
     console.log(router); // Log the router object to inspect its properties
   }, [router]);
@@ -42,23 +31,32 @@ export const AuthSignUp = () => {
     <div style={{ textAlign: 'center', marginTop: '20vh' }}>
       <form>
         <div>
-          <input
-            style={inputStyle}
-            placeholder="Email"
-            value={email}
+          <TextField
+          style={{ marginBottom: '10px' }}
+          label="Email"
+          variant="outlined"
+          type="email"
+          value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
         <div>
-          <input
-            style={inputStyle}
-            placeholder="Password"
-            type="password"
+          <TextField
+          style={{ marginBottom: '10px' }}
+          label="Password"
+          variant="outlined"
+          type="password"
+          value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
         </div>
         <div>
-          <button onClick={signUp} style={buttonStyle}>Sign Up</button>
+          <Button variant="contained"
+          onClick={signUp}
+          style={{ backgroundColor: '#212d33', color: 'white', width: '200px', marginTop: '10px' }}
+          >
+            Sign Up
+          </Button>
         </div>
       </form>
     </div>

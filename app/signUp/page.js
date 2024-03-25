@@ -1,11 +1,28 @@
 'use client';
 import React from 'react';
-import { AuthSignUp } from '../_utils/auth-signup';
+import { AuthSignUp } from './auth-signup';
+import { useState, useEffect } from "react";
+import { UserAuth } from '../context/AuthContext';
+
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 export default function SignUp(){
-
+    const { user } = UserAuth();
+    const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        const checkAuthentication = async () => {
+          await new Promise((resolve) => setTimeout(resolve, 50));
+          setLoading(false);
+        };
+        checkAuthentication();
+      }, [user]);
+    
+  
+      if (loading) {
+          // Render loading indicator or placeholder content while authentication is in progress
+          return <div>Loading...</div>;
+      }
     const backgroundStyle = {
         background: `url('signupbi.gif')`,  
         backgroundSize: 'cover',
@@ -49,9 +66,15 @@ export default function SignUp(){
         padding: '5px',
     };
 
+
+
     return (
         <div style={backgroundStyle}>
-
+            {user ? (
+                <div>
+                    <p>Already Signed in</p>
+                </div>
+            ) : (
             <Grid style={gridContainerStyle}>
                 <Grid style={SignUpContainerStyle}>
                     <div style={SignUpInputStyle}>
@@ -64,6 +87,7 @@ export default function SignUp(){
                     </div>
                 </Grid>
             </Grid>
+        )}
 
         </div>
     );

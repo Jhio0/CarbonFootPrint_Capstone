@@ -63,8 +63,6 @@ export const ProfileDiv1 = () => {
             <div style={profileDescStyle}>
                 <Typography variant="body1">Profile Desc</Typography>
                 <br/>
-                <Typography variant="body1">Insert Emission graph here</Typography>
-                <br/>
                 <button>Edit</button>
             </div>
         </div>
