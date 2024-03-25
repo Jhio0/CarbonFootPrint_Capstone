@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext.js";
 import { useLocation } from './LocationContext';
-import { addReport, getReports } from "./_services/reports-service.js";
+import { addReport, getReports, addPublicReport } from "./_services/reports-service.js";
 import { FaLocationDot } from "react-icons/fa6";
 import { CiCalendarDate } from "react-icons/ci";
 import { IoIosCheckmark } from "react-icons/io";
@@ -12,6 +12,7 @@ export default function ReportForm() {
     const [text, setText] = useState("");
     const [date, setDate] = useState("");
     const { location, setLocation } = useLocation(); // Destructure location and setLocation from useLocation() hook
+    const [isPrivate, setPrivate] = useState(false);
     const [reports, setReports] = useState([]);
 
     const { user } = UserAuth();
@@ -38,26 +39,39 @@ export default function ReportForm() {
             text: text,
             date: date,
             location: location, // Use location directly
+            private: isPrivate,
         };
     
         try {
             console.log("Submitting report", report);
             console.log("User", user.uid);
-            const reportId = await addReport(user.uid, report);
-            console.log('Report added with ID:', reportId);
+            
+            if (isPrivate == true) {
+                // If the report is private, call addReport
+                const reportId = await addReport(user.uid, report);
+                console.log('Private report added with ID:', reportId);
+            } else {
+                // If the report is not private, call addPublicReport
+                const reportId = await addPublicReport(user.uid, report);
+                console.log('Public report added with ID:', reportId);
+            }
+    
+            // Reset form fields after submission
             setTitle("");
             setText("");
             setDate("");
             setLocation(""); // Clear the location after submission
+            setPrivate(false); // Reset the isPrivate state
         } catch (error) {
             console.error('Error submitting report:', error);
             // Handle the error appropriately in your UI
         }
     };
+    ;
 
     useEffect(() => {
         loadReports();
-    }, [user]);
+    }, [user, reports]);
 
     return (
     <div className="bg-white dark:bg-gray-900">
@@ -91,6 +105,12 @@ export default function ReportForm() {
                     <input type="text" id="location" value={location} onChange={(e) => setLocation(e.target.value)}  className="flex-1 block w-full sm:text-sm rounded-none border border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"/>
                 </div>
             </div>
+            <div className="mb-5">
+                <label htmlFor="location" className="text-lg flex justify-between items-end"><span>Private</span></label>
+                <div className="mt-1 flex shadow-md">
+                    <input type="checkbox" id="location" value={isPrivate} onChange={(e) => setPrivate(e.target.value)}  className="flex-1 block w-full sm:text-sm rounded-none border border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"/>
+                </div>
+            </div>
             <div>
                 <button type="submit" onSubmit={addReport} className="font-medium shadow-md rounded-none p-2 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 border border-gray-900 dark:border-gray-100 bg-gray-800 dark:bg-gray-200 text-gray-200 dark:text-gray-800 hover:bg-gray-900 dark:hover:bg-gray-100">Submit Report</button>
             </div>
@@ -102,6 +122,7 @@ export default function ReportForm() {
                             <p>{report.text}</p>
                             <p>{report.date}</p>
                             <p>{report.location}</p>
+                            <p>{report.isPrivate}</p>
                         </div>
                     ))}
         </div>
