@@ -5,6 +5,8 @@ import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import L from 'leaflet'; 
 import 'leaflet-routing-machine';
+import 'leaflet-geosearch/dist/geosearch.css';
+
 import 'leaflet/dist/leaflet.css';
 import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
 import AirportData from './Airports.json'; // Import Airport data
@@ -46,7 +48,7 @@ const MapRouting = () => {
     <div>
       <MapContainer center={[20, 0]} zoom={6}>
         <TileLayer 
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          attribution='&copy; <a href=7"https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=97162abb-de48-4413-a227-44ce4cfb0cd3`}
         />
         <div className="flex items-end" style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 1000 }}>
@@ -127,7 +129,17 @@ const Routing = ({ sourceAirport, destinationAirport }) => {
       ];
 
       L.Routing.control({
-        waypoints,
+        waypoints: waypoints,
+        routeWhileDragging: true,
+        show: false,
+        createMarker: function(i, waypoint, n) {
+          return L.circleMarker(waypoint.latLng, {
+            radius: 5,
+            color: 'purple',
+            fillColor: '#800080',
+            fillOpacity: 0.7
+          });
+        }
       }).addTo(map);
     }
   }, [sourceAirport, destinationAirport, map]);
