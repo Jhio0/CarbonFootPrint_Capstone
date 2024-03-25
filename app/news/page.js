@@ -5,6 +5,9 @@ import { useEffect } from "react";
 import { Link } from "react-router";
 import newsBar from "./components/newsBar";
 
+// use this api to get the news
+// https://rapidapi.com/cvera08/api/climate-crisis
+
 export default function NewsItem({ news }) {
     const url = 'https://climate-news-live.p.rapidapi.com/news/guardian';
     const options = {
