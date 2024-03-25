@@ -11,13 +11,7 @@ const CarbonEmissionsLeaderboard = () => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          "https://api.climatetrace.org/v4/country/emissions?&countries=all",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
+          "https://api.climatetrace.org/v4/country/emissions?&countries=all"
         );
 
         if (!response.ok) {
@@ -41,14 +35,15 @@ const CarbonEmissionsLeaderboard = () => {
         {isCollapsed ? "Show Leaderboard" : "Hide Leaderboard"}
       </button>
       {!isCollapsed && (
-        <div className="max-h-96 w-64 overflow-y-scroll bg-white shadow-lg rounded-lg p-4">
+        <div className="max-h-96 w-64 overflow-y-scroll bg-white shadow-lg rounded-lg p-4 text-black">
           <h2 className="text-lg font-semibold mb-2 text-black">
             Carbon Emissions Leaderboard
           </h2>
           <ul>
             {countriesEmissions.map((country, index) => (
-              <li key={index} className="py-1">
-                {country.name}: {country.emissions} MtCO2
+              <li key={index}>
+                Rank{country.rank} {country.country}: {country.emissions[0]}
+                MtCO2
               </li>
             ))}
           </ul>
