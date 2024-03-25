@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { UserAuth  } from "../context/AuthContext.js";
+import { UserAuth } from "../context/AuthContext.js";
 
 
 export default function AccountPage() {

@@ -1,15 +1,18 @@
 import { db } from "../../_utils/firebase";
 import { collection, getDocs, query, addDoc, setDoc, doc } from "firebase/firestore";
 
-export const editAccount = async(userId, account) => {
-    try{
-        const itemCol = collection(db, `users/${userId}/accounts`);
-        const docRef = await addDoc(itemCol, account);
-        return docRef.id;
-    }
-    catch(error){
-        console.log(error);
-    }
+export const getAccount = async (userId) => {
+  try {
+    // Use the userId to reference the correct document in the accounts collection
+    const docRef = doc(db, "accounts", userId);
+    // Get the document data
+    const docSnap = await getDoc(docRef);
+    // Return the document data
+    return docSnap.data();
+  } catch (error) {
+    console.error(error);
+    throw error; // It's usually better to throw the error to let the caller handle it
+  }
 }
 
 export const addAccount = async (userId, account) => {

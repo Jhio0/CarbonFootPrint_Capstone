@@ -11,11 +11,15 @@ export default function ReportPage() {
     const [date, setDate] = useState("");
     const [location, setLocation] = useState("");
     const [reports, setReports] = useState([]);
-    const reportsList = [...reports]
+    // const [reportsUtil, newReportsUtil] = useState(reports);
 
     const { user } = UserAuth(); // Get the user from the auth hook
 
     // Handler to process the report submission
+
+    const handleAddReport = (event) => {
+        newReportsUtil([...reports, event])
+    } 
 
     const loadReports = async () => {
         if (typeof window !== 'undefined') {
@@ -42,10 +46,9 @@ export default function ReportPage() {
         };
     
         try {
-            console.log("Submitting report", report);
-            console.log("User", user.uid);
             const reportId = await addReport(user.uid, report);
             console.log('Report added with ID:', reportId);
+            handleAddReport(report);
             setTitle("");
             setText("");
             setDate("");
@@ -63,60 +66,82 @@ export default function ReportPage() {
         else{
             return;
         }
-    }, [user]);
+    }, [user, reports]);
     
 
     return (
-        <div className="bg-black">
-            <h1>Submit a Report</h1>
-            <form onSubmit={handleSubmit}>
+        <div className='bg-gray-900 w-full items-center p-20 m-auto flex flex-row'>
+            <div className="bg-gray-800 py-4 px-4 rounded-md">
                 <div>
-                    <label htmlFor="title">Title:</label>
-                    <input
-                        type="text"
-                        id="title"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        className="text-black"
-                    />
+                    <h1 className="text-2xl">Submit a Report</h1>
                 </div>
                 <div>
-                    <label htmlFor="text">Text:</label>
-                    <textarea
-                        id="text"
-                        value={text}
-                        onChange={(e) => setText(e.target.value)}
-                        className="text-black"
-                    />
+                    <form onSubmit={handleSubmit}>
+                        <div className="p-2 ">
+                            <div>
+                                <label htmlFor="title">Title:</label>
+                            </div>
+                            <div>
+                                <input
+                                    type="text"
+                                    id="title"
+                                    value={title}
+                                    onChange={(e) => setTitle(e.target.value)}
+                                    className="text-white input"
+                                />
+                            </div>
+                        </div>
+                        <div className="p-2">
+                            <div>
+                                <label htmlFor="text">Text:</label>
+                            </div>
+                            <div>
+                                <textarea
+                                    id="text"
+                                    value={text}
+                                    onChange={(e) => setText(e.target.value)}
+                                    className="text-white textarea"
+                                />
+                            </div>
+                        </div>
+                        <div className="p-2">
+                            <div>
+                                <label htmlFor="date">Date:</label>
+                            </div>
+                            <div>
+                                <input
+                                    type="date"
+                                    id="date"
+                                    value={date}
+                                    onChange={(e) => setDate(e.target.value)}
+                                    className="text-white input"
+                                />
+                            </div>
+                        </div>
+                        <div className="p-2">
+                            <div>
+                                <label htmlFor="location">Location:</label>
+                            </div>
+                            <div>
+                                <input
+                                    type="text"
+                                    id="location"
+                                    value={location}
+                                    onChange={(e) => setLocation(e.target.value)}
+                                    className="text-white input"
+                                />
+                            </div>
+                        </div>
+                        <button className="btn mt-2 ml-2" onSubmit={addReport} type="submit">Submit Report</button>
+                    </form>
                 </div>
-                <div>
-                    <label htmlFor="date">Date:</label>
-                    <input
-                        type="date"
-                        id="date"
-                        value={date}
-                        onChange={(e) => setDate(e.target.value)}
-                        className="text-black"
-                    />
-                </div>
-                <div>
-                    <label htmlFor="location">Location:</label>
-                    <input
-                        type="text"
-                        id="location"
-                        value={location}
-                        onChange={(e) => setLocation(e.target.value)}
-                        className="text-black"
-                    />
-                </div>
-                <button onSubmit={addReport} type="submit">Submit Report</button>
-            </form>
+            </div>
 
             <div className="reportsContainer">
                 {/* Display the reports here */}
                 {/* fix this, pass props like the web dev 2 assignments */}
-                {reportsList.map((report) => (
-                    <div key={report.id}>
+                {reports.map((report) => (
+                    <div key={report.id} className="p-3 bg-gray-800 rounded-md m-3">
                         <h2>{report.title}</h2>
                         <p>{report.text}</p>
                         <p>{report.date}</p>

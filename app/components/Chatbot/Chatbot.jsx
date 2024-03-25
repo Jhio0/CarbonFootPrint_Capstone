@@ -11,7 +11,7 @@ const openai = new OpenAI({
 
 // shoutout BugNinza on youtube for the tutorial: https://www.youtube.com/watch?v=G4VrgJ3Mzj4
 
-export default function Chatbot() {
+export default function Chatbot( {toggleChatVisibility} ) {
   const [userInput, setUserInput] = useState("");
   const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -47,43 +47,40 @@ export default function Chatbot() {
 
   }
 
-
   return (
-    <div className="chatContainer border-2 border-white bg-black flex flex-col w-1/5 p-4 rounded-xl ">
-      <div className="headerContainer">
-        <h1 className="text-2xl pb-2">Sprout: Your Environmental AI Buddy!</h1>
-      </div>
-      <div className="chatHistoryContainer" style={{height:400}}>
-        {chatHistory.map((chat, index) => (
-          <div key={index} className={`${
-            chat.role === "user" ? "text-left" : "text-right"
-          } mb-2`}>
-            <div className={`rounded-m ${chat.role === "user" ? "bg-blue-300 text-blue-800" : "bg-green-300 text-green-800" }`}>
-              {chat.role === "user" ? "You: " : "Seedless: "}
-            </div>
-            <div className={`${chat.role === "user" ? "bg-blue-300 text-blue-800" : "bg-green-300 text-green-800" }`}>
-              {chat.content}
-            </div>
-          </div>
-        ))}
-      </div>
-      <div className="flex flex-row"> 
-        <div>
-          <input
-            type="text"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-          />
-        </div>
-        {isLoading ? (
-          <div className="animate-spin">Loading...</div>
-        ) : (
-          <div>
-            <button onClick={handleUserInput}>Send</button>
-          </div> 
-        )}
-      </div>
+    <div className="border-2 border-white bg-black flex flex-col w-80 p-4 rounded-xl overflow-hidden">
+    <div className="flex justify-between items-center mb-4">
+      <h1 className="text-xl text-white">Sprout: Your Environmental AI Buddy!</h1>
+      <button onClick={toggleChatVisibility} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+        X
+      </button>
     </div>
+    {/* Chat history and input fields */}
+    <div className="chatHistoryContainer h-96 overflow-auto mb-4">
+      {chatHistory.map((chat, index) => (
+        <div key={index} className={`flex flex-col mb-2 ${chat.role === "user" ? "items-end" : "items-start"}`}>
+          <div className={`text-sm ${chat.role === "user" ? "bg-blue-300 text-blue-800" : "bg-green-300 text-green-800"} rounded-md px-2 py-1`}>
+            {chat.content}
+          </div>
+        </div>
+      ))}
+    </div>
+    <div className="flex">
+      <input
+        type="text"
+        value={userInput}
+        onChange={(e) => setUserInput(e.target.value)}
+        className="grow rounded-l-md p-2"
+      />
+      {isLoading ? (
+        <button className="bg-gray-300 text-gray-800 rounded-r-md px-4">...</button>
+      ) : (
+        <button onClick={handleUserInput} className="bg-blue-500 hover:bg-blue-700 text-white rounded-r-md px-4">
+          Send
+        </button>
+      )}
+    </div>
+  </div>
   );
 
 }
