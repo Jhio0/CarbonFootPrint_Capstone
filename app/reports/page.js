@@ -5,7 +5,7 @@ import { UserAuth } from '../context/AuthContext'; // Assuming you have an AuthC
 import MapReport from "./MapReport.js";
 import ReportPage from "./reportsList.js";
 import ReportForm from './reportForm.js';
-
+import { LogInError } from '../_utils/authError/authLoginError';
 export default function Page() {
   const { user } = UserAuth();
   const [loading, setLoading] = useState(true);
@@ -37,7 +37,7 @@ export default function Page() {
           </div>
         ) : (
           <div>
-            <p>Please sign in to view your profile.</p>
+            <LogInError/>
           </div>
         )}
       </LocationProvider>

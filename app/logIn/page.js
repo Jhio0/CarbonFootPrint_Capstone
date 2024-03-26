@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import { UserAuth } from '../context/AuthContext';
 import { useState, useEffect } from "react";
 import { useRouter } from 'next/router';
+import {SignUpError} from '../_utils/authError/authSignUpError'
 
 export default function LogIn() {
     const { user } = UserAuth();
@@ -76,7 +77,7 @@ export default function LogIn() {
         <div style={backgroundStyle}>
             {user ? (
                 <div>
-                    <p>Already Signed in</p>
+                    <SignUpError/>
                 </div>
             ) : (
             <Grid style={gridContainerStyle}>

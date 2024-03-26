@@ -4,6 +4,7 @@ import { UserAuth } from '../context/AuthContext'; // Assuming you have an AuthC
 import Link from "next/link";
 import UserCalc from "./UserCalc";
 import MapRouting from "./MapRouting";
+import { LogInError } from '../_utils/authError/authLoginError';
 
 function Page() {
   const { user } = UserAuth();
@@ -40,7 +41,7 @@ function Page() {
         </main>
       ) : (
         <div>
-          <p>Please sign in to view your profile.</p>
+          <LogInError/>
         </div>
       )}
     </div>

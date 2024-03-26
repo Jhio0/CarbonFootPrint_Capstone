@@ -6,6 +6,7 @@ import { ProfileDiv1 } from './profilediv';
 import { ProfileDiv2 } from './profilediv2';
 import { UserAuth } from '../context/AuthContext'; // Assuming you have an AuthContext
 import { useRouter } from 'next/navigation';  
+import { LogInError } from '../_utils/authError/authLoginError';
 
 export default function Profile() {
     const { user } = UserAuth();
@@ -38,7 +39,7 @@ export default function Profile() {
                 </Grid>
             ) : (
                 <div>
-                    <p>Please sign in to view your profile.</p>
+                    <LogInError/>                
                 </div>
             )}
         </Container>

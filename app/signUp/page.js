@@ -3,10 +3,11 @@ import React from 'react';
 import { AuthSignUp } from './auth-signup';
 import { useState, useEffect } from "react";
 import { UserAuth } from '../context/AuthContext';
-
+import { SignUpError } from '../_utils/authError/authSignUpError';
 import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
+
 export default function SignUp(){
     const { user } = UserAuth();
     const [loading, setLoading] = useState(true);
@@ -72,7 +73,7 @@ export default function SignUp(){
         <div style={backgroundStyle}>
             {user ? (
                 <div>
-                    <p>Already Signed in</p>
+                    <SignUpError/>
                 </div>
             ) : (
             <Grid style={gridContainerStyle}>

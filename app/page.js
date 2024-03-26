@@ -19,7 +19,6 @@ export default function Home() {
     <div>
       <MapWithNoSSR />
       {/* hello test */}
-      <NewsBar />
       <Chatbot />
     </div>
   );

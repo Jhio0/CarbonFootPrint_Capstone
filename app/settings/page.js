@@ -7,11 +7,11 @@ import { auth } from '../_utils/firebase';
 
 import { UserAuth } from '../context/AuthContext'; // Assuming you have an AuthContext
 
-
 export default function Settings() {
     const { user } = UserAuth();
     const [displayName, setDisplayName] = useState(null); // State to store user's display name
     const [photoURL, setPhotoURL] = useState(null); // State to store user's photo URL
+    const [selectedOption, setSelectedOption] = useState(null); // State to store selected option
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
@@ -31,6 +31,20 @@ export default function Settings() {
         return () => unsubscribe();
     }, []); 
 
+    const handleOptionSelect = (option) => {
+        setSelectedOption(option);
+    };
+
+    const renderOptionComponent = () => {
+        switch (selectedOption) {
+            case "changePassword":
+                return <ChangePasswordComponent />;
+            case "deleteAccount":
+                return <DeleteAccountComponent />;
+            default:
+                return null;
+        }
+    };
 
     const profileDivContainerStyle = {
         backgroundColor: 'blue',
@@ -45,7 +59,6 @@ export default function Settings() {
         padding: '20px',
     }
 
-    
     const profileDescStyle = {
         padding:'20px',
     }
@@ -57,28 +70,26 @@ export default function Settings() {
                     <Grid item xs={12} sm={11} md={4} lg={3}>
                         <div style={profileDivContainerStyle}>
                             <div style={nameStyle}>
-                                <Typography variant="h6">{displayName ? displayName : 'User'}</Typography>
+                                <Typography variant="h6">Settings</Typography>
                             </div>
 
                             <div style={profileDescStyle}>
-                                <Typography variant="body1">Profile Desc</Typography>
+                                <Typography variant="body1" onClick={() => handleOptionSelect("changePassword")}>Change Password</Typography>
                                 <br/>
-                                <Typography variant="body1">Insert Emission graph here</Typography>
+                                <Typography variant="body1" onClick={() => handleOptionSelect("deleteAccount")}>Delete Account</Typography>
                                 <br/>
-                                <button>Edit</button>
                             </div>
                         </div>
                     </Grid>
                     <Grid item xs>
-
+                        {renderOptionComponent()}
                     </Grid>
                 </Grid>
             ) : (
                 <div>
-                    {/* Render something else if the user is not authenticated */}
                     <p>Please sign in to view your profile.</p>
                 </div>
             )}
         </Container>
     );
-}
+} 
