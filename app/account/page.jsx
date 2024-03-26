@@ -31,10 +31,6 @@ export default function AccountPage() {
                     <h2 className="text-black">Email:</h2>
                     <input type="text" placeholder="Email" />
                 </div>
-                <div>
-                    <h2 className="text-black">Phone:</h2>
-                    <input type="text" placeholder="Phone" />
-                </div>
             </div>
             <div>
                 <button className="btn">Save</button>
