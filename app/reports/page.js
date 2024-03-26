@@ -66,7 +66,7 @@ export default function ReportPage() {
         else{
             return;
         }
-    }, [user, reports]);
+    }, []);
     
 
     return (

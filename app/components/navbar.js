@@ -39,7 +39,6 @@ function ResponsiveAppBar() {
     checkAuthentication();
   }, [user]);
 
-  console.log('User:', user);
 
   const handleSignOut = async () => {
     try {
