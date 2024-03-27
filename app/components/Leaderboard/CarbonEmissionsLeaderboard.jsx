@@ -19,7 +19,7 @@ const CarbonEmissionsLeaderboard = () => {
         }
 
         const data = await response.json();
-        const sortedData = data.sort((a, b) => b.emissions - a.emissions);
+        const sortedData = data.sort((a, b) => a.rank - b.rank);
         setCountriesEmissions(sortedData); // Sort the countries by emissions before setting state
       } catch (error) {
         console.error("Error fetching emissions data:", error);
@@ -30,23 +30,35 @@ const CarbonEmissionsLeaderboard = () => {
   }, []);
 
   return (
-    <div className="fixed right-0 top-3/4 z-50">
+    <div className="fixed right-0 top-[550px] z-50">
       <button className="btn mb-2" onClick={() => setIsCollapsed(!isCollapsed)}>
         {isCollapsed ? "Show Leaderboard" : "Hide Leaderboard"}
       </button>
       {!isCollapsed && (
-        <div className="max-h-96 w-64 overflow-y-scroll bg-white shadow-lg rounded-lg p-4 text-black">
-          <h2 className="text-lg font-semibold mb-2 text-black">
-            Carbon Emissions Leaderboard
-          </h2>
-          <ul>
-            {countriesEmissions.map((country, index) => (
-              <li key={index}>
-                Rank{country.rank} {country.country}: {country.emissions[0]}
-                MtCO2
-              </li>
-            ))}
-          </ul>
+        <div className="max-h-64 overflow-y-auto shadow-lg rounded-lg bg-black">
+          <table className="table w-full">
+            <thead>
+              <tr>
+                <th colspan="3" className="text-center">
+                  CO2e Emissions in Last 20 Years
+                </th>
+              </tr>
+              <tr>
+                <th>Rank</th>
+                <th>Country</th>
+                <th>Emissions (Tonnes CO2e)</th>
+              </tr>
+            </thead>
+            <tbody>
+              {countriesEmissions.map((country, index) => (
+                <tr key={index}>
+                  <th>{country.rank}</th>
+                  <td>{country.country}</td>
+                  <td>{country.emissions.co2e_20yr.toFixed(2)}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
         </div>
       )}
     </div>
