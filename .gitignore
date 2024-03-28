@@ -38,11 +38,3 @@ next-env.d.ts
 <<<<<<< Updated upstream
 
 *storybook.log
-=======
-/test-results/
-/playwright-report/
-/blob-report/
-/playwright/.cache/
->>>>>>> Stashed changes
-=======
->>>>>>> parent of 34697f1 (MapRouting for Leaflet Routing Machine)
