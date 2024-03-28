@@ -2,6 +2,12 @@
 import React from 'react';
 export default function News(){
 
+
+    // grid container
+    const gridcontainer = {
+
+    }
+
     //trending tab container
     const trendingcontainer = {
 
@@ -15,7 +21,7 @@ export default function News(){
     //size
     //position
     //border
-    const trendingimgcontainer = {
+    const trendingimg = {
 
     }
 
@@ -23,7 +29,7 @@ export default function News(){
     //font
     //color
     //position
-    const trendingtextcontainer = {
+    const trendingtext = {
 
     }
 
@@ -43,18 +49,42 @@ export default function News(){
     // position
     // lines
     // border
-    const textcontainer = {
+    const maintext = {
 
     }
     //size
     //location
     //magin
     //style
-    const imgcontainer = {
+    const mainimg = {
 
     }
 
-    
+    return( 
+        //full page
+        <div style={gridcontainer}>
+            <div style={maincontainer}>
+                <div style={mainitem}>
+                 <div style={maintext}>news title 1</div>
+                 <div style={maintext}>news title 2</div>
+                 <div style={maintext}>news title 3</div>
+                 <div style={mainimg}>"company img"</div>
+                </div>
+                <div style={mainitem}>
+                 <div style={maintext}>1 news title 1</div>
+                 <div style={maintext}>1 news title 2</div>
+                 <div style={maintext}>1 news title 3</div>
+                 <div style={mainimg}>1 "company img"</div>
+                </div>
+            </div>
+            <div style={trendingcontainer}>
+                <div style={trendingitem}>
+                    <div style={trendingimg}>"Arctical Img"</div>
+                    <div style={trendingtext}>Artical text</div>
+                </div>
+            </div>
+        </div>
+    );
 
 
  }
