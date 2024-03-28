@@ -254,10 +254,13 @@ export default function Map() {
   
   return (
     <div>
-      <div >
+      <div className='flex flex-col'>
         {loading ? (
-          <div className="spinner"></div>
+          <div className='items-center justify-center'>
+            <div className="spinner"></div>
+          </div>
         ) : (
+
           <MapContainer center={[38, -97]} zoom={4}  ref={mapRef} worldCopyJump={true}  
           maxBounds={[
             [null, -180], // No restriction on the left
@@ -330,6 +333,78 @@ export default function Map() {
             <SearchField/>
           </MapContainer>
         )}
+
+
+          <div className='mb-20'>
+            <MapContainer center={[38, -97]} zoom={4} style={{ width: '100%', height: '490px' }} ref={mapRef} worldCopyJump={true}  
+            maxBounds={[
+              [null, -180], // No restriction on the left
+              [null, 180],  // No restriction on the right
+              [90, -180],   // Top Left
+              [-90, 180]    // Bottom Right
+            ]}>
+              <TileLayer 
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                url={`https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=97162abb-de48-4413-a227-44ce4cfb0cd3`}
+              />
+              
+
+              <GeoJSON 
+                data={{
+                  type: "FeatureCollection",
+                  features: geojsonFeatures
+                }}
+                pointToLayer={(feature, latlng) => (
+                  L.circleMarker(latlng, {
+                    radius: 5,
+                    color: 'red',
+                    fillColor: '#f03',
+                    fillOpacity: 0.5,
+                  }).on('click', () => handleFeatureClick(feature)) 
+                )}
+                onEachFeature={(feature, layer) => {
+                  const { name, province, co2_2022, owners } = feature.properties;
+                  const ownerInfo = owners ? owners.map(owner => `<li>${owner.CompanyName}: ${owner.PercentageOfInterestCompany}%</li>`).join('') : 'None';
+                  layer.bindPopup(`<b>${name}</b><br><b>Province:</b> ${province}<br><ul>Owners:<br>${ownerInfo}</ul><br>CO2 Emission (2022): ${co2_2022} Tons`);
+                  layer.on('click', () => handleFeatureClick(feature));
+                }}
+              />
+              <GeoJSON 
+                data={{
+                  type: "FeatureCollection",
+                  features: geojsonFeaturesCountry
+                }}
+                pointToLayer={(feature, latlng) => (
+                  L.circleMarker(latlng, {
+                    radius: 5,
+                    color: 'purple',
+                    fillColor: '#800080',
+                    fillOpacity: 0.5,
+                  }).on('click', () => handleFeatureClick(feature)) 
+                )}
+                onEachFeature={(feature, layer) => {
+                  const { countryName, co2Emissions } = feature.properties;
+                  layer.bindPopup(`<b>Country:</b> ${countryName}<br><b>CO2 Emission:</b> ${co2Emissions} Tons`);
+                  layer.on('click', () => handleFeatureClick(feature));
+                }}
+              />
+              <SearchField/>
+            </MapContainer>
+          </div>
+        
+
+        <div className="flex justify-center mb-20"> 
+          <div className='flex'>
+            <div className='ml-[150px] bg-grey rounded-lg shadow-lg  w-100 h-50px' >
+              <DoughnutChart selectedData={selectedData} />
+            </div>
+            <div className='mr-[150px] m-10 bg-grey rounded-lg shadow-lg p-4 w-100%'>
+              <BarChart ownerEmissions={ownerEmissions} />
+            </div>
+          </div>
+        </div>
+
+
       </div>
     </div>
 

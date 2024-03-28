@@ -1,24 +1,23 @@
 "use client"
-import { auth } from "./firebase";
+import { auth } from "../_utils/firebase.js";
 import { createUserWithEmailAndPassword } from 'firebase/auth';
-import { useState } from "react";
-import { useRouter } from 'next/navigation';  
+import { useState, useEffect } from "react";
+import { useRouter } from 'next/navigation';
 
 export const AuthSignUp = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  const signUp = async () => {
+  const signUp = async (e) => {
     try {
-      await createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredential) =>{
-        const user = userCredential.user;
-        window.alert('User signed up successfully!'); 
-        console.log(user);
-      });
-    } catch (error) {
-      window.alert(` Sign up failed: ${error.message}`); 
-      console.error("Sign up failed:", error.message);
+      e.preventDefault();
+      const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+      const userId = userCredential.user.uid;
+      router.push(`signUp/${userId}`);
+    }
+    catch (error) {
+      console.log(error);
     }
   };
 
@@ -29,14 +28,16 @@ export const AuthSignUp = () => {
     borderRadius: '8px',
   };
   
-  
-  
   const inputStyle = {
     color: 'black',
     marginBottom: '10px',
     padding: '8px',
   };
-    
+
+  useEffect(() => {
+    console.log(router); // Log the router object to inspect its properties
+  }, [router]);
+
   return (
     <div style={{ textAlign: 'center', marginTop: '20vh' }}>
       <form>
@@ -44,6 +45,7 @@ export const AuthSignUp = () => {
           <input
             style={inputStyle}
             placeholder="Email"
+            value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
