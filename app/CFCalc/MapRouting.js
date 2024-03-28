@@ -14,13 +14,8 @@ import 'leaflet-easybutton/src/easy-button.css'
 import "font-awesome/css/font-awesome.min.css";
 import './routingstyling.css';
 
-import 'osmbuildings/dist/OSMBuildings-Leaflet'; // Import OSM Buildings
-
-
-
 const MapRouting = () => {
   const [startWaypoint, setStartWaypoint] = useState(null);
-  const [distance, setDistance] = useState(null); // State to store distance
 
   return (
     <div>
@@ -29,7 +24,7 @@ const MapRouting = () => {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=97162abb-de48-4413-a227-44ce4cfb0cd3`}
         />
-        <Routing startWaypoint={startWaypoint} setDistance={setDistance}/>
+        <Routing startWaypoint={startWaypoint} />
         <LeafletLocateControl setStartWaypoint={setStartWaypoint} />
       </MapContainer>
     </div>
@@ -74,7 +69,7 @@ const LeafletLocateControl = ({ setStartWaypoint }) => {
   return null;
 };
 
-const Routing = ({ startWaypoint,  setDistance }) => {
+const Routing = ({ startWaypoint }) => {
   const map = useMap();
   const [routingControl, setRoutingControl] = useState(null);
   const [isRoutingControlVisible, setIsRoutingControlVisible] = useState(true);
@@ -104,19 +99,7 @@ const Routing = ({ startWaypoint,  setDistance }) => {
       geocoder: L.Control.Geocoder.nominatim(),
     }).addTo(map);
 
-    // Event listener for routesfound event
-    routing.on('routesfound', function(e) {
-      const routes = e.routes;
-      const summary = routes[0].summary;
-      
-      // Extract distance in kilometers
-      const distanceInKm = summary.totalDistance / 1000;
-
-      // You can save the distance to a variable here or perform any other action
-      console.log('Distance:', distanceInKm.toFixed(2), 'kilometers');
-      setDistance(distanceInKm);
-    });
-
+    setRoutingControl(routing);
 
     return () => {
       if (routing) {

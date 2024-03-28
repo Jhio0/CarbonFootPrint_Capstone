@@ -34,6 +34,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+<<<<<<< HEAD
 <<<<<<< Updated upstream
 
 *storybook.log
@@ -43,3 +44,5 @@ next-env.d.ts
 /blob-report/
 /playwright/.cache/
 >>>>>>> Stashed changes
+=======
+>>>>>>> parent of 34697f1 (MapRouting for Leaflet Routing Machine)

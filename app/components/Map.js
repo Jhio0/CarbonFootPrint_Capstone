@@ -15,8 +15,6 @@ Chart.register(ArcElement, Tooltip, Legend);
 import { countryCodeToName, countryCodes } from './items/countryUtils';
 
 
-
-
 export default function Map() {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
   const [geojsonFeaturesCountry, setGeojsonFeaturesCountry] = useState([]);
