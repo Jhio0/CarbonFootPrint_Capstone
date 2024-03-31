@@ -20,20 +20,24 @@ export default function AIClimateRecommendation({ emissions }) {
     try {
       const prompt = `Given that a user has a carbon footprint of ${totalEmissions.toFixed(2)} kg CO2e per year from electricity and natural gas usage, provide detailed, practical recommendations on how they can reduce their carbon footprint. Focus on lifestyle changes, energy use, and transportation.`;
       
+      const messagesWithBaseContext = [
+        { role: "system", content: prompt },
+      ];
+
       const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
-        prompt: prompt,
+        messages: messagesWithBaseContext,
         temperature: 0.6,
         max_tokens: 500,
         top_p: 1.0,
         frequency_penalty: 0.0,
         presence_penalty: 0.0,
       });
-
-      if (response && response.data && response.data.choices && response.data.choices.length > 0) {
-        const aiResponse = response.data.choices[0].text.trim();
+      
+        const aiResponse = response.choices[0].message.content;
+        console.log("Recommendations from OpenAI:", aiResponse);
         setRecommendations(aiResponse);
-      }
+      
     } catch (error) {
       console.error("Error fetching recommendations from OpenAI:", error);
       setRecommendations("Sorry, we couldn't fetch recommendations at this time.");
