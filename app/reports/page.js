@@ -22,15 +22,13 @@ export default function ReportPage() {
     } 
 
     const loadReports = async () => {
-        if (typeof window !== 'undefined') {
-            try {
-                const reports = await getReports(user.uid);
-                console.log("Reports", reports);
-                setReports(reports);
-            }
-            catch (error) {
-                console.error('Error loading reports:', error);
-            }
+        try {
+            const reports = await getReports(user.uid);
+            console.log("Reports", reports);
+            setReports(reports);
+        }
+        catch (error) {
+            console.error('Error loading reports:', error);
         }
     };
 
@@ -65,15 +63,15 @@ export default function ReportPage() {
     };
 
     useEffect(() => {
-        if (user) {
-            try {
+        try {
+            if (user) {
                 loadReports();
-            } catch (error) {
-                console.error('Error loading reports:', error);
             }
-        }
-        else{
-            return;
+            else{
+                return;
+            }
+        } catch (error) {
+            console.error('Error loading reports:', error);
         }
     }, [user]);
     

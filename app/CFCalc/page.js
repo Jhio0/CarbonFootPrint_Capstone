@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import UserCalc from "./UserCalc";
+import AIClimateRecommendation from "./CalcAI";
 
 function Page() {
   const [emissions, setEmissions] = useState({
@@ -17,6 +17,7 @@ function Page() {
     <main className="bg-base-300 min-h-screen w-full flex flex-col justify-center items-start">
       <div className="bg-base-300">
         <UserCalc updateEmissions={updateEmissions} />
+        <AIClimateRecommendation emissions={emissions} />
       </div>
     </main>
   );

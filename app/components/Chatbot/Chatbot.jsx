@@ -26,16 +26,16 @@ export default function Chatbot( {toggleChatVisibility} ) {
     {role: 'user', content: userInput }]);
 
 
-    const messagesWithBaseContext = [
-      { role: "system", content: aiContext },
-      ...chatHistory,
-      { role: "user", content: userInput },
-    ];
+      const messagesWithBaseContext = [
+        { role: "system", content: aiContext },
+        ...chatHistory,
+        { role: "user", content: userInput },
+      ];
 
-    const chatCompletion = await openai.chat.completions.create({
-      messages: messagesWithBaseContext,
-      model: "gpt-3.5-turbo",
-    });
+      const chatCompletion = await openai.chat.completions.create({
+        messages: messagesWithBaseContext,
+        model: "gpt-3.5-turbo",
+      });
   
     setChatHistory((prevChat) => [
       ...prevChat,
@@ -56,7 +56,7 @@ export default function Chatbot( {toggleChatVisibility} ) {
       </button>
     </div>
     {/* Chat history and input fields */}
-    <div className="chatHistoryContainer h-96 overflow-auto mb-4">
+    <div className="chatHistoryContainer h-96 overflow-auto mb-4 p-3">
       {chatHistory.map((chat, index) => (
         <div key={index} className={`flex flex-col mb-2 ${chat.role === "user" ? "items-end" : "items-start"}`}>
           <div className={`text-sm ${chat.role === "user" ? "bg-blue-300 text-blue-800" : "bg-green-300 text-green-800"} rounded-md px-2 py-1`}>
