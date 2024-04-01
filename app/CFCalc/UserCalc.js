@@ -354,7 +354,7 @@ const UserCalc = ({ updateEmissions }) => {
         </button>
       </div>
       <div className="divider divider-horizontal"></div> {/*middle line*/}
-      <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center">
+      <div className="flex-grow grid w-full h-full card bg-off-black rounded-box place-items-center">
         <div className="stats shadow">
           <div className="stat">
             <div className="stat-title">Total Emissions</div>

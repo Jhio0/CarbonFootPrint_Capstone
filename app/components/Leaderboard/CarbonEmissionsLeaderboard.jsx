@@ -31,19 +31,22 @@ const CarbonEmissionsLeaderboard = () => {
 
   return (
     <div className="fixed right-0 top-[550px] z-50">
-      <button className="btn mb-2" onClick={() => setIsCollapsed(!isCollapsed)}>
+      <button
+        className="btn mb-0 bg-off-black border-light-green border-2"
+        onClick={() => setIsCollapsed(!isCollapsed)}
+      >
         {isCollapsed ? "Show Leaderboard" : "Hide Leaderboard"}
       </button>
       {!isCollapsed && (
-        <div className="max-h-64 overflow-y-auto shadow-lg rounded-lg bg-black">
+        <div className="max-h-64 overflow-y-auto shadow-lg rounded-lg bg-off-black border-light-green border-l-2 border-y-2">
           <table className="table w-full">
-            <thead>
+            <thead className="text-white">
               <tr>
                 <th colspan="3" className="text-center">
                   CO2e Emissions in Last 20 Years
                 </th>
               </tr>
-              <tr>
+              <tr className="border-[#E6CF58] border-y-2">
                 <th>Rank</th>
                 <th>Country</th>
                 <th>Emissions (Tonnes CO2e)</th>

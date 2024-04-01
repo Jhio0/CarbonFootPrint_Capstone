@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Doughnut } from "react-chartjs-2";
 import "chart.js/auto";
@@ -21,15 +20,15 @@ const EmissionDonutChart = ({
           vehicleEmission,
         ],
         backgroundColor: [
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(153, 102, 255, 0.2)", // Color for flights
+          "rgba(230, 207, 88, 0.2)", // Color for electricity
+          "rgba(63, 107, 47, 0.2)", // Color for natural gas
+          "rgba(135, 174, 86, 0.2)", // Color for flights
           "rgba(255, 99, 132, 0.2)", // Color for vehicle
         ],
         borderColor: [
-          "rgba(255, 206, 86, 1)",
-          "rgba(54, 162, 235, 1)",
-          "rgba(153, 102, 255, 1)", // Border color for flights
+          "rgba(230, 207, 88, 1)", // Border color for electricity
+          "rgba(63, 107, 47, 1)", // Border color for natural gas
+          "rgba(135, 174, 86, 1)", // Border color for flights
           "rgba(255, 99, 132, 1)", // Border color for vehicle
         ],
         borderWidth: 1,
