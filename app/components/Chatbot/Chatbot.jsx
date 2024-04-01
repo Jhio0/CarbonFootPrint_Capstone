@@ -18,7 +18,6 @@ export default function Chatbot( {toggleChatVisibility} ) {
 
   const aiContext = "Your name is Sprout. Your main goal is to provide suggestions to users on how to reduce their carbon emissions.";
 
-
   const handleUserInput = async () => {
     setIsLoading(true);
     setChatHistory((chatHistory) => 

@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import FlightsCalc from "./FlightCalc";
 import EmissionDonutChart from "./EmissionsDonutChart";
+import AIClimateRecommendation from "./CalcAI";
 //firebase
 import { doc, setDoc } from "firebase/firestore";
 import { auth, db } from "/app/_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
@@ -373,6 +374,7 @@ const UserCalc = ({ updateEmissions }) => {
           />
         </div>
       </div>
+      <AIClimateRecommendation emissions={{ electricityEmission, naturalGasEmission }} />
     </div>
   );
 };

@@ -17,7 +17,6 @@ function Page() {
     <main className="bg-base-300 min-h-screen w-full flex flex-col justify-center items-start">
       <div className="bg-base-300">
         <UserCalc updateEmissions={updateEmissions} />
-        <AIClimateRecommendation emissions={emissions} />
       </div>
     </main>
   );
