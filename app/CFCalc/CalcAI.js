@@ -52,14 +52,17 @@ export default function AIClimateRecommendation({ emissions }) {
   }, [displayedRecommendations, recommendations, typing]);
 
   return (
-    <div className="max-w-4xl mx-auto mt-10 px-4">
-      <button className="mb-4 py-2 px-4 bg-blue-500 text-white font-bold rounded hover:bg-blue-700 transition duration-300" onClick={handleCalculationRecommendation}>
+    <div className="flex flex-col items-center mt-10">
+      <button
+        className="mb-4 py-2 px-4 bg-ferngreen-700 text-white font-bold rounded hover:bg-ferngreen-900 transition duration-300"
+        onClick={handleCalculationRecommendation}
+      >
         Get Recommendations
       </button>
       {displayedRecommendations && (
-        <div className="mt-5">
-          <h3 className="text-xl font-semibold mb-2">Recommendations:</h3>
-          <div className="min-h-[200px] overflow-y-auto p-4 bg-white shadow rounded-lg border border-gray-200">
+        <div className="mt-5 w-full max-w-4xl">
+          <h3 className="text-xl font-semibold mb-2 text-gray-800">Recommendations:</h3>
+          <div className="h-96 overflow-y-auto p-4 bg-green-50 shadow rounded-lg border border-gray-200">
             <p className="text-gray-700 whitespace-pre-wrap">{displayedRecommendations}</p>
           </div>
         </div>
