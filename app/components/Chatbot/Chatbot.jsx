@@ -7,17 +7,23 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
-export default function Chatbot({ toggleChatVisibility }) {
+export default function Chatbot({ toggleChatVisibility, chatHistory, setChatHistory }) {
   const [userInput, setUserInput] = useState("");
-  const [chatHistory, setChatHistory] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+
+  const chatHistoryRef = React.useRef(null);
 
   const aiContext = "Your name is Sprout. Your main goal is to provide suggestions to users on how to reduce their carbon emissions.";
 
   const handleUserInput = async () => {
     setIsLoading(true);
-    setChatHistory((chatHistory) => [...chatHistory, { role: 'user', content: userInput }]);
-
+    // Directly use setChatHistory from props
+    setChatHistory((currentHistory) => [
+      ...currentHistory,
+      { role: 'user', content: userInput },
+      
+      // Assistant's response is added here after fetching it from OpenAI
+    ]);
     const messagesWithBaseContext = [
       { role: "system", content: aiContext },
       ...chatHistory,
@@ -38,6 +44,12 @@ export default function Chatbot({ toggleChatVisibility }) {
     setIsLoading(false);
   };
 
+  useEffect(() => {
+    if (chatHistoryRef.current) {
+      chatHistoryRef.current.scrollTop = chatHistoryRef.current.scrollHeight;
+    }
+  }, [chatHistory]); // Dependency array ensures this runs every time chatHistory changes
+
   return (
     <div className="max-w-md mx-auto mt-10 border-2 border-gray-200 bg-gray-800 text-white flex flex-col p-4 rounded-xl shadow-lg">
       <div className="flex justify-between items-center mb-4">
@@ -49,7 +61,7 @@ export default function Chatbot({ toggleChatVisibility }) {
           X
         </button>
       </div>
-      <div className="flex-grow mb-4 overflow-auto p-3 bg-gray-700 rounded">
+      <div ref={chatHistoryRef} className="flex-grow overflow-auto p-3 bg-gray-700 rounded max-h-[500px]"> {/* Adjust the max-h-[500px] as needed */}
         {chatHistory.map((chat, index) => (
           <div key={index} className={`flex flex-col mb-2 ${chat.role === "user" ? "items-end" : "items-start"}`}>
             <div className={`text-sm p-2 rounded-lg ${chat.role === "user" ? "bg-blue-500 text-white" : "bg-green-500 text-gray-900"}`}>
@@ -64,7 +76,7 @@ export default function Chatbot({ toggleChatVisibility }) {
           value={userInput}
           onChange={(e) => setUserInput(e.target.value)}
           placeholder="Type your message..."
-          className="flex-grow rounded-l-md p-2 bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
+          className="input flex-grow rounded-l-md p-2 bg-gray-900 border-0 focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
         />
         <button
           onClick={handleUserInput}
