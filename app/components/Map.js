@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import React, { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMap, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
@@ -14,9 +14,9 @@ Chart.register(ArcElement, Tooltip, Legend);
 
 import { countryCodeToName, countryCodes } from './items/countryUtils';
 
+import { ThreeCircles } from 'react-loader-spinner';
 
-
-
+import ReactDOMServer from 'react-dom/server';
 export default function Map() {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
   const [geojsonFeaturesCountry, setGeojsonFeaturesCountry] = useState([]);
@@ -250,13 +250,22 @@ export default function Map() {
     return null;
   };
 
-  
-  
   return (
     <div>
-      <div >
-        {loading ? (
-          <div className="spinner"></div>
+      <div>
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+           <ThreeCircles
+            visible={true}
+            height="100"
+            width="100"
+            color="#4fa94d"
+            ariaLabel="three-circles-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+
+        </div>
         ) : (
           <MapContainer center={[38, -97]} zoom={4}  ref={mapRef} worldCopyJump={true}  
           maxBounds={[
@@ -286,8 +295,8 @@ export default function Map() {
               )}
               onEachFeature={(feature, layer) => {
                 const { name, province, co2_2022, owners } = feature.properties;
-                const ownerInfo = owners ? owners.map(owner => `<li>${owner.CompanyName}: ${owner.PercentageOfInterestCompany}%</li>`).join('') : 'None';
-                layer.bindPopup(`<b>${name}</b><br><b>Province:</b> ${province}<br><ul>Owners:<br>${ownerInfo}</ul><br>CO2 Emission (2022): ${co2_2022} Tons`);
+                const ownerInfo = owners ? owners.map(owner => `<li><b>${owner.CompanyName}:</b> ${owner.PercentageOfInterestCompany}%</li>`).join('') : 'None';
+                layer.bindPopup(`<b>${name}</b><br><b>Country:</b> ${province}<hr/><ul><b>Owners:</b>${ownerInfo}</ul><b>CO2 Emission (2022):</b>${co2_2022} Tons`);
                 layer.on('click', () => handleFeatureClick(feature));
               }}
             />
@@ -311,7 +320,7 @@ export default function Map() {
               }}
             />
             {/* Overlaying content */}
-              <div className="flex justify-center" style={{ position: 'absolute', top: '20px', right: '20px', zIndex: 1000 }}> 
+              <div className="flex justify-center" style={{ position: 'absolute', top: '10%', right: '5px', zIndex: 1000 }}> 
                 <div className='flex flex-col'>
                   <div className='min-h-3/4 h-auto w-full bg-gray-400 flex justify-center items-center flex-wrap rounded-md
                       backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100'>

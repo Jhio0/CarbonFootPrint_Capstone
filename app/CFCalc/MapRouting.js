@@ -14,7 +14,7 @@ import 'leaflet-easybutton/src/easy-button.css'
 import "font-awesome/css/font-awesome.min.css";
 import './routingstyling.css';
 
-import 'osmbuildings/dist/OSMBuildings-Leaflet'; // Import OSM Buildings
+
 
 
 

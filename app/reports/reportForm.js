@@ -18,11 +18,10 @@ export default function ReportForm() {
     const { user } = UserAuth();
 
     const loadReports = async () => {
-        if (typeof window !== 'undefined') {
-            const reports = await getReports(user.uid);
-            console.log("Reports", reports);
-            setReports(reports);
-        }
+        const reports = await getReports(user.uid);
+        console.log("Reports", reports);
+        setReports(reports);
+
     };
 
     const handleSubmit = async (event) => {
