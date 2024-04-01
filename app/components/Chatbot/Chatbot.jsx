@@ -64,7 +64,7 @@ export default function Chatbot({ toggleChatVisibility, chatHistory, setChatHist
     <div ref={chatHistoryRef} className="flex-grow overflow-auto p-3 bg-gray-800 rounded max-h-[500px] mb-4">
       {chatHistory.map((chat, index) => (
         <div key={index} className={`flex flex-col mb-2 ${chat.role === "user" ? "items-end" : "items-start"}`}>
-          <div className={`text-sm p-2 rounded-lg ${chat.role === "user" ? "bg-ferngreen-900 text-gray-200" : "bg-ferngreen-700 text-gray-200"}`}>
+          <div className={`text-sm p-2 rounded-lg shadow-md ${chat.role === "user" ? "bg-ferngreen-900 text-gray-200" : "bg-ferngreen-700 text-gray-200"}`}>
             {chat.content}
           </div>
         </div>
@@ -81,7 +81,7 @@ export default function Chatbot({ toggleChatVisibility, chatHistory, setChatHist
       <button
         onClick={handleUserInput}
         disabled={isLoading}
-        className="bg-green-700 hover:bg-green-800 text-white rounded-r-md px-4 disabled:bg-green-600 disabled:cursor-not-allowed transition duration-150 ease-in-out"
+        className="bg-ferngreen-800 hover:bg-ferngreen-900 text-white rounded-r-md px-4 disabled:bg-green-600 disabled:cursor-not-allowed transition duration-150 ease-in-out"
       >
         {isLoading ? '...' : 'Send'}
       </button>
