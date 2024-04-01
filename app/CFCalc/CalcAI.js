@@ -11,23 +11,17 @@ export default function AIClimateRecommendation({ emissions }) {
   const [displayedRecommendations, setDisplayedRecommendations] = useState("");
   const [typing, setTyping] = useState(false);
 
-  // Function to calculate total emissions
   const calculateTotalEmissions = () => {
-    console.log(emissions.electricityEmission, emissions.naturalGasEmission);
     return emissions.electricityEmission + emissions.naturalGasEmission;
   };
 
   const handleCalculationRecommendation = async () => {
     const totalEmissions = calculateTotalEmissions();
     try {
-      const prompt = `Given that a user has an electrical usage of ${emissions.electricityEmission.toFixed(2)} kWh, a natural gas usage of ${emissions.naturalGasEmission.toFixed(2)}, and a total carbon footprint of ${totalEmissions.toFixed(2)} kg CO2e , provide detailed, practical recommendations on how they can reduce their carbon footprint. Focus on lifestyle changes, energy use, and transportation.`;
-      console.log("Prompt to OpenAI:", prompt);
-
-      const messagesWithBaseContext = [{ role: "system", content: prompt }];
-
+      const prompt = `Given that a user has an electrical usage of ${emissions.electricityEmission.toFixed(2)} kWh and a natural gas usage of ${emissions.naturalGasEmission.toFixed(2)} GJ, resulting in a total carbon footprint of ${totalEmissions.toFixed(2)} kg CO2e, provide detailed, practical recommendations on how they can reduce their carbon footprint, focusing on lifestyle changes, energy use, and transportation.`;
       const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",
-        messages: messagesWithBaseContext,
+        messages: [{ role: "system", content: prompt }],
         temperature: 0.6,
         max_tokens: 500,
         top_p: 1.0,
@@ -35,15 +29,13 @@ export default function AIClimateRecommendation({ emissions }) {
         presence_penalty: 0.0,
       });
 
-      const aiResponse = response.choices[0].message.content;
-      console.log("Recommendations from OpenAI:", aiResponse);
-      setRecommendations(aiResponse);
-      setDisplayedRecommendations(""); // Reset displayed text
-      setTyping(true); // Start typing effect
+      setRecommendations(response.choices[0].message.content);
+      setDisplayedRecommendations("");
+      setTyping(true);
     } catch (error) {
       console.error("Error fetching recommendations from OpenAI:", error);
       setRecommendations("Sorry, we couldn't fetch recommendations at this time.");
-      setTyping(false); // Stop typing effect
+      setTyping(false);
     }
   };
 
@@ -51,7 +43,7 @@ export default function AIClimateRecommendation({ emissions }) {
     if (typing && recommendations.length > displayedRecommendations.length) {
       const timer = setTimeout(() => {
         setDisplayedRecommendations(recommendations.slice(0, displayedRecommendations.length + 1));
-      }, 25); // Adjust typing speed as needed
+      }, 25);
 
       return () => clearTimeout(timer);
     } else {
@@ -60,15 +52,15 @@ export default function AIClimateRecommendation({ emissions }) {
   }, [displayedRecommendations, recommendations, typing]);
 
   return (
-    <div className="w-[240px] pl-6">
-      <button className="btn" onClick={handleCalculationRecommendation}>
+    <div className="max-w-4xl mx-auto mt-10 px-4">
+      <button className="mb-4 py-2 px-4 bg-blue-500 text-white font-bold rounded hover:bg-blue-700 transition duration-300" onClick={handleCalculationRecommendation}>
         Get Recommendations
       </button>
       {displayedRecommendations && (
-        <div>
-          <h3>Recommendations:</h3>
-          <div className="w-96 min-h-[200px] overflow-y-auto p-4 border border-gray-600 rounded-md">
-            <p>{displayedRecommendations}</p>
+        <div className="mt-5">
+          <h3 className="text-xl font-semibold mb-2">Recommendations:</h3>
+          <div className="min-h-[200px] overflow-y-auto p-4 bg-white shadow rounded-lg border border-gray-200">
+            <p className="text-gray-700 whitespace-pre-wrap">{displayedRecommendations}</p>
           </div>
         </div>
       )}
