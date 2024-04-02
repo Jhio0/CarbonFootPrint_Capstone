@@ -6,7 +6,7 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
-export default function AIClimateRecommendation({ emissions }) {
+export default function AIClimateRecommendation({ emissions, onCalculate }) {
   const [recommendations, setRecommendations] = useState("");
   const [displayedRecommendations, setDisplayedRecommendations] = useState("");
   const [typing, setTyping] = useState(false);
@@ -50,6 +50,14 @@ export default function AIClimateRecommendation({ emissions }) {
       setTyping(false);
     }
   }, [displayedRecommendations, recommendations, typing]);
+
+    useEffect(() => {
+      // Call the passed onCalculate function to fetch recommendations
+      if (onCalculate) {
+        onCalculate();
+      }
+    }, [onCalculate]);
+
 
   return (
     <div className="flex flex-col items-center mt-10">
