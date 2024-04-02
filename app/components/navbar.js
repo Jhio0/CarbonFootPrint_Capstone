@@ -21,7 +21,7 @@ import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 
 const pages = ['logIn','signUp'];
-const pagesauth = ['CFCalc', 'reports',]
+const pagesauth = ['CFCalc', 'reports', 'forum']
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout',];
 
 function ResponsiveAppBar() {
