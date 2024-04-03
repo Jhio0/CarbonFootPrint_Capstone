@@ -8,6 +8,9 @@ import { FaLocationDot } from "react-icons/fa6";
 import { CiCalendarDate } from "react-icons/ci";
 import { IoIosCheckmark } from "react-icons/io";
 
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 export default function ReportForm() {
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
@@ -17,12 +20,12 @@ export default function ReportForm() {
 
     const { user } = UserAuth();
 
-    const loadReports = async () => {
-        const reports = await getReports(user.uid);
-        console.log("Reports", reports);
-        setReports(reports);
+    // const loadReports = async () => {
+    //     const reports = await getReports(user.uid);
+    //     console.log("Reports", reports);
+    //     setReports(reports);
 
-    };
+    // };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
@@ -55,9 +58,16 @@ export default function ReportForm() {
         }
     };
 
-    useEffect(() => {
-        loadReports();
-    }, [user]);
+    // useEffect(() => {
+    //     loadReports();
+    // }, [user]);
+
+    const showToastMessage = (event) => {
+        event.preventDefault();
+        toast.success("Success Notification !", {
+          position: "top-right",
+        });
+      };
 
     return (
     <div className="bg-white dark:bg-gray-900">
@@ -92,7 +102,7 @@ export default function ReportForm() {
                 </div>
             </div>
             <div>
-                <button type="submit" onSubmit={addReport} className="font-medium shadow-md rounded-none p-2 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 border border-gray-900 dark:border-gray-100 bg-gray-800 dark:bg-gray-200 text-gray-200 dark:text-gray-800 hover:bg-gray-900 dark:hover:bg-gray-100">Submit Report</button>
+                <button type="submit" onClick={showToastMessage}  className="font-medium shadow-md rounded-none p-2 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 border border-gray-900 dark:border-gray-100 bg-gray-800 dark:bg-gray-200 text-gray-200 dark:text-gray-800 hover:bg-gray-900 dark:hover:bg-gray-100">Submit Report</button>
             </div>
         </form>
         <div className="reportsContainer">
@@ -105,6 +115,19 @@ export default function ReportForm() {
                         </div>
                     ))}
         </div>
+        <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+
+        />
     </div>
     );
 }

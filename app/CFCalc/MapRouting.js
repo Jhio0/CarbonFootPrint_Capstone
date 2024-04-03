@@ -12,9 +12,7 @@ import 'leaflet-control-geocoder';
 import 'leaflet-easybutton/src/easy-button'
 import 'leaflet-easybutton/src/easy-button.css'
 import "font-awesome/css/font-awesome.min.css";
-import './routingstyling.css';
-
-
+import './routingstyling.css'; // Import OSM Buildings
 
 
 
@@ -22,6 +20,7 @@ const MapRouting = () => {
   const [startWaypoint, setStartWaypoint] = useState(null);
   const [distance, setDistance] = useState(null); // State to store distance
 
+  
   return (
     <div>
       <MapContainer center={[20, 0]} zoom={6}>
@@ -125,43 +124,7 @@ const Routing = ({ startWaypoint,  setDistance }) => {
     };
   }, [map, startWaypoint]);
 
-  useEffect(() => {
-    if (map) {
-      const toggleRoutingButton = L.easyButton({
-        states: [{
-          stateName: 'enable-routing',
-          icon: 'fa-car',
-          title: 'Show Routing',
-          onClick: function (control) {
-            control.state('disable-routing');
-            setIsRoutingControlVisible(true);
-          }
-        }, {
-          stateName: 'disable-routing',
-          icon: "<i class='fa fa-car' style='color: red;'></i>",
-          title: 'Hide Routing',
-          onClick: function (control) {
-            control.state('enable-routing');
-            setIsRoutingControlVisible(false);
-          }
-        }]
-      }).addTo(map);
-
-      return () => {
-        map.removeControl(toggleRoutingButton);
-      };
-    }
-  }, [map]);
-
-  useEffect(() => {
-    if (routingControl) {
-      if (isRoutingControlVisible) {
-        routingControl.show();
-      } else {
-        routingControl.hide();
-      }
-    }
-  }, [routingControl, isRoutingControlVisible]);
+  
 
   return null;
 };
