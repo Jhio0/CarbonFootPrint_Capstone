@@ -1,6 +1,6 @@
 import { Threads } from "openai/resources/beta/threads/threads";
 import { db } from "../../_utils/firebase";
-import { collection, getDocs, addDoc, query, doc, remove } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, doc, remove, getDoc, where } from "firebase/firestore";
 
 export const addThread = async(userId, thread) => {
     try{
@@ -8,7 +8,6 @@ export const addThread = async(userId, thread) => {
             console.log("Inside add threads");
         const itemCol = collection(db, `threads`);
         const docRef = await addDoc(itemCol, thread);
-        // thread.threadId = docRef;
         return docRef.id; 
         }
     }
@@ -35,4 +34,11 @@ export const getThreads = async(userId) => {
     catch(error){
         console.log(error);
     }
+}
+
+export const editThread = async(thread) => {
+    console.log(thread)
+    const q = query(collection(db, 'threads'), where("date", "==", thread.date));
+    const querySnapshot = await getDocs(q);
+    console.log(querySnapshot.docs.findIndex(0))
 }
