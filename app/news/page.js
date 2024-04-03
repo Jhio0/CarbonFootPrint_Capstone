@@ -5,7 +5,9 @@ import Link from "next/link";
 import newsBar from "./components/newsBar";
 
 // use this api to get the news
+
 // https://rapidapi.com/cvera08/api/climate-crisis
+
 
 export default function NewsItem({ news }) {
     const [newsList, setNewsList] = useState([]);
