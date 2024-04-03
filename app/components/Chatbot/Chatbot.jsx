@@ -7,7 +7,7 @@ const openai = new OpenAI({
   dangerouslyAllowBrowser: true,
 });
 
-export default function Chatbot({ toggleChatVisibility, chatHistory, setChatHistory }) {
+export default function Chatbot({ isActive, toggleChatVisibility, chatHistory, setChatHistory }) {
   const [userInput, setUserInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
@@ -40,8 +40,14 @@ export default function Chatbot({ toggleChatVisibility, chatHistory, setChatHist
       { role: 'assistant', content: chatCompletion.choices[0].message.content },
     ]);
 
+    if (!isActive) return;
     setUserInput("");
     setIsLoading(false);
+  };
+
+  const handleFormSubmit = (e) => {
+    e.preventDefault();
+    handleUserInput();
   };
 
   useEffect(() => {
@@ -50,42 +56,53 @@ export default function Chatbot({ toggleChatVisibility, chatHistory, setChatHist
     }
   }, [chatHistory]); // Dependency array ensures this runs every time chatHistory changes
 
+  useEffect(() => {
+    // Whenever the chat is active, automatically focus the input field.
+    const inputField = chatHistoryRef.current?.querySelector('input');
+    if (isActive && inputField) {
+      inputField.focus();
+    }
+  }, [isActive]);
+
   return (
-  <div className="max-w-md mx-auto mt-10 border-2 border-gray-200 bg-gray-900 text-gray-300 flex flex-col p-4 rounded-xl shadow-lg">
-    <div className="flex justify-between items-center mb-4">
-      <h1 className="text-xl font-semibold text-gray-200">Sprout: Your Environmental AI Buddy</h1>
-      <button
-        onClick={toggleChatVisibility}
-        className="bg-red-700 hover:bg-red-800 text-white font-bold py-1 px-2 rounded focus:outline-none transition duration-150 ease-in-out"
-      >
-        X
-      </button>
-    </div>
-    <div ref={chatHistoryRef} className="flex-grow overflow-auto p-3 bg-gray-800 rounded max-h-[500px] mb-4">
-      {chatHistory.map((chat, index) => (
-        <div key={index} className={`flex flex-col mb-2 ${chat.role === "user" ? "items-end" : "items-start"}`}>
-          <div className={`text-sm p-2 rounded-lg shadow-md ${chat.role === "user" ? "bg-ferngreen-900 text-gray-200" : "bg-ferngreen-700 text-gray-200"}`}>
-            {chat.content}
+  <div>
+    <form onSubmit={handleFormSubmit} className="w-full max-w-md mx-auto mt-10 border-2 border-gray-200 bg-gray-900 text-gray-300 flex flex-col p-4 rounded-xl shadow-lg">
+      <div className="flex justify-between items-center mb-4">
+        <h1 className="text-xl font-semibold text-gray-200">Sprout: Your Environmental AI Buddy</h1>
+        <button
+          onClick={toggleChatVisibility}
+          className="bg-red-700 hover:bg-red-800 text-white font-bold py-1 px-2 rounded focus:outline-none transition duration-150 ease-in-out"
+        >
+          X
+        </button>
+      </div>
+      <div ref={chatHistoryRef} className="flex-grow overflow-auto p-3 bg-gray-800 rounded max-h-[500px] mb-4">
+        {chatHistory.map((chat, index) => (
+          <div key={index} className={`flex flex-col mb-2 ${chat.role === "user" ? "items-end" : "items-start"}`}>
+            <div className={`text-sm p-2 rounded-lg shadow-md ${chat.role === "user" ? "bg-ferngreen-900 text-gray-200" : "bg-ferngreen-700 text-gray-200"}`}>
+              {chat.content}
+            </div>
           </div>
-        </div>
-      ))}
-    </div>
-    <div className="flex">
-      <input
-        type="text"
-        value={userInput}
-        onChange={(e) => setUserInput(e.target.value)}
-        placeholder="Type your message..."
-        className="flex-grow rounded-l-md p-2 border-0 focus:ring-2 focus:ring-green-700 transition duration-150 ease-in-out"
-      />
-      <button
-        onClick={handleUserInput}
-        disabled={isLoading}
-        className="bg-ferngreen-800 hover:bg-ferngreen-900 text-white rounded-r-md px-4 disabled:bg-green-600 disabled:cursor-not-allowed transition duration-150 ease-in-out"
-      >
-        {isLoading ? '...' : 'Send'}
-      </button>
-    </div>
+        ))}
+      </div>
+      <div className="flex">
+        <input
+          type="text"
+          value={userInput}
+          autoFocus
+          onChange={(e) => setUserInput(e.target.value)}
+          placeholder="Type your message..."
+          className="flex-grow rounded-l-md p-2 border-0 focus:ring-2 focus:ring-green-700 transition duration-150 ease-in-out input"
+        />
+        <button
+          type="submit"
+          disabled={isLoading}
+          className="bg-ferngreen-800 hover:bg-ferngreen-900 text-white rounded-r-md px-4 disabled:bg-green-600 disabled:cursor-not-allowed transition duration-150 ease-in-out"
+        >
+          {isLoading ? '...' : 'Send'}
+        </button>
+      </div>
+    </form>
   </div>
 
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Chatbot from "../Chatbot/Chatbot.jsx";
 import { FaRegComments } from "react-icons/fa"; // Make sure to install react-icons using `npm install react-icons`
 
@@ -6,9 +6,27 @@ export default function ChatBubble() {
   const [isChatVisible, setIsChatVisible] = useState(false);
   const [chatHistory, setChatHistory] = useState([]);
 
+  // This function toggles the visibility of the chat.
   const toggleChatVisibility = () => {
-    setIsChatVisible(!isChatVisible);
+    setIsChatVisible((visible) => !visible);
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.key === 'Enter' && isChatVisible) {
+        event.preventDefault();
+        // You can also call handleUserInput here if you want to submit on Enter press
+      }
+    };
+  
+    // Add event listener when the component mounts
+    document.addEventListener('keydown', handleKeyDown);
+  
+    // Remove event listener on cleanup
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isChatVisible]);
 
   return (
     <div className="fixed bottom-4 right-4 z-50">
@@ -22,6 +40,7 @@ export default function ChatBubble() {
         </button>
       ) : (
         <Chatbot
+          isActive={isChatVisible}
           toggleChatVisibility={toggleChatVisibility}
           chatHistory={chatHistory}
           setChatHistory={setChatHistory}

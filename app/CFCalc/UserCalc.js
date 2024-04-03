@@ -384,7 +384,7 @@
         </div>
         <AIClimateRecommendation
           emissions={{ electricityEmission, naturalGasEmission }}
-          onCalculate={fetchRecommendation ? handleCalculationRecommendation : undefined}
+          onCalculate={fetchRecommendation}
         />
       </div>
     );
