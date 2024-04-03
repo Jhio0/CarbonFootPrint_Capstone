@@ -71,6 +71,8 @@ export default function ReportForm() {
         loadReports();
     }, [user]);
 
+    console.log("isPrivate:", isPrivate);
+
     return (
     <div className="bg-white dark:bg-gray-900">
         <form onSubmit={handleSubmit} className="p-10 max-w-xl mx-auto shadow-md sm:border-0 md:border md:border-gray-900 md:dark:border-gray-100 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
@@ -106,7 +108,7 @@ export default function ReportForm() {
             <div className="mb-5">
                 <label htmlFor="location" className="text-lg flex justify-between items-end"><span>Private</span></label>
                 <div className="mt-1 flex shadow-md">
-                    <input type="checkbox" id="location" value={isPrivate} onChange={(e) => setPrivate(e.target.value)}  className="flex-1 block w-full sm:text-sm rounded-none border border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"/>
+                    <input type="checkbox" id="location" value={isPrivate} onChange={(e) => setPrivate(e.target.checked)}  className="flex-1 block w-full sm:text-sm rounded-none border border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"/>
                 </div>
             </div>
             <div>

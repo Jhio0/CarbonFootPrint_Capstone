@@ -29,6 +29,10 @@ export const UserEmissions = () => {
         setEmission(emissionSnap.data()); // Set the emission state with data retrieved
     };
 
+    if (!emission) {
+        return null;
+      }
+
     return (
         <TableContainer component={Paper} sx={{ display: 'flex' }}>
             <div style={{ flex: '1 1 auto', overflowX: 'auto' }}>
