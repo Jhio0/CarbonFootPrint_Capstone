@@ -1,7 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext.js";
-import { addThread, getThreads, editThread} from "./_services/thread-service.js";
+import {
+  addThread,
+  getThreads,
+  editThread,
+  deleteThread
+} from "./_services/thread-service.js";
 import { Button } from "@mui/material";
 // CreatedAT (DATE), POST ID, Title, Content, Edit, Reply
 // EDIT ? Firebase
@@ -12,6 +17,8 @@ const ForumPage = () => {
   const [content, setContent] = useState("");
   const [date, setDate] = useState("");
   const [ThreadClicked, setThreadClicked] = useState("");
+  const [editTitle, setEditTitle] = useState("");
+  const [editContent, setEditContent] = useState("");
 
   const thread = {
     title: title,
@@ -20,6 +27,7 @@ const ForumPage = () => {
     date: date,
     threadUid: "",
     replies: replies,
+    docRef: "",
   };
 
   // Write a getDate that formats the date object for a string. Potentially delete and re-create DB for string date.
@@ -31,16 +39,27 @@ const ForumPage = () => {
       newThread.author = user.displayName;
     }
     newThread.threadUid = user.uid;
-    await addThread(user.uid, newThread);
+    newThread.docRef = await addThread(user.uid, newThread);
     setThreads([...threads, newThread]);
   };
+  const handleDeleteClick = async (deleteThread) => {
+    if(user.uid == deleteThread.threadUid) {
+      await handleDeleteThread(deleteThread)
+      const filteredThreads = threads.filter(thread => thread !== deleteThread);
+      setThreads(filteredThreads)
+    }
+  };
+  const handleDeleteThread = async(thread) => {
+    await deleteThread(thread)
+  }
   //GET threads and populate page.
   const loadThreads = async () => {
     const storedThreads = await getThreads(user.uid);
     setThreads(storedThreads);
   };
   const handleEditThread = async (thread) => {
-    console.log("Inside handleEditThread.")
+    // console.log("Inside handleEditThread.");
+    // console.log(thread)
     await editThread(thread);
   };
   function formatDate(dateObject) {
@@ -70,7 +89,7 @@ const ForumPage = () => {
     try {
       //Send thread to db;
       thread.date = formatDate(new Date());
-      console.log(thread.date);
+      // console.log(thread.date);
       handleAddThread(thread);
       setTitle("");
       setContent("");
@@ -82,7 +101,6 @@ const ForumPage = () => {
 
   //DELETE the thread.
   //Refresh page and remove info - delete from db itself.
-  //UPDATE the thread.
 
   useEffect(() => {
     if (user) {
@@ -94,20 +112,24 @@ const ForumPage = () => {
 
   //Find the thread by matching user ID to author.
   const findThreadById = (id) => {
-    console.log(id);
+    // console.log(id);
     return threads.find((thread) => thread.threadUid === id);
   };
 
-  // Find the correct thread id that matches user
-  // If found, re-write title and content.
-  // Over-write data in front and back end.
   const handleEditClick = async (editThread, tid) => {
     if (editThread.threadUid === user.uid) {
-      handleEditThread(editThread)
       setThreadClicked(tid);
     }
   };
-
+  const handleEditSubmit = async (editThread) => {
+    editThread.title = editTitle;
+    editThread.content = editContent;
+    // console.log("From inside handleEditSubmit:", editThread.content)
+    await handleEditThread(editThread);
+    setEditTitle("");
+    setEditContent("");
+    loadThreads();
+  };
   return (
     <>
       <main className="home">
@@ -168,41 +190,48 @@ const ForumPage = () => {
               >
                 <h2>{thread.title}</h2>
                 <p>{thread.content}</p>
-                <div>
-                  <Button
-                    key={thread.id}
-                    className=" m-2 text-decoration-none btn btn-sm btn-success flex-row"
-                    onClick={() => handleEditClick(thread, thread.id)}
-                  >
-                    Edit
-                  </Button>
-                  {ThreadClicked === thread.id && (
-                    <div className="popup">
-                      <h2>Edit Thread</h2>
-                      <label>Title:</label>
-                      <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                      />
-                      <label>Content:</label>
-                      <textarea
-                        value={content}
-                        onChange={(e) => setContent(e.target.value)}
-                      />
-                      <button>Save</button>
-                      <button>Cancel</button>
-                    </div>
-                  )}
-                </div>
-                <div>
-                  <Button
-                    className="m-2 text-decoration-none btn btn-sm btn-success flex-row"
-                    // onClick={ () => deleteThread(/delete/${thread.id})}
-                  >
-                    Delete
-                  </Button>
-                </div>
+                {user.uid === thread.threadUid && (
+                <><div>
+                    <Button
+                      key={thread.id}
+                      className=" m-2 text-decoration-none btn btn-sm btn-success flex-row"
+                      onClick={() => handleEditClick(thread, thread.id)}
+                    >
+                      Edit
+                    </Button>
+                    {ThreadClicked === thread.id && (
+                      <div className="popup">
+                        <h2>Edit Thread</h2>
+                        <label>Title:</label>
+                        <textarea
+                          id="editTitle"
+                          value={editTitle}
+                          onChange={(e) => setEditTitle(e.target.value)}
+                          className="text-black textarea" />
+                        <label>Content:</label>
+                        <textarea
+                          id="editContent"
+                          value={editContent}
+                          onChange={(e) => setEditContent(e.target.value)}
+                          className="text-black textarea" />
+                        <button className="m-2 text-decoration-none btn btn-sm btn-success flex-row"
+                          onClick={(e) => handleEditSubmit(thread)}>
+                          Save
+                        </button>
+                        <button
+                          className="m-2 text-decoration-none btn btn-sm btn-success flex-row"
+                        >Cancel</button>
+                      </div>
+                    )}
+                  </div><div>
+                      <Button
+                        className="m-2 text-decoration-none btn btn-sm btn-success flex-row"
+                        onClick={(e) => handleDeleteClick(thread)}
+                      >
+                        Delete
+                      </Button>
+                    </div></>
+                )}
                 <p>{thread.date}</p>
               </div>
             ))}
