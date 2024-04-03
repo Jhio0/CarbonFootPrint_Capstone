@@ -18,11 +18,9 @@ export default function ReportForm() {
     const { user } = UserAuth();
 
     const loadReports = async () => {
-        if (typeof window !== 'undefined') {
-            const reports = await getReports(user.uid);
-            console.log("Reports", reports);
-            setReports(reports);
-        }
+        const reports = await getReports(user.uid);
+        console.log("Reports", reports);
+        setReports(reports);
     };
 
     const handleSubmit = async (event) => {
@@ -38,7 +36,7 @@ export default function ReportForm() {
             title: title,
             text: text,
             date: date,
-            location: location, // Use location directly
+            location: location, 
             private: isPrivate,
         };
     
@@ -46,7 +44,7 @@ export default function ReportForm() {
             console.log("Submitting report", report);
             console.log("User", user.uid);
             
-            if (isPrivate == true) {
+            if (isPrivate === true) {
                 // If the report is private, call addReport
                 const reportId = await addReport(user.uid, report);
                 console.log('Private report added with ID:', reportId);
@@ -71,11 +69,11 @@ export default function ReportForm() {
 
     useEffect(() => {
         loadReports();
-    }, [user, reports]);
+    }, [user]);
 
     return (
     <div className="bg-white dark:bg-gray-900">
-        <form action="" className="p-10 max-w-xl mx-auto shadow-md sm:border-0 md:border md:border-gray-900 md:dark:border-gray-100 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+        <form onSubmit={handleSubmit} className="p-10 max-w-xl mx-auto shadow-md sm:border-0 md:border md:border-gray-900 md:dark:border-gray-100 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             <div className="mb-10">
                 <h1 className="font-bold text-4xl mb-3">Report</h1>
                 <p className="font-medium text-lg mb-5"></p>
@@ -112,7 +110,7 @@ export default function ReportForm() {
                 </div>
             </div>
             <div>
-                <button type="submit" onSubmit={handleSubmit } className="font-medium shadow-md rounded-none p-2 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 border border-gray-900 dark:border-gray-100 bg-gray-800 dark:bg-gray-200 text-gray-200 dark:text-gray-800 hover:bg-gray-900 dark:hover:bg-gray-100">Submit Report</button>
+                <button type="submit" className="font-medium shadow-md rounded-none p-2 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 border border-gray-900 dark:border-gray-100 bg-gray-800 dark:bg-gray-200 text-gray-200 dark:text-gray-800 hover:bg-gray-900 dark:hover:bg-gray-100">Submit Report</button>
             </div>
         </form>
         <div className="reportsContainer">

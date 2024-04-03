@@ -8,6 +8,7 @@ import { UserAuth } from '../context/AuthContext'; // Assuming you have an AuthC
 import { useRouter } from 'next/navigation';  
 import { LogInError } from '../_utils/authError/authLoginError';
 
+
 export default function Profile() {
     const { user } = UserAuth();
     const [loading, setLoading] = useState(true);

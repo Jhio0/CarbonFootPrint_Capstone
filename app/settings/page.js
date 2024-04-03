@@ -4,6 +4,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import Typography from '@mui/material/Typography';
 import { auth } from '../_utils/firebase';
+import { LogInError } from '../_utils/authError/authLoginError';
 
 import { UserAuth } from '../context/AuthContext'; // Assuming you have an AuthContext
 
@@ -87,7 +88,7 @@ export default function Settings() {
                 </Grid>
             ) : (
                 <div>
-                    <p>Please sign in to view your profile.</p>
+                    <LogInError/>
                 </div>
             )}
         </Container>
