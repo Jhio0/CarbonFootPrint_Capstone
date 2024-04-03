@@ -1,5 +1,6 @@
 "use client"
 import React, { useState, useEffect } from "react";
+import Image from "next/image";
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -20,8 +21,9 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 
-const pages = ['logIn','signUp'];
-const pagesauth = ['CFCalc', 'reports', 'forum']
+const pages = ['logIn','signUp', 'news'];
+const pagesauth = ['CFCalc', 'reports', 'forum', 'news']
+
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout',];
 
 function ResponsiveAppBar() {
@@ -39,7 +41,6 @@ function ResponsiveAppBar() {
     checkAuthentication();
   }, [user]);
 
-  console.log('User:', user);
 
   const handleSignOut = async () => {
     try {
@@ -69,39 +70,46 @@ function ResponsiveAppBar() {
   };
 
   //color
-  const darkTheme = createTheme({
+
+  const customTheme = createTheme({
     palette: {
-      mode: 'dark',
       primary: {
-        main: '#1976d2',
+        main: '#1E1E1C', // Replace with the primary color you want for the AppBar
+      },
+      secondary: {
+        main: '#E6CF58', // Replace with the color you want for the hover
+      },
+      // Add other custom colors as needed
+    },
+    components: {
+      MuiButton: {
+        styleOverrides: {
+          // Style override for hover state on buttons
+          root: {
+            '&:hover': {
+              backgroundColor: '#E6CF58', // Replace with the hex color for hover
+            },
+          },
+        },
       },
     },
   });
 
   return (
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={customTheme}>
       <AppBar position="static">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
-            <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
-            <Typography
-              variant="h6"
-              noWrap
-              component={Link}
-              href="/"
-              sx={{
-                mr: 2,
-                display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
-                textDecoration: 'none',
-              }}
-            >
-              LOGO
-            </Typography>
-
+            <Link href="/" passHref>
+              <Image
+                src="../../carbonlogo.svg" // Update with the path to your logo
+                alt="logo"
+                width={35} // Set the size of your logo
+                height={35}
+                style={{ cursor: 'pointer' }} // Optional for a pointer cursor on hover\
+                className="mr-4"
+              />
+            </Link>
 
             {loading ? null : !user ? (
               <>
@@ -146,33 +154,12 @@ function ResponsiveAppBar() {
                     ))}
                   </Menu>
                 </Box>
-                <AdbIcon
-                  sx={{ display: { xs: 'flex', md: 'none' }, mr: 1 }}
-                />
-                <Typography
-                  variant="h5"
-                  noWrap
-                  component={Link}
-                  href="/"
-                  sx={{
-                    mr: 2,
-                    display: { xs: 'flex', md: 'none' },
-                    flexGrow: 1,
-                    fontFamily: 'monospace',
-                    fontWeight: 700,
-                    letterSpacing: '.3rem',
-                    color: 'inherit',
-                    textDecoration: 'none',
-                  }}
-                >
-                  LOGO
-                </Typography>
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                   {pages.map((page) => (
                     <Button
                       key={page}
                       onClick={handleCloseNavMenu}
-                      sx={{ my: 2, color: 'white', display: 'block' }}
+                      sx={{ my: 2, color: 'white', display: 'block', '&:hover': { backgroundColor: 'secondary.main' } }}
                     >
                       <Link href={`/${page}`}>{page}</Link>
                     </Button>
@@ -187,7 +174,7 @@ function ResponsiveAppBar() {
                     <Button
                       key={page}
                       onClick={handleCloseNavMenu}
-                      sx={{ my: 2, color: 'white', display: 'block' }}
+                      sx={{ my: 2, color: 'white', display: 'block', '&:hover': { backgroundColor: 'secondary.main' } }}
                     >
                       <Link href={`/${page}`}>{page}</Link>
                     </Button>

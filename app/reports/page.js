@@ -11,7 +11,7 @@ export default function ReportPage() {
     const [date, setDate] = useState("");
     const [location, setLocation] = useState("");
     const [reports, setReports] = useState([]);
-    // const [reportsUtil, newReportsUtil] = useState(reports);
+    const [reportsUtil, newReportsUtil] = useState(reports);
 
     const { user } = UserAuth(); // Get the user from the auth hook
 
@@ -22,9 +22,14 @@ export default function ReportPage() {
     } 
 
     const loadReports = async () => {
-        const reports = await getReports(user.uid);
-        console.log("Reports", reports);
-        setReports(reports);
+        try {
+            const reports = await getReports(user.uid);
+            console.log("Reports", reports);
+            setReports(reports);
+        }
+        catch (error) {
+            console.error('Error loading reports:', error);
+        }
     };
 
     const handleSubmit = async (event) => {
@@ -58,11 +63,15 @@ export default function ReportPage() {
     };
 
     useEffect(() => {
-        if (user) {
-            loadReports();
-        }
-        else{
-            return;
+        try {
+            if (user) {
+                loadReports();
+            }
+            else{
+                return;
+            }
+        } catch (error) {
+            console.error('Error loading reports:', error);
         }
     }, [user]);
     

@@ -1,7 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import UserCalc from "./UserCalc";
+import AIClimateRecommendation from "./CalcAI";
 
 function Page() {
   const [emissions, setEmissions] = useState({

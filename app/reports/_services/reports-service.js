@@ -17,6 +17,7 @@ export const getReports = async(userId) => {
         const itemCol = collection(db, `users/${userId}/reports`);
         const querySnapshot = await getDocs(itemCol);
         const reports = [];
+        console.log("read reports");
         querySnapshot.forEach((doc) => {
             reports.push({id: doc.id, ...doc.data()});
         });
