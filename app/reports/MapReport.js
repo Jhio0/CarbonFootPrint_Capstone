@@ -15,6 +15,7 @@ import "font-awesome/css/font-awesome.min.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {useLocation} from './LocationContext';
+import { ThreeCircles } from 'react-loader-spinner';
 
 export default function MapReport({ onLocationSelect }) {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
@@ -320,7 +321,18 @@ export default function MapReport({ onLocationSelect }) {
   return (
       <div >
         {loading ? (
-          <div className="spinner"></div>
+          <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+          <ThreeCircles
+           visible={true}
+           height="100"
+           width="100"
+           color="#4fa94d"
+           ariaLabel="three-circles-loading"
+           wrapperStyle={{}}
+           wrapperClass=""
+         />
+
+       </div>
         ) : (
           <MapContainer center={[38, -97]} zoom={4}  ref={mapRef} worldCopyJump={true}  
           maxBounds={[

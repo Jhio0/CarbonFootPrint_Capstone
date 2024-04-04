@@ -7,6 +7,9 @@
   import { doc, setDoc } from "firebase/firestore";
   import { auth, db } from "/app/_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
   import { onAuthStateChanged } from "firebase/auth";
+
+  //maps
+  import MapRouting from "./MapRouting";
   const emissionFactors = {
     Canada: {
       "Alberta (AB)": {
@@ -226,7 +229,7 @@
 
     return (
       <div className="flex w-full min-h-screen my-5 ">
-        <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center ml-5">
+        <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center ">
           <div role="tablist" className="tabs tabs-bordered mb-5">
             {["Location", "Home", "Flights", "Vehicle"].map((tabName) => (
               <button
@@ -354,6 +357,7 @@
                 Total Vehicle Emissions: {vehicleEmissions.toFixed(2)} kg CO2e
               </p>
             </div>
+
           )}
           <button
             className="btn btn-outline btn-success mt-10"
@@ -361,6 +365,10 @@
           >
             Save Results
           </button>
+          <AIClimateRecommendation
+          emissions={{ electricityEmission, naturalGasEmission }}
+          onCalculate={fetchRecommendation}
+        />
         </div>
         <div className="divider divider-horizontal"></div> {/*middle line*/}
         <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center">
@@ -373,7 +381,7 @@
               <div className="stat-desc"></div>
             </div>
           </div>
-          <div className="size-[448px]">
+          <div className="size-[350px]">
             <EmissionDonutChart
               electricityEmission={electricityEmission}
               naturalGasEmission={naturalGasEmission}
@@ -381,11 +389,15 @@
               vehicleEmission={vehicleEmissions}
             />
           </div>
+          
         </div>
-        <AIClimateRecommendation
-          emissions={{ electricityEmission, naturalGasEmission }}
-          onCalculate={fetchRecommendation}
-        />
+
+        
+        <div className="w-1/2 h-full card bg-base-300 rounded-box place-items-center">
+          {/* MapRouting content */}
+          <MapRouting />
+        </div>
+        
       </div>
     );
   };

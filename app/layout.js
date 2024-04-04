@@ -22,7 +22,7 @@ export default function RootLayout({ children }) {
           <AuthContextProvider>
             <Navbar />
             {children}
-            <ChatBubble />  
+            <ChatBubble />
             <Footer />
           </AuthContextProvider>
       </body>

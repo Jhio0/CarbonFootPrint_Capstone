@@ -1,9 +1,8 @@
 "use client"
 import React, { useState, useEffect } from "react";
-import { addReport, getReports } from "../_services/reports-service";
 import { UserAuth } from "../context/AuthContext.js";
 import { useLocation } from './LocationContext';
-
+import { addReport, getReports } from "./_services/reports-service.js";
 import { FaLocationDot } from "react-icons/fa6";
 import { CiCalendarDate } from "react-icons/ci";
 import { IoIosCheckmark } from "react-icons/io";
@@ -17,19 +16,30 @@ export default function ReportForm() {
     const [date, setDate] = useState("");
     const { location, setLocation } = useLocation(); // Destructure location and setLocation from useLocation() hook
     const [reports, setReports] = useState([]);
+    const [reportsUtil, newReportsUtil] = useState(reports);
 
-    const { user } = UserAuth();
+    const { user } = UserAuth(); // Get the user from the auth hook
 
-    // const loadReports = async () => {
-    //     const reports = await getReports(user.uid);
-    //     console.log("Reports", reports);
-    //     setReports(reports);
+    // Handler to process the report submission
 
-    // };
+    const handleAddReport = (event) => {
+        newReportsUtil([...reports, event])
+    } 
+
+    const loadReports = async () => {
+        try {
+            const reports = await getReports(user.uid);
+            console.log("Reports", reports);
+            setReports(reports);
+        }
+        catch (error) {
+            console.error('Error loading reports:', error);
+        }
+    };
 
     const handleSubmit = async (event) => {
         event.preventDefault();
-        
+    
         // Guard clause to ensure user is authenticated
         if (!user) {
             console.error('User is not authenticated.');
@@ -40,27 +50,35 @@ export default function ReportForm() {
             title: title,
             text: text,
             date: date,
-            location: location, // Use location directly
+            location: location,
         };
     
         try {
-            console.log("Submitting report", report);
-            console.log("User", user.uid);
             const reportId = await addReport(user.uid, report);
             console.log('Report added with ID:', reportId);
+            handleAddReport(report);
             setTitle("");
             setText("");
             setDate("");
-            setLocation(""); // Clear the location after submission
+            setLocation("");
         } catch (error) {
             console.error('Error submitting report:', error);
             // Handle the error appropriately in your UI
         }
     };
 
-    // useEffect(() => {
-    //     loadReports();
-    // }, [user]);
+    useEffect(() => {
+        try {
+            if (user) {
+                loadReports();
+            }
+            else{
+                return;
+            }
+        } catch (error) {
+            console.error('Error loading reports:', error);
+        }
+    }, [user]);
 
     const showToastMessage = (event) => {
         event.preventDefault();
@@ -70,15 +88,15 @@ export default function ReportForm() {
       };
 
     return (
-    <div className="bg-white dark:bg-gray-900">
-        <form action="" className="p-10 max-w-xl mx-auto shadow-md sm:border-0 md:border md:border-gray-900 md:dark:border-gray-100 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+        <div className="bg-white dark:bg-gray-900 flex flex-col md:flex-row">
+        <form onSubmit={handleSubmit} className="p-10 max-w-xl mx-auto shadow-md sm:border-0 md:border md:border-gray-900 md:dark:border-gray-100 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 md:mr-5 mb-5 md:mb-0">
             <div className="mb-10">
                 <h1 className="font-bold text-4xl mb-3">Report</h1>
                 <p className="font-medium text-lg mb-5"></p>
                 <hr className="border-gray-900 dark:border-gray-100"/>
             </div>
             <div className="mb-5">
-                <label for="message" className="text-lg flex justify-between items-end"><span>Message</span></label>
+                <label htmlFor="message" className="text-lg flex justify-between items-end"><span>Message</span></label>
                 <textarea name="message" id="message" cols="30" rows="10" className="shadow-md mt-1 block w-full sm:text-sm rounded-none border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"></textarea>
             </div>
             <div className="mb-5">
@@ -105,15 +123,17 @@ export default function ReportForm() {
                 <button type="submit" onClick={showToastMessage}  className="font-medium shadow-md rounded-none p-2 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 border border-gray-900 dark:border-gray-100 bg-gray-800 dark:bg-gray-200 text-gray-200 dark:text-gray-800 hover:bg-gray-900 dark:hover:bg-gray-100">Submit Report</button>
             </div>
         </form>
-        <div className="reportsContainer">
-                    {reports && reports.map((report) => (
-                        <div key={report.id}>
-                            <h2>{report.title}</h2>
-                            <p>{report.text}</p>
-                            <p>{report.date}</p>
-                            <p>{report.location}</p>
-                        </div>
-                    ))}
+        <div className="reportsContainer md:w-1/3 md:max-w-md">
+            {/* Display the reports here */}
+            {/* fix this, pass props like the web dev 2 assignments */}
+            {reports.map((report) => (
+                <div key={report.id} className="p-3 bg-gray-800 rounded-md m-3">
+                    <h2>{report.title}</h2>
+                    <p>{report.text}</p>
+                    <p>{report.date}</p>
+                    <p>{report.location}</p>
+                </div>
+            ))}
         </div>
         <ToastContainer
             position="top-right"
@@ -126,7 +146,6 @@ export default function ReportForm() {
             draggable
             pauseOnHover
             theme="dark"
-
         />
     </div>
     );
