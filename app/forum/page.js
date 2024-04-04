@@ -10,6 +10,10 @@ import {
 import { Button } from "@mui/material";
 // CreatedAT (DATE), POST ID, Title, Content, Edit, Reply
 // EDIT ? Firebase
+
+//notification
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const ForumPage = () => {
   const [threads, setThreads] = useState([]);
   const [replies, setReplies] = useState([]);
@@ -130,6 +134,14 @@ const ForumPage = () => {
     setEditContent("");
     loadThreads();
   };
+
+  const showToastMessage = (event) => {
+    event.preventDefault();
+    toast.success("Success Notification !", {
+      position: "top-right",
+    });
+  };
+
   return (
     <>
       <main className="home">
@@ -177,6 +189,7 @@ const ForumPage = () => {
               className="py-4 px-6 text-white"
               onSubmit={addThread}
               type="submit"
+              onClick={showToastMessage} 
             >
               CREATE THREAD
             </button>
@@ -237,6 +250,18 @@ const ForumPage = () => {
             ))}
           </div>
         </div>
+        <ToastContainer
+            position="top-right"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+        />
       </main>
     </>
   );
