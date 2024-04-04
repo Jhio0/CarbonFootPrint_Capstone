@@ -12,6 +12,14 @@ module.exports = {
         "gradient-conic":
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
+      colors: {
+        ferngreen: {
+          900: "#3F6B2F",
+          800: "#608531",
+          700: "#79A93D",
+          600: "#87AE56",
+        },
+      },
     },
   },
   plugins: [require("daisyui")],

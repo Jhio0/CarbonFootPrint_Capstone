@@ -1,4 +1,4 @@
-import { db } from "../_utils/firebase";
+import { db } from "../../_utils/firebase";
 import { collection, getDocs, addDoc, query } from "firebase/firestore";
 
 export const addReport = async(userId, report) => {
@@ -14,9 +14,10 @@ export const addReport = async(userId, report) => {
 
 export const getReports = async(userId) => {
     try{
-        const itemCol = collection(db, `users/${userId}/items`);
+        const itemCol = collection(db, `users/${userId}/reports`);
         const querySnapshot = await getDocs(itemCol);
         const reports = [];
+        console.log("read reports");
         querySnapshot.forEach((doc) => {
             reports.push({id: doc.id, ...doc.data()});
         });

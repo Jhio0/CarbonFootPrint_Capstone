@@ -1,8 +1,10 @@
 "use client";
 import React, { useState } from "react";
-import Link from "next/link";
 import UserCalc from "./UserCalc";
+
 import MapRouting from "./MapRouting"
+import AIClimateRecommendation from "./CalcAI";
+
 
 function Page() {
   const [emissions, setEmissions] = useState({
@@ -15,14 +17,11 @@ function Page() {
   };
 
   return (
-    // <main className="bg-base-300 min-h-screen w-full flex flex-col justify-center items-start">
-    //   <div className="bg-base-300">
-    //     <UserCalc updateEmissions={updateEmissions} />
-    //   </div>
-    // </main>
-    <div>
-      <MapRouting/>
-    </div>
+    <main className="bg-base-300 min-h-screen w-full flex flex-col justify-center items-start">
+      <div className="bg-base-300">
+        <UserCalc updateEmissions={updateEmissions} />
+      </div>
+    </main>
   );
 }
 

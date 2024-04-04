@@ -274,6 +274,7 @@ export default function Map() {
   
   return (
     <div>
+
       <div>
       {loading ? (
         <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
@@ -375,17 +376,18 @@ export default function Map() {
                 </div>
             </div>
 
-              <div style={{ position: 'absolute', top: '50px', zIndex: 1000 }}>
-                <div className='flex flex-col'>
-                  <div className='ml-2 mt-10 w-100%'>
-                    <CarbonEmissionsLeaderboard/>
-                  </div>
+            <div style={{ position: 'absolute', top: '50px', zIndex: 1000 }}>
+              <div className='flex flex-col'>
+                <div className='ml-2 mt-10 w-100%'>
+                  <CarbonEmissionsLeaderboard/>
                 </div>
               </div>
+            </div>
 
             <SearchField/>
           </MapContainer>
         )}
+    
       </div>
     </div>
 
