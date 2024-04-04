@@ -1,5 +1,5 @@
 "use client"
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
@@ -18,33 +18,56 @@ const AirportMapRouting = () => {
   const [destinationAirport, setDestinationAirport] = useState(null);
   const [sourceOptions, setSourceOptions] = useState([]);
   const [destinationOptions, setDestinationOptions] = useState([]);
-
+  
   useEffect(() => {
-    // Populate source and destination options with airport data
-    setSourceOptions(AirportData);
-    setDestinationOptions(AirportData);
+    // Lazy loading airport data
+    setSourceOptions(AirportData.slice(0, 100)); // Load first 100 airports initially
+    setDestinationOptions(AirportData.slice(0, 100));
+  }, []);
+  
+  const handleSourceAirportChange = useCallback((_, value) => {
+    setSourceAirport(value);
+  }, []);
+  
+  const handleDestinationAirportChange = useCallback((_, value) => {
+    setDestinationAirport(value);
   }, []);
 
-  const handleSourceAirportChange = (_, value) => {
-    setSourceAirport(value);
-  };
+  // Debounced search function to avoid frequent updates
+  const debouncedSearch = useCallback(
+    debounce((query, setOptions) => {
+      if (!query) {
+        setOptions(AirportData.slice(0, 100)); // Load first 100 airports if query is empty
+        return;
+      }
+      // Filter options based on user input (query)
+      const filteredOptions = AirportData.filter(option =>
+        option.name.toLowerCase().includes(query.toLowerCase())
+      );
+      setOptions(filteredOptions.slice(0, 100)); // Load first 100 filtered airports
+    }, 300),
+    []
+  );
 
-  const handleDestinationAirportChange = (_, value) => {
-    setDestinationAirport(value);
+  const handleSearch = (event, value, setOptions) => {
+    debouncedSearch(value, setOptions);
   };
-
-  // Populate options with all airports when input is empty
-  const handleSearch = (query, setOptions) => {
-    if (!query) {
-      setOptions(AirportData);
-      return;
-    }
-    // Filter options based on user input (query)
-    const filteredOptions = AirportData.filter(option =>
-      option.name.toLowerCase().includes(query.toLowerCase())
-    );
-    setOptions(filteredOptions);
+  // Function to debounce calls
+function debounce(func, wait, immediate) {
+  let timeout;
+  return function executedFunction() {
+    const context = this;
+    const args = arguments;
+    const later = function() {
+      timeout = null;
+      if (!immediate) func.apply(context, args);
+    };
+    const callNow = immediate && !timeout;
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+    if (callNow) func.apply(context, args);
   };
+}
 
   return (
     <div style={{ height: '100vh', width: '95vh' }}>
@@ -59,8 +82,8 @@ const AirportMapRouting = () => {
               id='source-airport'
               options={sourceOptions}
               onChange={handleSourceAirportChange}
-              getOptionLabel={(option) => option.name}
-              onInputChange={(e, value) => handleSearch(value, setSourceOptions)}
+              getOptionLabel={(option) => option.iata_code}
+              onInputChange={(event, value) => handleSearch(event, value, setSourceOptions)}
               style={{ 
                 width: 300, 
                 background: 'rgba(0, 0, 0, 0.1)', // Black with 10% opacity
@@ -87,8 +110,8 @@ const AirportMapRouting = () => {
               id='destination-airport'
               options={destinationOptions}
               onChange={handleDestinationAirportChange}
-              getOptionLabel={(option) => option.name}
-              onInputChange={(e, value) => handleSearch(value, setDestinationOptions)}
+              getOptionLabel={(option) => option.iata_code}
+              onInputChange={(event, value) => handleSearch(event, value, setDestinationOptions)}
               style={{ 
                 width: 300, 
                 background: 'rgba(0, 0, 0, 0.1)', // Black with 10% opacity
@@ -118,6 +141,7 @@ const AirportMapRouting = () => {
     </div>
   );
 };
+
 
 const Routing = ({ sourceAirport, destinationAirport }) => {
     const map = useMap();

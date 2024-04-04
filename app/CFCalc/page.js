@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import UserCalc from "./UserCalc";
 
-import MapRouting from "./MapRouting"
+import AirportMapRouting from "./AirpotMapRoutin"
 import AIClimateRecommendation from "./CalcAI";
 
 
