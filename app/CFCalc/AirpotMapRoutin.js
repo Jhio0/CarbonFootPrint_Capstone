@@ -70,7 +70,7 @@ function debounce(func, wait, immediate) {
 }
 
   return (
-    <div style={{ height: '100vh', width: '95vh' }}>
+    <div style={{ height: '100vh', width: '75vh' }}>
       <MapContainer center={[20, 0]} zoom={6}>
         <TileLayer 
           attribution='&copy; <a href=7"https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -85,7 +85,7 @@ function debounce(func, wait, immediate) {
               getOptionLabel={(option) => option.iata_code}
               onInputChange={(event, value) => handleSearch(event, value, setSourceOptions)}
               style={{ 
-                width: 300, 
+                width: 200, 
                 background: 'rgba(0, 0, 0, 0.1)', // Black with 10% opacity
                 borderRadius: '8px', // Rounded corners
                 border: '1px solid #ccc', // Border
@@ -113,7 +113,7 @@ function debounce(func, wait, immediate) {
               getOptionLabel={(option) => option.iata_code}
               onInputChange={(event, value) => handleSearch(event, value, setDestinationOptions)}
               style={{ 
-                width: 300, 
+                width: 200, 
                 background: 'rgba(0, 0, 0, 0.1)', // Black with 10% opacity
                 borderRadius: '8px', // Rounded corners
                 border: '1px solid #ccc', // Border

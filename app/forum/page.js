@@ -95,6 +95,9 @@ const ForumPage = () => {
       thread.date = formatDate(new Date());
       // console.log(thread.date);
       handleAddThread(thread);
+      toast.success("Success Notification !", {
+        position: "top-right",
+      });
       setTitle("");
       setContent("");
     } catch (error) {
@@ -133,14 +136,9 @@ const ForumPage = () => {
     setEditTitle("");
     setEditContent("");
     loadThreads();
+    showToastMessage();
   };
 
-  const showToastMessage = (event) => {
-    event.preventDefault();
-    toast.success("Success Notification !", {
-      position: "top-right",
-    });
-  };
 
   return (
     <>
@@ -189,7 +187,6 @@ const ForumPage = () => {
               className="py-4 px-6 text-white"
               onSubmit={addThread}
               type="submit"
-              onClick={showToastMessage} 
             >
               CREATE THREAD
             </button>
