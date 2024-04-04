@@ -10,6 +10,7 @@
 
   //maps
   import MapRouting from "./MapRouting";
+  import AirportMapRouting from "./AirpotMapRoutin"
   const emissionFactors = {
     Canada: {
       "Alberta (AB)": {
@@ -391,12 +392,19 @@
           </div>
           
         </div>
-
-        
-        <div className="w-1/2 h-full card bg-base-300 rounded-box place-items-center">
-          {/* MapRouting content */}
-          <MapRouting />
-        </div>
+        <div className="divider divider-horizontal"></div> 
+        {activeTab === "Vehicle" && (
+           <div className="w-20vh h-full card bg-base-300 rounded-box place-items-center">
+           {/* MapRouting content */}
+           <MapRouting />
+         </div>
+        )}
+        {activeTab === "Flights" && (
+           <div className="w-20vh h-full card bg-base-300 rounded-box place-items-center">
+           {/* AirportmapRouting content */}
+           <AirportMapRouting />
+         </div>
+        )}
         
       </div>
     );
