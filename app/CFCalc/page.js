@@ -1,7 +1,10 @@
 "use client";
 import React, { useState } from "react";
 import UserCalc from "./UserCalc";
+
+import MapRouting from "./MapRouting"
 import AIClimateRecommendation from "./CalcAI";
+
 
 function Page() {
   const [emissions, setEmissions] = useState({

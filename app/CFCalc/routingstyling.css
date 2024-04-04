@@ -1,0 +1,14 @@
+
+
+.leaflet-interactive.animate {
+    stroke-dasharray: 1920;
+    stroke-dashoffset: 1920;
+    animation: dash 20s linear 3s forwards;
+    stroke: red;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
