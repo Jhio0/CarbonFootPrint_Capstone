@@ -225,8 +225,8 @@
     };
 
     return (
-      <div className="flex w-full min-h-screen my-5 ">
-        <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center ml-5">
+      <div className="flex w-full min-h-screen my-5 pl-5 ">
+        <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center ">
           <div role="tablist" className="tabs tabs-bordered mb-5">
             {["Location", "Home", "Flights", "Vehicle"].map((tabName) => (
               <button
@@ -362,30 +362,43 @@
             Save Results
           </button>
         </div>
+
         <div className="divider divider-horizontal"></div> {/*middle line*/}
-        <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center">
-          <div className="stats shadow">
-            <div className="stat">
-              <div className="stat-title">Total Emissions</div>
-              <div className="stat-value">
-                {totalEmissions.toFixed(2)} kg CO2e
+
+          <div className="flex-grow grid max-w-2xl h-full card bg-base-300 rounded-box place-items-center pl-20">
+            
+            <div className="stats shadow">
+              <div className="stat">
+                <div className="stat-title">Total Emissions</div>
+                <div className="stat-value">
+                  {totalEmissions.toFixed(2)} kg CO2e
+                </div>
+                <div className="stat-desc"></div>
               </div>
-              <div className="stat-desc"></div>
             </div>
-          </div>
-          <div className="size-[448px]">
-            <EmissionDonutChart
-              electricityEmission={electricityEmission}
-              naturalGasEmission={naturalGasEmission}
-              flightEmission={flightEmissions}
-              vehicleEmission={vehicleEmissions}
+
+            <div className="size-[350px]">
+              <EmissionDonutChart
+                electricityEmission={electricityEmission}
+                naturalGasEmission={naturalGasEmission}
+                flightEmission={flightEmissions}
+                vehicleEmission={vehicleEmissions}
+              />
+            </div>
+
+            <div className="flex-grow max-w-4xl mx-auto overflow-auto">
+            <AIClimateRecommendation
+              emissions={{ electricityEmission, naturalGasEmission }}
+              onCalculate={fetchRecommendation}
             />
           </div>
-        </div>
-        <AIClimateRecommendation
-          emissions={{ electricityEmission, naturalGasEmission }}
-          onCalculate={fetchRecommendation}
-        />
+
+          </div>
+          {activeTab === "Flights" && (
+              <div className="w-1/2 h-full card bg-base-300 rounded-box place-items-center pl-20">
+                <MapRouting />
+              </div>
+            )}
       </div>
     );
   };
