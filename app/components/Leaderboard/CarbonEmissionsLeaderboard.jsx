@@ -37,7 +37,7 @@ const CarbonEmissionsLeaderboard = () => {
       </button>
 
       {!isCollapsed && (
-        <div className="max-h-64 overflow-y-auto shadow-lg rounded-lg bg-gray-400 rounded-md backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100 p-4">
+        <div className="max-h-64 overflow-y-auto shadow-lg rounded-lg bg-gray-400 backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100 p-4">
           <table className="table w-full">
             <thead>
               <tr>

@@ -5,12 +5,12 @@
   import AIClimateRecommendation from "./CalcAI";
   //firebase
   import { doc, setDoc } from "firebase/firestore";
-  import { auth, db } from "/app/_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
+  import { auth, db } from "../_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
   import { onAuthStateChanged } from "firebase/auth";
 
   //maps
-  import MapRouting from "./MapRouting";
-  import AirportMapRouting from "./AirpotMapRoutin"
+  // import MapRouting from "./MapRouting";
+  // import AirportMapRouting from "./AirpotMapRoutin"
   const emissionFactors = {
     Canada: {
       "Alberta (AB)": {
@@ -369,7 +369,7 @@
           <AIClimateRecommendation
           emissions={{ electricityEmission, naturalGasEmission }}
           onCalculate={fetchRecommendation}
-        />
+          />
         </div>
         <div className="divider divider-horizontal"></div> {/*middle line*/}
         <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center">
@@ -392,17 +392,20 @@
           </div>
           
         </div>
+
+        {/* divider line */}
         <div className="divider divider-horizontal"></div> 
+
         {activeTab === "Vehicle" && (
            <div className="w-20vh h-full card bg-base-300 rounded-box place-items-center">
            {/* MapRouting content */}
-           <MapRouting />
+           {/* <MapRouting /> */}
          </div>
         )}
         {activeTab === "Flights" && (
            <div className="w-20vh h-full card bg-base-300 rounded-box place-items-center">
            {/* AirportmapRouting content */}
-           <AirportMapRouting />
+           {/* <AirportMapRouting /> */}
          </div>
         )}
         
