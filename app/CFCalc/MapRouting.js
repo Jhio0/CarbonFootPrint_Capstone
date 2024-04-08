@@ -22,7 +22,7 @@ const MapRouting = () => {
 
   
   return (
-    <div style={{ height: '100vh', width: '75vh' }}>
+    <div style={{ height: '100vh', width: '100vh' }}>
       <MapContainer center={[20, 0]} zoom={6}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

@@ -34,8 +34,13 @@ export default function NewsItem({ news }) {
     }
 
     useEffect(() => {
+        if (news && news.length > 0) {
+            setNewsList(news);
+        }
         fetchNews();
-    }, []);
+    }, [news]);
+
+
     
 
     return (
