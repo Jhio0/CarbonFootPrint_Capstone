@@ -1,8 +1,15 @@
   "use client";
   import React, { useState, useEffect } from "react";
   import FlightsCalc from "./FlightCalc";
+  const FlightsCalcWithNoSSR = dynamic(() => import("./FlightCalc"), {
+    ssr: false
+  });
   import EmissionDonutChart from "./EmissionsDonutChart";
   import AIClimateRecommendation from "./CalcAI";
+
+  const AIClimateRecommendationWithNoSSR = dynamic(() => import("./CalcAI"), {
+    ssr: false
+  });
   //firebase
   import { doc, setDoc } from "firebase/firestore";
   import { auth, db } from "/app/_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
@@ -132,20 +139,19 @@
     const [fetchRecommendation, setFetchRecommendation] = useState(false);
 
     const [currentUser, setCurrentUser] = useState(null);
-    // Update to guard Firebase initialization with typeof window check
+    //firebase
     useEffect(() => {
-      if (typeof window !== 'undefined') {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-          if (user) {
-            console.log("User is signed in:", user);
-            setCurrentUser(user);
-          } else {
-            console.log("No user signed in.");
-            setCurrentUser(null);
-          }
-        });
-        return unsubscribe; // Cleanup subscription
-      }
+      const unsubscribe = onAuthStateChanged(auth, (user) => {
+        if (user) {
+          console.log("User is signed in:", user);
+          setCurrentUser(user);
+        } else {
+          console.log("No user signed in.");
+          setCurrentUser(null);
+        }
+      });
+
+      return unsubscribe; // Cleanup subscription
     }, []);
 
     const saveEmissionData = async () => {
@@ -327,7 +333,7 @@
           {activeTab === "Flights" && (
             <div>
               <h2>Flights</h2>
-              <FlightsCalc
+              <FlightsCalcWithNoSSR
                 flights={flights}
                 setFlights={setFlights}
                 onFlightEmissionsChange={handleFlightEmissionsChange}
@@ -399,7 +405,7 @@
               vehicleEmission={vehicleEmissions}
             />
           </div>
-          <AIClimateRecommendation
+          <AIClimateRecommendationWithNoSSR
           emissions={{ electricityEmission, naturalGasEmission }}
           onCalculate={fetchRecommendation}
         />
