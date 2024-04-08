@@ -19,6 +19,10 @@
   const AirportMapRoutingWithNoSSR = dynamic(() => import("./AirpotMapRoutin"), {
     ssr: false
   });
+
+  const AIClimateRecommendationRoutingWithNoSSR = dynamic(() => import("./CalcAI"), {
+    ssr: false
+  });
   const emissionFactors = {
     Canada: {
       "Alberta (AB)": {
@@ -395,7 +399,7 @@
               vehicleEmission={vehicleEmissions}
             />
           </div>
-          <AIClimateRecommendation
+          <AIClimateRecommendationRoutingWithNoSSR
           emissions={{ electricityEmission, naturalGasEmission }}
           onCalculate={fetchRecommendation}
         />

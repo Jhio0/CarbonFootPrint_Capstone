@@ -14,6 +14,7 @@ const MapReportWithNoSSR = dynamic(() => import("./MapReport.js"), {
   ssr: false
 });
 
+
 export default function page() {
     return (
         <LocationProvider>
