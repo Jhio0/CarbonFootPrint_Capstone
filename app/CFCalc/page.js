@@ -23,7 +23,7 @@ function Page() {
   return (
     <main className="bg-base-300 min-h-screen w-full flex flex-col justify-center items-start">
       <div className="bg-base-300">
-        <UserCalc updateEmissions={updateEmissions} />
+        <UserCalcWithNoSSR updateEmissions={updateEmissions} />
       </div>
     </main>
   );
