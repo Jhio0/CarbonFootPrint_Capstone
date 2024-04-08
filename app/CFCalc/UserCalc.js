@@ -391,12 +391,12 @@
             </div>
           </div>
           <div className="size-[350px]">
-            <EmissionDonutChart
+            {/* <EmissionDonutChart
               electricityEmission={electricityEmission}
               naturalGasEmission={naturalGasEmission}
               flightEmission={flightEmissions}
               vehicleEmission={vehicleEmissions}
-            />
+            /> */}
           </div>
           <AIClimateRecommendation
           emissions={{ electricityEmission, naturalGasEmission }}
