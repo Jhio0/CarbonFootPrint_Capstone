@@ -21,8 +21,10 @@ export default function RootLayout({ children }) {
       <body className={inter.className}>
           <AuthContextProvider>
             <Navbar />
+            <div style={{ position: 'relative', zIndex: 1 }}>
             {children}
-            <ChatBubble />
+            </div>
+            <ChatBubble style={{ position: 'fixed', bottom: 20, right: 20, zIndex: 2 }} />
             <Footer />
           </AuthContextProvider>
       </body>

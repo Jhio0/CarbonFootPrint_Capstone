@@ -87,8 +87,8 @@ export default function ReportForm() {
 
 
     return (
-        <div className="bg-white dark:bg-gray-900 flex flex-col md:flex-row">
-        <form onSubmit={handleSubmit} className="p-10 max-w-xl mx-auto shadow-md sm:border-0 md:border md:border-gray-900 md:dark:border-gray-100 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100 md:mr-5 mb-5 md:mb-0">
+        <div className="bg-white dark:bg-gray-900">
+        <form action="" className="p-10 max-w-xl mx-auto shadow-md sm:border-0 md:border md:border-gray-900 md:dark:border-gray-100 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             <div className="mb-10">
                 <h1 className="font-bold text-4xl mb-3">Report</h1>
                 <p className="font-medium text-lg mb-5"></p>
@@ -122,9 +122,7 @@ export default function ReportForm() {
                 <button type="submit"  onSubmit={addReport} className="font-medium shadow-md rounded-none p-2 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 border border-gray-900 dark:border-gray-100 bg-gray-800 dark:bg-gray-200 text-gray-200 dark:text-gray-800 hover:bg-gray-900 dark:hover:bg-gray-100">Submit Report</button>
             </div>
         </form>
-        <div className="reportsContainer md:w-1/3 md:max-w-md">
-            {/* Display the reports here */}
-            {/* fix this, pass props like the web dev 2 assignments */}
+        {/* <div className="reportsContainer md:w-1/3 md:max-w-md">
             {reports.map((report) => (
                 <div key={report.id} className="p-3 bg-gray-800 rounded-md m-3">
                     <h2>{report.title}</h2>
@@ -133,7 +131,7 @@ export default function ReportForm() {
                     <p>{report.location}</p>
                 </div>
             ))}
-        </div>
+        </div> */}
         <ToastContainer
             position="top-right"
             autoClose={5000}

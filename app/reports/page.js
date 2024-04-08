@@ -19,7 +19,7 @@ export default function page() {
           <div className="w-full">
             <MapReport/>
           </div>
-          <div className="w-2/5 h-full">
+          <div className="w-3/5 h-full m-5">
             <ReportForm/>
           </div>
 
