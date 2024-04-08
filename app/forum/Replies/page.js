@@ -33,6 +33,15 @@ const Replies = () => {
         //     console.error('Error submitting reply:', error);
         //     // Handle error
         // }
+
+        try {
+            addReply(reply); // Assuming addReply is defined elsewhere
+            setContent("");
+            setDate("");
+        } catch (error) {
+            console.error('Error submitting reply:', error);
+            // Handle error
+        }
     };
 
     //POST reply to db.
@@ -47,14 +56,15 @@ const Replies = () => {
                 <textarea
                     rows={5}
                     value={reply}
-                    onChange={(e) => setReply(e.target.value)}
+                    onChange={(e) => setContent(e.target.value)}
                     type='text'
                     name='reply'
                     className='modalInput'
                 />
 
-                <button className='modalBtn'
-                 onSubmit={addReply}>SEND</button>
+                {/* <button className='modalBtn'
+                 onSubmit={addReply}>SEND</button> */}
+                 <button type="submit" className='modalBtn'>SEND</button>
             </form>
         </main>
     );
