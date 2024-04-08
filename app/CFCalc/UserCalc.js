@@ -3,26 +3,14 @@
   import FlightsCalc from "./FlightCalc";
   import EmissionDonutChart from "./EmissionsDonutChart";
   import AIClimateRecommendation from "./CalcAI";
-  import dynamic from 'next/dynamic';
   //firebase
   import { doc, setDoc } from "firebase/firestore";
   import { auth, db } from "/app/_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
   import { onAuthStateChanged } from "firebase/auth";
 
   //maps
-  
-
-  const MapRoutingWithNoSSR = dynamic(() => import("./MapRouting"), {
-    ssr: false
-  });
-
-  const AirportMapRoutingWithNoSSR = dynamic(() => import("./AirpotMapRoutin"), {
-    ssr: false
-  });
-
-  const AIClimateRecommendationRoutingWithNoSSR = dynamic(() => import("./CalcAI"), {
-    ssr: false
-  });
+  import MapRouting from "./MapRouting";
+  import AirportMapRouting from "./AirpotMapRoutin"
   const emissionFactors = {
     Canada: {
       "Alberta (AB)": {
@@ -399,22 +387,22 @@
               vehicleEmission={vehicleEmissions}
             />
           </div>
-          <AIClimateRecommendationRoutingWithNoSSR
+          <AIClimateRecommendation
           emissions={{ electricityEmission, naturalGasEmission }}
           onCalculate={fetchRecommendation}
         />
         </div>
         <div className="divider divider-horizontal"></div> 
         {activeTab === "Vehicle" && (
-           <div className="w-20vh card bg-base-300 rounded-box place-items-center">
+           <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
            {/* MapRouting content */}
-           <MapRoutingWithNoSSR />
+           <MapRouting />
          </div>
         )}
         {activeTab === "Flights" && (
-           <div className="w-20vh card bg-base-300 rounded-box place-items-center">
+           <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
            {/* AirportmapRouting content */}
-           <AirportMapRoutingWithNoSSR />
+           <AirportMapRouting />
          </div>
         )}
         
