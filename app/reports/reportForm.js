@@ -63,7 +63,7 @@ export default function ReportForm() {
             setDate("");
             setLocation("");
             toast.success("Success Notification !", {
-                position: "top-right",
+                position: "top-center",
             });
         } catch (error) {
             console.error('Error submitting report:', error);
@@ -122,20 +122,9 @@ export default function ReportForm() {
                 <button type="submit"  onSubmit={addReport} className="font-medium shadow-md rounded-none p-2 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 border border-gray-900 dark:border-gray-100 bg-gray-800 dark:bg-gray-200 text-gray-200 dark:text-gray-800 hover:bg-gray-900 dark:hover:bg-gray-100">Submit Report</button>
             </div>
         </form>
-        <div className="reportsContainer md:w-1/3 md:max-w-md">
-            {/* Display the reports here */}
-            {/* fix this, pass props like the web dev 2 assignments */}
-            {reports.map((report) => (
-                <div key={report.id} className="p-3 bg-gray-800 rounded-md m-3">
-                    <h2>{report.title}</h2>
-                    <p>{report.text}</p>
-                    <p>{report.date}</p>
-                    <p>{report.location}</p>
-                </div>
-            ))}
-        </div>
+        
         <ToastContainer
-            position="top-right"
+            position="top-center"
             autoClose={5000}
             hideProgressBar={false}
             newestOnTop={false}

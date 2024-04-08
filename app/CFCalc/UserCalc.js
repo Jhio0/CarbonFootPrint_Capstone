@@ -3,14 +3,17 @@
   import FlightsCalc from "./FlightCalc";
   import EmissionDonutChart from "./EmissionsDonutChart";
   import AIClimateRecommendation from "./CalcAI";
+  import { ToastContainer, toast } from "react-toastify";
+  import "react-toastify/dist/ReactToastify.css";
+
   //firebase
   import { doc, setDoc } from "firebase/firestore";
   import { auth, db } from "../_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
   import { onAuthStateChanged } from "firebase/auth";
 
   //maps
-  // import MapRouting from "./MapRouting";
-  // import AirportMapRouting from "./AirpotMapRoutin"
+  import MapRouting from "./MapRouting";
+  import AirportMapRouting from "./AirpotMapRoutin"
   const emissionFactors = {
     Canada: {
       "Alberta (AB)": {
@@ -139,6 +142,15 @@
     const saveEmissionData = async () => {
       if (!currentUser) {
         console.log("No user signed in.");
+        toast.error("You must be signed in to save data.", { position: "top-center" });
+        return;
+      }
+    
+      // Check if any of the required fields are empty
+      if (!region || !electricityUsed || !naturalGasUsed) {
+        // Display an error message using toast
+        console.log("Please ensure all fields are filled out correctly before saving.");
+        toast.error("Please ensure all fields are filled out correctly before saving.", { position: "top-center" });
         return;
       }
 
@@ -155,9 +167,11 @@
           { merge: true }
         ); // Use merge to avoid overwriting other fields
 
-        alert("Emissions data saved successfully.");
+        console.log("Emissions data saved successfully.")
+        toast.success("Emissions data saved successfully.", { position: "top-center" });
       } catch (error) {
-        alert("Error saving emissions data: ", error);
+        console.log("Error saving emissions data.", error)
+        toast.error("Error saving emissions data.", { position: "top-center" });
       }
     };
 
@@ -194,6 +208,20 @@
       let electricityCalc = 0;
       let naturalGasCalc = 0;
 
+      if (!electricityUsed || !naturalGasUsed || parseFloat(electricityUsed) < 0 || parseFloat(naturalGasUsed) < 0) {
+        // Optionally, inform the user that both fields must be filled
+        console.log("Both electricity and gas inputs must be provided for calculations.")
+        toast.error("Both electricity and gas inputs must be provided for calculations.", { position: "top-center" });
+        return; // Exit the function if conditions are not met
+      }
+
+      if (!region) {
+        // Inform the user to select a region before calculating emissions
+        console.log("Please select a region before calculating emissions.");
+        toast.error("Please select a region before calculating emissions.", { position: "top-center" });
+        return; // Exit the function if region is null
+      }
+
       // Example calculation from Home tab
       if (country && region) {
         const factors = emissionFactors[country][region];
@@ -204,6 +232,7 @@
           naturalGasCalc = parseFloat(naturalGasUsed) * factors.naturalGas;
         }
       }
+      console.log("Successful Calculation!");
       setElectricityEmissions(electricityCalc);
       setNaturalGasEmissions(naturalGasCalc);
       setFetchRecommendation(true);
@@ -399,15 +428,28 @@
         {activeTab === "Vehicle" && (
            <div className="w-20vh h-full card bg-base-300 rounded-box place-items-center">
            {/* MapRouting content */}
-           {/* <MapRouting /> */}
+           <MapRouting />
          </div>
         )}
         {activeTab === "Flights" && (
            <div className="w-20vh h-full card bg-base-300 rounded-box place-items-center">
            {/* AirportmapRouting content */}
-           {/* <AirportMapRouting /> */}
+           <AirportMapRouting />
          </div>
         )}
+
+        <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+        />
         
       </div>
     );

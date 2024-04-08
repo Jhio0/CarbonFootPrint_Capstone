@@ -2,6 +2,7 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, fireEvent, screen, waitFor} from '@testing-library/react';
 import ResponsiveAppBar from '../app/components/navbar.js';
+import Page from '../app/CFCalc/page.js';
 
 jest.mock('../app/context/AuthContext', () => ({
     UserAuth: jest.fn(() => ({
@@ -24,6 +25,7 @@ describe('NavBar Tests', () => {
           expect(screen.getByText(/CFCalc/i)).toBeInTheDocument();
         });
         fireEvent.click(screen.getByText(/CFCalc/i));
+        
       });
     // Add more test cases as needed
   });   

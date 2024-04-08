@@ -1,4 +1,4 @@
-// jest-setup.js
+import '@testing-library/jest-dom';
 
 // Ensure all necessary imports are defined at the beginning of the file
 import dotenv from 'dotenv';
