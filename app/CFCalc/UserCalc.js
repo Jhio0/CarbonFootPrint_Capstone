@@ -330,7 +330,7 @@
             </div>
           )}
 
-          {/* {activeTab === "Flights" && (
+          {activeTab === "Flights" && (
             <div>
               <h2>Flights</h2>
               <FlightsCalcWithNoSSR
@@ -339,7 +339,7 @@
                 onFlightEmissionsChange={handleFlightEmissionsChange}
               />
             </div>
-          )} */}
+          )}
 
           {activeTab === "Vehicle" && (
             <div>
@@ -405,10 +405,10 @@
               vehicleEmission={vehicleEmissions}
             />
           </div>
-          <AIClimateRecommendationWithNoSSR
+          {/* <AIClimateRecommendationWithNoSSR
           emissions={{ electricityEmission, naturalGasEmission }}
           onCalculate={fetchRecommendation}
-        />
+        /> */}
         </div>
         <div className="divider divider-horizontal"></div> 
         {activeTab === "Vehicle" && (
