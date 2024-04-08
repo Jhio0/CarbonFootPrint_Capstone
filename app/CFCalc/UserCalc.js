@@ -132,19 +132,20 @@
     const [fetchRecommendation, setFetchRecommendation] = useState(false);
 
     const [currentUser, setCurrentUser] = useState(null);
-    //firebase
+    // Update to guard Firebase initialization with typeof window check
     useEffect(() => {
-      const unsubscribe = onAuthStateChanged(auth, (user) => {
-        if (user) {
-          console.log("User is signed in:", user);
-          setCurrentUser(user);
-        } else {
-          console.log("No user signed in.");
-          setCurrentUser(null);
-        }
-      });
-
-      return unsubscribe; // Cleanup subscription
+      if (typeof window !== 'undefined') {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          if (user) {
+            console.log("User is signed in:", user);
+            setCurrentUser(user);
+          } else {
+            console.log("No user signed in.");
+            setCurrentUser(null);
+          }
+        });
+        return unsubscribe; // Cleanup subscription
+      }
     }, []);
 
     const saveEmissionData = async () => {
