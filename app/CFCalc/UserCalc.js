@@ -330,7 +330,7 @@
             </div>
           )}
 
-          {activeTab === "Flights" && (
+          {/* {activeTab === "Flights" && (
             <div>
               <h2>Flights</h2>
               <FlightsCalcWithNoSSR
@@ -339,7 +339,7 @@
                 onFlightEmissionsChange={handleFlightEmissionsChange}
               />
             </div>
-          )}
+          )} */}
 
           {activeTab === "Vehicle" && (
             <div>
@@ -411,7 +411,18 @@
         />
         </div>
         <div className="divider divider-horizontal"></div> 
-       
+        {activeTab === "Vehicle" && (
+           <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
+           {/* MapRouting content */}
+           <MapRoutingWithNoSSR />
+         </div>
+        )}
+        {activeTab === "Flights" && (
+           <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
+           {/* AirportmapRouting content */}
+           <AirportMapRoutingWithNoSSR />
+         </div>
+        )}
         
       </div>
     );
