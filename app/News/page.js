@@ -85,7 +85,7 @@ export default function News() {
                     <div style={trendingtext}>Artical text</div>
                 </div>
             </div>
-        </div> */
+        </div> 
 
         <div class="grid-col-2 gap-2 flex flex-row"> 
             <div class="basis-2/3 gap-2 border-r-1 border-b-1">
@@ -108,7 +108,33 @@ export default function News() {
                     <div class="row-span-1">Artical text</div>
                 </div>
             </div>
-        </div>
+        </div> */
+        <div class="min-h-screen bg-[black]">
+  <h1 class="p-2 text-center text-white">News</h1>
+  <div class="grid-col-2 flex flex-row gap-2 bg-[white] px-8 py-4 text-white">
+    <div class="border-r-1 border-b-1 mx-4 basis-2/3 gap-2">
+      <div class="grid grid-flow-col grid-rows-3 gap-2 divide-y py-2">
+        <div class="col-span-2 bg-[green]">news title 1</div>
+        <div class="col-span-2 bg-[green]">news title 2</div>
+        <div class="col-span-2 bg-[green]">news title 3</div>
+        <div class="object-cove row-span-3 flex h-48 w-48 items-center justify-center bg-[green]">"company img"</div>
+      </div>
+      <div class="grid grid-flow-col grid-rows-3 gap-2 divide-y">
+        <div class="col-span-2 bg-[green]">news title 1</div>
+        <div class="col-span-2 bg-[green]">news title 2</div>
+        <div class="col-span-2 bg-[green]">news title 3</div>
+        <div class="row-span-3 flex h-48 w-48 items-center justify-center bg-[green] object-cover">"company img"</div>
+      </div>
+    </div>
+    <div class="border-b-1 flex basis-1/3 grid-cols-2 grid-rows-2 gap-2 py-2">
+      <div class="divide-y py-2">
+        <div class="grid h-32 w-32 bg-[green] object-cover py-2">"Arctical Img"</div>
+        <div class="row-start-1 grid bg-[green]">Artical text</div>
+      </div>
+    </div>
+  </div>
+</div>
+
     );
 
 
