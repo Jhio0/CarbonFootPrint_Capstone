@@ -1,7 +1,8 @@
-"use client"
 import { useState } from 'react';
 import { UserAuth } from '../context/AuthContext';
 import { useRouter } from 'next/navigation';  
+import { toast } from 'react-toastify';
+import "react-toastify/dist/ReactToastify.css";
 
 export const AuthLogin = () => {
   const { onLogin, googleSignIn } = UserAuth();  
@@ -11,12 +12,20 @@ export const AuthLogin = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Input validation
+    if (!email || !password) {
+      console.error('Login failed: Email and password are required');
+      toast.error('Email and password are required');
+      return;
+    }
+
     try {
       await onLogin(email, password);
       router.push('/');
     } catch (error) {
       console.error('Login failed', error);
-      window.alert(`Login failed: ${error.message}`);
+      toast.error(`Login failed: ${error.message}`);
     }
   };
 
@@ -25,7 +34,8 @@ export const AuthLogin = () => {
       await googleSignIn();
       router.push('/');
     }catch (error) {
-      window.alert(`Login failed: ${error.message}`);
+      console.error('Login failed', error);
+      toast.error(`Login failed: ${error.message}`);
     }
   };
 

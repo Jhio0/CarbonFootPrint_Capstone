@@ -1,7 +1,7 @@
 import '@testing-library/jest-dom'
 import UserCalc from '../app/CFCalc/UserCalc.js'
 import { describe } from 'node:test'
-import { render, fireEvent, findByRole, screen, waitFor, beforeEach } from '@testing-library/react'
+import { render, fireEvent, screen } from '@testing-library/react'
 
 require('dotenv').config();
 
@@ -23,7 +23,7 @@ describe('UserCalc', () => {
     });
 
     it('calculates emissions correctly with valid inputs', async () => {
-        const { getByText, getByLabelText } = render(<UserCalc />);
+        const { getByText, getByLabelText, getByRole } = render(<UserCalc />);
         jest.spyOn(console, 'log').mockImplementation();
 
 
@@ -33,20 +33,13 @@ describe('UserCalc', () => {
         await fireEvent.click(screen.getByText('Country')); // Adjust the label text as necessary
         await fireEvent.click(screen.getByText('Canada')); // Adjust the label text as necessary
 
-        const regionDropdown = getByLabelText('Region');
     
         // Click on the region dropdown to open the options
-        await fireEvent.click(regionDropdown);
+        const regionSelect = screen.getByRole('combobox', { name: 'Region' });
+        expect(regionSelect).not.toBeDisabled();
     
-        // Find and click on the option for "Alberta (AB)"
-        const albertaOption = getByText('Alberta (AB)');
-        await fireEvent.click(albertaOption);
-        
-        await waitFor(() => {
-            expect(screen.getByText('Alberta (AB)')).toBeInTheDocument();
-          });
-          
-        await fireEvent.click(albertaOption);
+        // Select an option
+        fireEvent.change(regionSelect, { target: { value: 'Alberta (AB)' } });
         // navigate to home emissions tab
         await fireEvent.click(screen.getByText('Home'));
 
