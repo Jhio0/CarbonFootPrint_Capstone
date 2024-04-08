@@ -2,29 +2,8 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 255, 255, 255; /* White */
-  --background-end-rgb: 255, 255, 255; /* White */
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 255, 255, 255; /* White */
-    --background-end-rgb: 255, 255, 255; /* White */
-  }
-}
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
 
 @layer utilities {
   .text-balance {
@@ -35,6 +14,7 @@ body {
 .leaflet-container {
   height: 100vh;
 }
+
 
 .spinner {
   border: 4px solid rgba(0, 0, 0, 0.1);
@@ -50,3 +30,4 @@ body {
     transform: rotate(360deg);
   }
 }
+

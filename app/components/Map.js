@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 "use client"
 import React, { useEffect, useState, useRef } from 'react';
-import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
+import { MapContainer, TileLayer, GeoJSON, useMap} from 'react-leaflet';
 import L from 'leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
 import 'leaflet-geosearch/dist/geosearch.css';
@@ -14,6 +14,15 @@ Chart.register(ArcElement, Tooltip, Legend);
 
 import { countryCodeToName, countryCodes } from './items/countryUtils';
 
+import { ThreeCircles } from 'react-loader-spinner';
+
+import 'leaflet-easybutton/src/easy-button'
+import 'leaflet-easybutton/src/easy-button.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChartPie } from '@fortawesome/free-solid-svg-icons';
+import { faChartSimple } from '@fortawesome/free-solid-svg-icons';
+
+import CarbonEmissionsLeaderboard from './Leaderboard/CarbonEmissionsLeaderboard.jsx'
 
 export default function Map() {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
@@ -248,15 +257,40 @@ export default function Map() {
     return null;
   };
 
-  
+ 
+  const [isDoughnutChartCollapsed, setIsDoughnutChartCollapsed] = useState(false);
+  const [isBarChartCollapsed, setIsBarChartCollapsed] = useState(false);
+
+    // Toggle the collapsed state of the doughnut chart
+  const toggleDoughnutChart = () => {
+    setIsDoughnutChartCollapsed(!isDoughnutChartCollapsed);
+  };
+
+  // Toggle the collapsed state of the bar chart
+  const toggleBarChart = () => {
+    setIsBarChartCollapsed(!isBarChartCollapsed);
+  };
+
   
   return (
     <div>
-      <div >
-        {loading ? (
-          <div className="spinner"></div>
+
+      <div>
+      {loading ? (
+        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
+           <ThreeCircles
+            visible={true}
+            height="100"
+            width="100"
+            color="#4fa94d"
+            ariaLabel="three-circles-loading"
+            wrapperStyle={{}}
+            wrapperClass=""
+          />
+
+        </div>
         ) : (
-          <MapContainer center={[38, -97]} zoom={4} style={{ width: '100%', height: '470px' }} ref={mapRef} worldCopyJump={true}  
+          <MapContainer center={[38, -97]} zoom={4}  ref={mapRef} worldCopyJump={false}  
           maxBounds={[
             [null, -180], // No restriction on the left
             [null, 180],  // No restriction on the right
@@ -284,8 +318,8 @@ export default function Map() {
               )}
               onEachFeature={(feature, layer) => {
                 const { name, province, co2_2022, owners } = feature.properties;
-                const ownerInfo = owners ? owners.map(owner => `<li>${owner.CompanyName}: ${owner.PercentageOfInterestCompany}%</li>`).join('') : 'None';
-                layer.bindPopup(`<b>${name}</b><br><b>Province:</b> ${province}<br><ul>Owners:<br>${ownerInfo}</ul><br>CO2 Emission (2022): ${co2_2022} Tons`);
+                const ownerInfo = owners ? owners.map(owner => `<li><b>${owner.CompanyName}:</b> ${owner.PercentageOfInterestCompany}%</li>`).join('') : 'None';
+                layer.bindPopup(`<b>${name}</b><br><b>Country:</b> ${province}<hr/><ul><b>Owners:</b>${ownerInfo}</ul><b>CO2 Emission (2022):</b>${co2_2022} Tons`);
                 layer.on('click', () => handleFeatureClick(feature));
               }}
             />
@@ -308,20 +342,52 @@ export default function Map() {
                 layer.on('click', () => handleFeatureClick(feature));
               }}
             />
+            
+            {/* Overlaying content */}
+            <div className="flex justify-center" style={{ position: 'absolute', top: '2%', right: '5px', zIndex: 1000 }}> 
+                <div className='flex flex-col'>
+                    <button className={`btn mb-2 ${isDoughnutChartCollapsed ? '' : 'text-red-500'}`} onClick={toggleDoughnutChart}>
+                        <FontAwesomeIcon icon={faChartPie} />
+                    </button>
+                    <div className='min-h-3/4 h-auto w-full bg-gray-400 flex justify-center items-center flex-wrap rounded-md
+                        backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100'>
+                        {!isDoughnutChartCollapsed && (
+                            <div className='m-10 w-100%'>
+                                <DoughnutChart selectedData={selectedData} />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            <div className="flex justify-center" style={{ position: 'absolute', top: isDoughnutChartCollapsed ? '10%' : '55%', right: '5px', zIndex: 1000 }}> 
+                <div className='flex flex-col'>
+                    <button className={`btn mb-2 ${isBarChartCollapsed ? '' : 'text-red-500'}`} onClick={toggleBarChart}>
+                        <FontAwesomeIcon icon={faChartSimple} />
+                    </button>
+                    <div className='min-h-3/4 h-auto w-full bg-gray-400 flex justify-center items-center flex-wrap rounded-md
+                        backdrop-filter backdrop-blur-md bg-opacity-10 border border-gray-100'>
+                        {!isBarChartCollapsed && (
+                            <div className='m-10 w-100%'>
+                                <BarChart ownerEmissions={ownerEmissions} />
+                            </div>
+                        )}
+                    </div>
+                </div>
+            </div>
+
+            <div style={{ position: 'absolute', top: '50px', zIndex: 1000 }}>
+              <div className='flex flex-col'>
+                <div className='ml-2 mt-10 w-100%'>
+                  <CarbonEmissionsLeaderboard/>
+                </div>
+              </div>
+            </div>
+
             <SearchField/>
           </MapContainer>
         )}
-
-        <div className="flex justify-center"> 
-          <div className='flex'>
-            <div className='ml-[150px] bg-grey rounded-lg shadow-lg  w-100 h-50px' >
-              <DoughnutChart selectedData={selectedData} />
-            </div>
-            <div className='mr-[150px] m-10 bg-grey rounded-lg shadow-lg p-4 w-100%'>
-              <BarChart ownerEmissions={ownerEmissions} />
-            </div>
-          </div>
-        </div>
+    
       </div>
     </div>
 
