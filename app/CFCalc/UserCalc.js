@@ -11,6 +11,17 @@
   //maps
   import MapRouting from "./MapRouting";
   import AirportMapRouting from "./AirpotMapRoutin"
+
+  import dynamic from 'next/dynamic';
+
+  const MapRoutingWithNoSSR = dynamic(() => import("./MapRouting"), {
+    ssr: false
+  });
+
+  const AirportMapRoutingWithNoSSR = dynamic(() => import("./AirpotMapRoutin"), {
+    ssr: false
+  });
+
   const emissionFactors = {
     Canada: {
       "Alberta (AB)": {
@@ -396,13 +407,13 @@
         {activeTab === "Vehicle" && (
            <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
            {/* MapRouting content */}
-           <MapRouting />
+           <MapRoutingWithNoSSR />
          </div>
         )}
         {activeTab === "Flights" && (
            <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
            {/* AirportmapRouting content */}
-           <AirportMapRouting />
+           <AirportMapRoutingWithNoSSR />
          </div>
         )}
         
