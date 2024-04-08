@@ -3,14 +3,22 @@
   import FlightsCalc from "./FlightCalc";
   import EmissionDonutChart from "./EmissionsDonutChart";
   import AIClimateRecommendation from "./CalcAI";
+  import dynamic from 'next/dynamic';
   //firebase
   import { doc, setDoc } from "firebase/firestore";
   import { auth, db } from "/app/_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
   import { onAuthStateChanged } from "firebase/auth";
 
   //maps
-  import MapRouting from "./MapRouting";
-  import AirportMapRouting from "./AirpotMapRoutin"
+  
+
+  const MapRoutingWithNoSSR = dynamic(() => import("./MapRouting"), {
+    ssr: false
+  });
+
+  const AirportMapRoutingWithNoSSR = dynamic(() => import("./AirpotMapRoutin"), {
+    ssr: false
+  });
   const emissionFactors = {
     Canada: {
       "Alberta (AB)": {
@@ -396,13 +404,13 @@
         {activeTab === "Vehicle" && (
            <div className="w-20vh card bg-base-300 rounded-box place-items-center">
            {/* MapRouting content */}
-           <MapRouting />
+           <MapRoutingWithNoSSR />
          </div>
         )}
         {activeTab === "Flights" && (
            <div className="w-20vh card bg-base-300 rounded-box place-items-center">
            {/* AirportmapRouting content */}
-           <AirportMapRouting />
+           <AirportMapRoutingWithNoSSR />
          </div>
         )}
         
