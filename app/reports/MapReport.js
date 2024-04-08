@@ -17,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {useLocation} from './LocationContext';
 import { ThreeCircles } from 'react-loader-spinner';
 
+
 export default function MapReport({ onLocationSelect }) {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);
   const [geojsonFeaturesCountry, setGeojsonFeaturesCountry] = useState([]);

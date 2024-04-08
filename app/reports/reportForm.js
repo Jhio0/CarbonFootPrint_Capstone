@@ -88,7 +88,7 @@ export default function ReportForm() {
 
     return (
         <div className="bg-white dark:bg-gray-900">
-        <form action="" className="p-10 max-w-xl mx-auto shadow-md sm:border-0 md:border md:border-gray-900 md:dark:border-gray-100 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
+        <form action="" onSubmit={handleSubmit} className="p-10 max-w-xl mx-auto shadow-md sm:border-0 md:border md:border-gray-900 md:dark:border-gray-100 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-gray-100">
             <div className="mb-10">
                 <h1 className="font-bold text-4xl mb-3">Report</h1>
                 <p className="font-medium text-lg mb-5"></p>

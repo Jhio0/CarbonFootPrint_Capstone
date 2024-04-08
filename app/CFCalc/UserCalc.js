@@ -230,8 +230,8 @@
 
     return (
       <div className="flex w-full min-h-screen my-5 ">
-        <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center ">
-          <div role="tablist" className="tabs tabs-bordered mb-5">
+        <div className="mx-5 grid w-full h-full card bg-base-300 rounded-box place-items-center">
+          <div role="tablist" className="tabs tabs-bordered mb-5 ">
             {["Location", "Home", "Flights", "Vehicle"].map((tabName) => (
               <button
                 key={tabName}
@@ -366,13 +366,10 @@
           >
             Save Results
           </button>
-          <AIClimateRecommendation
-          emissions={{ electricityEmission, naturalGasEmission }}
-          onCalculate={fetchRecommendation}
-        />
+          
         </div>
         <div className="divider divider-horizontal"></div> {/*middle line*/}
-        <div className="flex-grow grid w-full h-full card bg-base-300 rounded-box place-items-center">
+        <div className="grid w-full h-full card bg-base-300 rounded-box place-items-center">
           <div className="stats shadow">
             <div className="stat">
               <div className="stat-title">Total Emissions</div>
@@ -390,17 +387,20 @@
               vehicleEmission={vehicleEmissions}
             />
           </div>
-          
+          <AIClimateRecommendation
+          emissions={{ electricityEmission, naturalGasEmission }}
+          onCalculate={fetchRecommendation}
+        />
         </div>
         <div className="divider divider-horizontal"></div> 
         {activeTab === "Vehicle" && (
-           <div className="w-20vh h-full card bg-base-300 rounded-box place-items-center">
+           <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
            {/* MapRouting content */}
            <MapRouting />
          </div>
         )}
         {activeTab === "Flights" && (
-           <div className="w-20vh h-full card bg-base-300 rounded-box place-items-center">
+           <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
            {/* AirportmapRouting content */}
            <AirportMapRouting />
          </div>

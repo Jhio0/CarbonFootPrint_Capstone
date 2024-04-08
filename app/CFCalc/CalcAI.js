@@ -62,7 +62,7 @@ export default function AIClimateRecommendation({ emissions, onCalculate }) {
   return (
     <div className="flex flex-col items-center mt-10">
       {displayedRecommendations && (
-        <div className="mt-5 w-full max-w-4xl">
+        <div className="mt-5 w-[450px] max-w-4xl">
           <h3 className="text-xl font-semibold mb-2 text-white">Sprouts Recommendations:</h3>
           <div className="h-96 overflow-y-auto p-4 bg-green-50 shadow rounded-lg border border-gray-200">
             <p className="text-gray-700 whitespace-pre-wrap">{displayedRecommendations}</p>
