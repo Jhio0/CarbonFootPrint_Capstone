@@ -196,6 +196,18 @@
 
     // Update to handle flight emissions
     const handleFlightEmissionsChange = (emissions) => {
+
+      const isValid = flights.every(flight => flight.airportCode.match(/^[A-Z]{3}$/));
+
+      if (!isValid) {
+        console.error("One or more airport codes are invalid.");
+        toast.error("One or more airport codes are invalid.", { position: "top-center" });
+        return; // Prevent further execution
+      }
+    
+      // Proceed with calculation if all airport codes are valid
+      console.log("All airport codes are valid. Calculating Emissions.");
+
       setFlightEmissions(emissions);
       updateTotalEmissions();
     };
@@ -246,6 +258,19 @@
     }, [fetchRecommendation]);
 
     const calculateVehicleEmissions = () => {
+
+      if (mileage.length > 8) {
+        console.error("Mileage cannot exceed 8 digits.");
+        toast.error("Mileage cannot exceed 8 digits.", { position: "top-center" });
+        return; // Stop execution if mileage exceeds 8 digits
+      }
+
+      if (parseFloat(mileage) < 0) {
+        console.error("Mileage cannot be less than 0.");
+        toast.error("Mileage cannot be less than 0.", { position: "top-center" });
+        return; // Prevent further execution
+      }
+
       const v_emissionFactors = {
         Car: 0.197,
         Motorcycle: 0.113,
@@ -253,6 +278,7 @@
       };
       const emissions =
         parseFloat(mileage) * (v_emissionFactors[vehicleType] || 0);
+      console.log("Vehicle emissions calculated");
       setVehicleEmissions(emissions);
       updateTotalEmissions();
     };
@@ -355,16 +381,20 @@
           {activeTab === "Vehicle" && (
             <div>
               <h2>Vehicle Emissions</h2>
-              <span className="label-text">Vehicle Type</span>
-              <select
-                className="select select-bordered w-full max-w-xs"
-                value={vehicleType}
-                onChange={(e) => setVehicleType(e.target.value)}
-              >
-                <option value="Car">Car</option>
-                <option value="Motorcycle">Motorcycle</option>
-                <option value="TruckSUV">Truck/SUV</option>
-              </select>
+              <label className="form-control w-full max-w-xs">
+                <div className="label">
+                  <span className="label-text">Vehicle Type</span>
+                </div>
+                <select
+                  className="select select-bordered w-full max-w-xs"
+                  value={vehicleType}
+                  onChange={(e) => setVehicleType(e.target.value)}
+                >
+                  <option value="Car">Car</option>
+                  <option value="Motorcycle">Motorcycle</option>
+                  <option value="TruckSUV">Truck/SUV</option>
+                </select>
+              </label>
               <br />
               <span className="label-text">Mileage</span>
               <input
