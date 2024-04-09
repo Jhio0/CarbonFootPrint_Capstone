@@ -3,9 +3,12 @@
   import FlightsCalc from "./FlightCalc";
   import EmissionDonutChart from "./EmissionsDonutChart";
   import AIClimateRecommendation from "./CalcAI";
+  import { ToastContainer, toast } from "react-toastify";
+  import "react-toastify/dist/ReactToastify.css";
+
   //firebase
   import { doc, setDoc } from "firebase/firestore";
-  import { auth, db } from "/app/_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
+  import { auth, db } from "../_utils/firebase"; // Adjust the path as necessary to where your Firebase config is exported
   import { onAuthStateChanged } from "firebase/auth";
 
   //maps
@@ -150,6 +153,15 @@
     const saveEmissionData = async () => {
       if (!currentUser) {
         console.log("No user signed in.");
+        toast.error("You must be signed in to save data.", { position: "top-center" });
+        return;
+      }
+    
+      // Check if any of the required fields are empty
+      if (!region || !electricityUsed || !naturalGasUsed) {
+        // Display an error message using toast
+        console.log("Please ensure all fields are filled out correctly before saving.");
+        toast.error("Please ensure all fields are filled out correctly before saving.", { position: "top-center" });
         return;
       }
 
@@ -166,9 +178,11 @@
           { merge: true }
         ); // Use merge to avoid overwriting other fields
 
-        alert("Emissions data saved successfully.");
+        console.log("Emissions data saved successfully.")
+        toast.success("Emissions data saved successfully.", { position: "top-center" });
       } catch (error) {
-        alert("Error saving emissions data: ", error);
+        console.log("Error saving emissions data.", error)
+        toast.error("Error saving emissions data.", { position: "top-center" });
       }
     };
 
@@ -193,6 +207,18 @@
 
     // Update to handle flight emissions
     const handleFlightEmissionsChange = (emissions) => {
+
+      const isValid = flights.every(flight => flight.airportCode.match(/^[A-Z]{3}$/));
+
+      if (!isValid) {
+        console.error("One or more airport codes are invalid.");
+        toast.error("One or more airport codes are invalid.", { position: "top-center" });
+        return; // Prevent further execution
+      }
+    
+      // Proceed with calculation if all airport codes are valid
+      console.log("All airport codes are valid. Calculating Emissions.");
+
       setFlightEmissions(emissions);
       updateTotalEmissions();
     };
@@ -205,6 +231,20 @@
       let electricityCalc = 0;
       let naturalGasCalc = 0;
 
+      if (!electricityUsed || !naturalGasUsed || parseFloat(electricityUsed) < 0 || parseFloat(naturalGasUsed) < 0) {
+        // Optionally, inform the user that both fields must be filled
+        console.log("Both electricity and gas inputs must be provided for calculations.")
+        toast.error("Both electricity and gas inputs must be provided for calculations.", { position: "top-center" });
+        return; // Exit the function if conditions are not met
+      }
+
+      if (!region) {
+        // Inform the user to select a region before calculating emissions
+        console.log("Please select a region before calculating emissions.");
+        toast.error("Please select a region before calculating emissions.", { position: "top-center" });
+        return; // Exit the function if region is null
+      }
+
       // Example calculation from Home tab
       if (country && region) {
         const factors = emissionFactors[country][region];
@@ -215,6 +255,7 @@
           naturalGasCalc = parseFloat(naturalGasUsed) * factors.naturalGas;
         }
       }
+      console.log("Successful Calculation!");
       setElectricityEmissions(electricityCalc);
       setNaturalGasEmissions(naturalGasCalc);
       setFetchRecommendation(true);
@@ -228,6 +269,19 @@
     }, [fetchRecommendation]);
 
     const calculateVehicleEmissions = () => {
+
+      if (mileage.length > 8) {
+        console.error("Mileage cannot exceed 8 digits.");
+        toast.error("Mileage cannot exceed 8 digits.", { position: "top-center" });
+        return; // Stop execution if mileage exceeds 8 digits
+      }
+
+      if (parseFloat(mileage) < 0) {
+        console.error("Mileage cannot be less than 0.");
+        toast.error("Mileage cannot be less than 0.", { position: "top-center" });
+        return; // Prevent further execution
+      }
+
       const v_emissionFactors = {
         Car: 0.197,
         Motorcycle: 0.113,
@@ -235,6 +289,7 @@
       };
       const emissions =
         parseFloat(mileage) * (v_emissionFactors[vehicleType] || 0);
+      console.log("Vehicle emissions calculated");
       setVehicleEmissions(emissions);
       updateTotalEmissions();
     };
@@ -337,16 +392,20 @@
           {activeTab === "Vehicle" && (
             <div>
               <h2>Vehicle Emissions</h2>
-              <span className="label-text">Vehicle Type</span>
-              <select
-                className="select select-bordered w-full max-w-xs"
-                value={vehicleType}
-                onChange={(e) => setVehicleType(e.target.value)}
-              >
-                <option value="Car">Car</option>
-                <option value="Motorcycle">Motorcycle</option>
-                <option value="TruckSUV">Truck/SUV</option>
-              </select>
+              <label className="form-control w-full max-w-xs">
+                <div className="label">
+                  <span className="label-text">Vehicle Type</span>
+                </div>
+                <select
+                  className="select select-bordered w-full max-w-xs"
+                  value={vehicleType}
+                  onChange={(e) => setVehicleType(e.target.value)}
+                >
+                  <option value="Car">Car</option>
+                  <option value="Motorcycle">Motorcycle</option>
+                  <option value="TruckSUV">Truck/SUV</option>
+                </select>
+              </label>
               <br />
               <span className="label-text">Mileage</span>
               <input
@@ -403,7 +462,10 @@
           onCalculate={fetchRecommendation}
         />
         </div>
+
+        {/* divider line */}
         <div className="divider divider-horizontal"></div> 
+
         {activeTab === "Vehicle" && (
            <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
            {/* MapRouting content */}
@@ -416,6 +478,19 @@
            <AirportMapRoutingWithNoSSR />
          </div>
         )}
+
+        <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+        />
         
       </div>
     );
