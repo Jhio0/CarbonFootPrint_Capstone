@@ -38,22 +38,12 @@ export const PublicReports = () => {
     return null;
   }
 
-  const handleViewProfile = async (selectedReport) => {
-    setSelectedReport(selectedReport); // Set the selected report in the context
-    console.log('Selected report:', selectedReport);
-    };
-
   return (
       <>
         {reports.map((report) => (
           <Card key={report.id} sx={{ width: '100%', marginBottom: '20px' }}>
             <CardHeader
               title="User"
-              action={
-                <Button style={{ marginLeft: 'auto' }} onClick={(e) => { e.stopPropagation(); handleViewProfile(report) }}>
-                View profile
-              </Button>
-              }
             />
             <CardActionArea>
               <div style={{ position: 'relative' }}>
