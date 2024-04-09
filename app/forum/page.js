@@ -34,7 +34,6 @@ const ForumPage = () => {
     docRef: "",
   };
 
-  // Write a getDate that formats the date object for a string. Potentially delete and re-create DB for string date.
   const { user } = UserAuth(); // Get the user from the auth hook
   const handleAddThread = async (newThread) => {
     if (user.displayName === null) {
@@ -50,6 +49,7 @@ const ForumPage = () => {
     if(user.uid == deleteThread.threadUid) {
       await handleDeleteThread(deleteThread)
       const filteredThreads = threads.filter(thread => thread !== deleteThread);
+      console.log('Thread deleted successfully')
       setThreads(filteredThreads)
     }
   };
@@ -62,8 +62,6 @@ const ForumPage = () => {
     setThreads(storedThreads);
   };
   const handleEditThread = async (thread) => {
-    // console.log("Inside handleEditThread.");
-    // console.log(thread)
     await editThread(thread);
   };
   function formatDate(dateObject) {
@@ -194,7 +192,8 @@ const ForumPage = () => {
       editThread.title = editTitle;
       editThread.content = editContent;
       await handleEditThread(editThread);
-      toast.success("Thread updated successfully!", {
+      console.log("Thread Updated");
+      toast.success("Thread updated successfully", {
         position: "top-center",
       });
       // Reset edit fields and close edit form
