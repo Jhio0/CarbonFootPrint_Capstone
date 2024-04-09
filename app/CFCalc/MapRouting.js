@@ -5,7 +5,7 @@ import L from 'leaflet';
 import '../mapStyling/leaflet.css';
 
 
-import '../mapStyling/leafletroutingmachine.css';
+
 import 'leaflet-routing-machine';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 import 'leaflet.locatecontrol';
@@ -14,7 +14,7 @@ import 'leaflet-control-geocoder';
 import 'leaflet-easybutton/src/easy-button'
 import 'leaflet-easybutton/src/easy-button.css'
 import "font-awesome/css/font-awesome.min.css";
-import './routingstyling.css'; // Import OSM Buildings
+import './routingstyling.css';
 
 
 
