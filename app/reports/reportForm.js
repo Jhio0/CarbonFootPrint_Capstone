@@ -11,6 +11,8 @@ export default function ReportForm() {
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
     const [date, setDate] = useState("");
+    const [author, setAuthor] = useState("");
+    const [uid, setUid] = useState("");
     const { location, setLocation } = useLocation(); // Destructure location and setLocation from useLocation() hook
     const [isPrivate, setPrivate] = useState(false);
     const [reports, setReports] = useState([]);
@@ -38,11 +40,12 @@ export default function ReportForm() {
             date: date,
             location: location, 
             private: isPrivate,
+            author: user.displayName, // Assuming displayName is available in your user object
+            uid: user.uid, // Set the uid to the current user's UID
         };
     
         try {
             console.log("Submitting report", report);
-            console.log("User", user.uid);
             
             if (isPrivate === true) {
                 // If the report is private, call addReport
@@ -65,7 +68,7 @@ export default function ReportForm() {
             // Handle the error appropriately in your UI
         }
     };
-    ;
+    
 
     useEffect(() => {
         loadReports();
@@ -115,17 +118,6 @@ export default function ReportForm() {
                 <button type="submit" className="font-medium shadow-md rounded-none p-2 w-full focus:outline-none focus:ring-2 focus:ring-offset-2 border border-gray-900 dark:border-gray-100 bg-gray-800 dark:bg-gray-200 text-gray-200 dark:text-gray-800 hover:bg-gray-900 dark:hover:bg-gray-100">Submit Report</button>
             </div>
         </form>
-        <div className="reportsContainer">
-                    {reports && reports.map((report) => (
-                        <div key={report.id}>
-                            <h2>{report.title}</h2>
-                            <p>{report.text}</p>
-                            <p>{report.date}</p>
-                            <p>{report.location}</p>
-                            <p>{report.isPrivate}</p>
-                        </div>
-                    ))}
-        </div>
     </div>
     );
 }

@@ -27,14 +27,14 @@ export const getReports = async(uid) => {
     }
 }
 
-export const addPublicReport = async (uid, report) => { // Ensure to pass userId
+export const addPublicReport = async (uid, report) => { 
     try {
         const itemCol = collection(db, "publicReports",);
         const docRef = await addDoc(itemCol, report);
         return docRef.id;
     } catch (error) {
         console.error("Error adding public report:", error);
-        throw error; // Rethrow the error to propagate it up the call stack
+        throw error;  
     }
 }
 
@@ -49,6 +49,32 @@ export const getPublicReports = async () => {
         return reports;
     } catch (error) {
         console.error("Error getting public reports:", error);
+        throw error;
+    }
+};
+
+export const publicProfile = async () => {
+    try {
+        const publicReportsCol = collection(db, "publicReports");
+        const querySnapshot = await getDocs(publicReportsCol);
+        const profiles = {};
+
+        querySnapshot.forEach((doc) => {
+            const reportData = doc.data();
+            const uid = reportData.uid;
+
+            if (!profiles[uid]) {
+                // If the UID is not already in the profiles object, create a new entry
+                profiles[uid] = [reportData];
+            } else {
+                // If the UID is already in the profiles object, push the reportData to the existing array
+                profiles[uid].push(reportData);
+            }
+        });
+
+        return profiles;
+    } catch (error) {
+        console.error("Error getting public profiles:", error);
         throw error;
     }
 };
