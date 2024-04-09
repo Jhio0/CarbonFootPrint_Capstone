@@ -2,8 +2,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import '../mapStyling/leaflet.css';
+
+
+import '../mapStyling/leafletroutingmachine.css';
 import 'leaflet-routing-machine';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 import 'leaflet.locatecontrol';
