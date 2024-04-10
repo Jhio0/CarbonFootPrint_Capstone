@@ -278,8 +278,8 @@ describe('UserCalc', () => {
     });
 
     it('displays an error for an invalid flight IATA code input', async () => {
-      render(<UserCalc />);
       jest.spyOn(console, 'error').mockImplementation();
+      render(<UserCalc />);
     
       // Navigate to the Flights tab
       await fireEvent.click(screen.getByText('Flights'));
@@ -295,7 +295,7 @@ describe('UserCalc', () => {
       await fireEvent.click(screen.getByText('Add Flight'));
     
       // Verify that an error toast message is displayed
-      expect(console.error).toHaveBeenCalledWith("One or more airport codes are invalid");
+      expect(console.error).toHaveBeenCalledWith("Invalid IATA code(s). Please check and try again.");
     });
     
 })
