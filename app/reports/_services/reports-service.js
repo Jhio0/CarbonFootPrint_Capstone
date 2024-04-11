@@ -27,3 +27,31 @@ export const getReports = async(userId) => {
         console.log(error);
     }
 }
+
+export const addPublicReport = async (uid, report) => { 
+    try {
+        const itemCol = collection(db, "publicReports",);
+        const docRef = await addDoc(itemCol, report);
+        return docRef.id;
+    } catch (error) {
+        console.error("Error adding public report:", error);
+        throw error;  
+    }
+}
+
+export const getPublicReports = async () => {
+    try {
+        const publicReportsCol = collection(db, "publicReports");
+        const querySnapshot = await getDocs(publicReportsCol);
+        const reports = [];
+        querySnapshot.forEach((doc) => {
+            reports.push({ id: doc.id, ...doc.data() });
+        });
+        return reports;
+    } catch (error) {
+        console.error("Error getting public reports:", error);
+        throw error;
+    }
+};
+
+
