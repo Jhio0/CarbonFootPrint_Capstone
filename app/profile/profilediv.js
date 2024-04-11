@@ -57,7 +57,11 @@ export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports,h
             </div>
 
             <figure style={profileImageStyle}>
-                {photoURL && <img src={photoURL} alt="Profile" style={profileImageStyle} />} {/* Render the profile image if photoURL exists */}
+                {photoURL ? (
+                    <img src={photoURL} alt="Profile" style={profileImageStyle} />
+                ) : (
+                    <img src="userprofile.jpg" alt="Profile" style={profileImageStyle} />
+                )}
             </figure>
 
             <div style={profileDescStyle}>
