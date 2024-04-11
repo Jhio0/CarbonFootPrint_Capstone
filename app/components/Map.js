@@ -4,7 +4,10 @@ import React, { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap} from 'react-leaflet';
 import L from 'leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
-import 'leaflet-geosearch/dist/geosearch.css';
+
+
+import '../mapStyling/leaflet.css';
+import '../mapStyling/leafletgeosearch.css';
 
 import DoughnutChart from './Chart/Doughnut.js';
 import BarChart from './Chart/BarChart.js';

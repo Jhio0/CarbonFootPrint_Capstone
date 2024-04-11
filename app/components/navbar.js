@@ -21,8 +21,8 @@ import { ThemeProvider, createTheme } from '@mui/material/styles';
 import { useRouter } from 'next/navigation';
 import { UserAuth } from '../context/AuthContext';
 
-const pages = ['logIn','signUp', 'news'];
-const pagesauth = ['CFCalc', 'reports', 'forum', 'news']
+const pages = ['logIn','signUp', 'feed', 'news'];
+const pagesauth = ['CFCalc', 'reports', 'forum', 'feed', 'news']
 
 const settings = ['Profile', 'Account', 'Dashboard', 'Logout',];
 

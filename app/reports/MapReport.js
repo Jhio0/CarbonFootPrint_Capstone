@@ -5,7 +5,8 @@ import React, { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, GeoJSON, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import { GeoSearchControl, OpenStreetMapProvider } from 'leaflet-geosearch';
-import 'leaflet-geosearch/dist/geosearch.css';
+
+import '../mapStyling/leafletgeosearch.css';
 import { countryCodeToName, countryCodes } from '../components/items/countryUtils';
 
 import 'leaflet-easybutton/src/easy-button'
@@ -16,6 +17,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 import {useLocation} from './LocationContext';
 import { ThreeCircles } from 'react-loader-spinner';
+
 
 export default function MapReport({ onLocationSelect }) {
   const [geojsonFeatures, setGeojsonFeatures] = useState([]);

@@ -2,8 +2,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
-import 'leaflet/dist/leaflet.css';
-import 'leaflet-routing-machine/dist/leaflet-routing-machine.css';
+import '../mapStyling/leaflet.css';
+
+
+
 import 'leaflet-routing-machine';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 import 'leaflet.locatecontrol';
@@ -12,7 +14,7 @@ import 'leaflet-control-geocoder';
 import 'leaflet-easybutton/src/easy-button'
 import 'leaflet-easybutton/src/easy-button.css'
 import "font-awesome/css/font-awesome.min.css";
-import './routingstyling.css'; // Import OSM Buildings
+import './routingstyling.css';
 
 
 
@@ -22,7 +24,7 @@ const MapRouting = () => {
 
   
   return (
-    <div style={{ height: '100vh', width: '95vh' }}>
+    <div style={{ height: '100vh', width: '100vh' }}>
       <MapContainer center={[20, 0]} zoom={6}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

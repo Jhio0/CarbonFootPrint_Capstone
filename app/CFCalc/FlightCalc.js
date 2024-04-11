@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import airportsData from "./Airports.json"; // Ensure this path is correct
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // Function to calculate distance between two lat/lon points in km
 function calculateDistance(lat1, lon1, lat2, lon2) {
@@ -30,7 +32,8 @@ const FlightsCalc = ({ flights = [], setFlights, onFlightEmissionsChange }) => {
     );
 
     if (!originAirport || !destinationAirport) {
-      alert("Invalid IATA code(s). Please check and try again.");
+      toast.error("Invalid IATA code(s). Please check and try again.");
+      console.error("Invalid IATA code(s). Please check and try again.");
       return;
     }
 

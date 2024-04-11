@@ -46,7 +46,7 @@ export default function NewsItem({ news }) {
                     <div key={newsItem.id} className="news-container w-2/5 border-4 bg-ferngreen-700 p-4 m-4 border-b-ferngreen-900 border-r-ferngreen-900  border-t-ferngreen-600 border-l-ferngreen-600">
                         <h2 className="text-xl font-bold text-white font-Typography">{newsItem.title}</h2>
                         <p className="text-white font-Typography">{newsItem.description}</p>
-                        <Link className="text-white underline font-Typography" href={`${newsItem.url}`}>
+                        <Link className="text-white underline " href={`${newsItem.url}`}>
                             Read More
                         </Link>
                     </div>

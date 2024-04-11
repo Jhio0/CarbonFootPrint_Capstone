@@ -34,7 +34,6 @@ const ForumPage = () => {
     docRef: "",
   };
 
-  // Write a getDate that formats the date object for a string. Potentially delete and re-create DB for string date.
   const { user } = UserAuth(); // Get the user from the auth hook
   const handleAddThread = async (newThread) => {
     if (user.displayName === null) {
@@ -50,6 +49,7 @@ const ForumPage = () => {
     if(user.uid == deleteThread.threadUid) {
       await handleDeleteThread(deleteThread)
       const filteredThreads = threads.filter(thread => thread !== deleteThread);
+      console.log('Thread deleted successfully')
       setThreads(filteredThreads)
     }
   };
@@ -62,8 +62,6 @@ const ForumPage = () => {
     setThreads(storedThreads);
   };
   const handleEditThread = async (thread) => {
-    // console.log("Inside handleEditThread.");
-    // console.log(thread)
     await editThread(thread);
   };
   function formatDate(dateObject) {
@@ -81,31 +79,63 @@ const ForumPage = () => {
 
   //Post with title and content, assign to userID.
   const handleSubmit = async (event) => {
-    //Prevent form from refreshing.
-    event.preventDefault();
-
+    event.preventDefault(); // Prevent form from refreshing
+  
     // Ensure user is authenticated
     if (!user) {
       console.error("User is not authenticated.");
+      toast.error("You need to be logged in to create a thread.", {
+        position: "top-center",
+      });
       return;
     }
-
-    try {
-      //Send thread to db;
-      thread.date = formatDate(new Date());
-      // console.log(thread.date);
-      handleAddThread(thread);
-      toast.success("Success Notification !", {
-        position: "top-right",
+  
+    // Validation: Check if the title is empty
+    if (title.trim().length === 0) {
+      console.error("The title cannot be empty.");
+      toast.error("The title cannot be empty.", {
+        position: "top-center",
       });
+      return; // Prevent further execution if validation fails
+    }
+  
+    // Validation: Check if the title exceeds 100 characters
+    if (title.length > 100) {
+      console.error("Title exceeds the maximum length of 100 characters.");
+      toast.error("Title cannot exceed 100 characters.", {
+        position: "top-center",
+      });
+      return; // Prevent further execution if validation fails
+    }
+  
+    // Validation: Check if the content exceeds 1000 characters
+    if (content.length > 1500) {
+      console.error("Content exceeds the maximum length of 1500 characters.");
+      toast.error("Content cannot exceed 1500 characters.", {
+        position: "top-center",
+      });
+      return; // Prevent further execution if validation fails
+    }
+  
+    try {
+      // Proceed with adding the thread to the database
+      thread.date = formatDate(new Date());
+      await handleAddThread(thread);
+      console.log("Thread Created");
+      toast.success("Thread created successfully!", {
+        position: "top-center",
+      });
+      // Reset form fields after successful submission
       setTitle("");
       setContent("");
     } catch (error) {
       console.error("Error submitting thread:", error);
-      // Handle error
+      toast.error("An error occurred while creating the thread.", {
+        position: "top-center",
+      });
     }
   };
-
+  
   //DELETE the thread.
   //Refresh page and remove info - delete from db itself.
 
@@ -128,16 +158,57 @@ const ForumPage = () => {
       setThreadClicked(tid);
     }
   };
+
   const handleEditSubmit = async (editThread) => {
-    editThread.title = editTitle;
-    editThread.content = editContent;
-    // console.log("From inside handleEditSubmit:", editThread.content)
-    await handleEditThread(editThread);
-    setEditTitle("");
-    setEditContent("");
-    loadThreads();
-    showToastMessage();
+    // Prevent submission if the editTitle is empty or consists only of whitespace
+    if (editTitle.trim().length === 0) {
+      console.error("The title cannot be empty.");
+      toast.error("The title cannot be empty.", {
+        position: "top-center",
+      });
+      return; // Prevent further execution if validation fails
+    }
+  
+    // Prevent submission if the editTitle exceeds 100 characters
+    if (editTitle.length > 100) {
+      console.error("Title exceeds the maximum length of 100 characters.");
+      toast.error("Title cannot exceed 100 characters.", {
+        position: "top-center",
+      });
+      return; // Prevent further execution if validation fails
+    }
+  
+    // Prevent submission if the editContent exceeds 1000 characters
+    if (editContent.length > 1500) {
+      console.error("Content exceeds the maximum length of 1500 characters.");
+      toast.error("Content cannot exceed 1500 characters.", {
+        position: "top-center",
+      });
+      return; // Prevent further execution if validation fails
+    }
+  
+    try {
+      // Proceed with updating the thread in the database
+      editThread.title = editTitle;
+      editThread.content = editContent;
+      await handleEditThread(editThread);
+      console.log("Thread Updated");
+      toast.success("Thread updated successfully", {
+        position: "top-center",
+      });
+      // Reset edit fields and close edit form
+      setEditTitle("");
+      setEditContent("");
+      setThreadClicked(""); // Assuming this resets the edit mode
+      loadThreads(); // Reload threads to reflect the edited changes
+    } catch (error) {
+      console.error("Error updating thread:", error);
+      toast.error("An error occurred while updating the thread.", {
+        position: "top-center",
+      });
+    }
   };
+  
 
 
   return (
@@ -157,6 +228,7 @@ const ForumPage = () => {
               <div>
                 <textarea
                   id="title"
+                  placeholder="Title here"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
                   className="text-black textarea"
@@ -172,6 +244,7 @@ const ForumPage = () => {
               <div>
                 <textarea
                   id="content"
+                  placeholder="Write your stuff here"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
                   className="text-black textarea"
@@ -193,7 +266,7 @@ const ForumPage = () => {
           </form>
           <div className="threadsContainer m-2 py-2 ">
             {/* Display threads here  */}
-            {threads.map((thread) => (
+            {threads && threads.map((thread) => (
               <div
                 key={thread.id}
                 className="p-3 bg-gray-500 rounded-md m-3 text-white"
@@ -216,11 +289,13 @@ const ForumPage = () => {
                         <textarea
                           id="editTitle"
                           value={editTitle}
+                          placeholder="New title here"
                           onChange={(e) => setEditTitle(e.target.value)}
                           className="text-black textarea" />
                         <label>Content:</label>
                         <textarea
                           id="editContent"
+                          placeholder="New content here"
                           value={editContent}
                           onChange={(e) => setEditContent(e.target.value)}
                           className="text-black textarea" />
@@ -248,7 +323,7 @@ const ForumPage = () => {
           </div>
         </div>
         <ToastContainer
-            position="top-right"
+            position="top-center"
             autoClose={5000}
             hideProgressBar={false}
             newestOnTop={false}
