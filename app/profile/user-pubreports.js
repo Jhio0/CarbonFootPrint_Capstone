@@ -5,16 +5,38 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert'; // Adding MoreVertIcon
-import { CardActionArea, CardActions, Collapse } from '@mui/material';
-import { getPublicReports } from '../reports/_services/reports-service';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'; // Importing DeleteOutlinedIcon
+import { CardActionArea, CardActions, Collapse, } from '@mui/material';
+import { getPublicReports, deletePublicReport } from '../reports/_services/reports-service';
 import { UserAuth } from "../context/AuthContext.js";
 
 export const UserPubReports = () => {
   const [reports, setReports] = useState([]);
   const { user } = UserAuth(); // Get the user from the auth hook
   const [expandedCards, setExpandedCards] = useState({}); // State to track expanded cards
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
   
+  const handleDelete = async (reportId) => {
+    try {
+      await deletePublicReport(reportId);
+      setReports(reports.filter(report => report.id !== reportId));
+    } catch (error) {
+      console.error('Error deleting report:', error);
+    }
+  };
+  
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleExpandClick = (reportId) => {
+    setExpandedCards(prevState => ({
+      ...prevState,
+      [reportId]: !prevState[reportId]
+    }));
+  };
+
   const fetchPubReports = async () => {
     try {
       const reportsData = await getPublicReports();
@@ -31,12 +53,6 @@ export const UserPubReports = () => {
     fetchPubReports();
   }, [user]);
 
-  const handleExpandClick = (reportId) => {
-    setExpandedCards(prevState => ({
-      ...prevState,
-      [reportId]: !prevState[reportId]
-    }));
-  };
 
   if (!reports) {
     return null;
@@ -73,18 +89,20 @@ export const UserPubReports = () => {
               </Typography>
               <IconButton 
                 aria-label="settings"
-                style={{ position: 'absolute', top: 5, right: 5, color: 'white' }}>
-                <MoreVertIcon />
+                style={{ position: 'absolute', top: 5, right: 5, color: 'white' }}
+                onClick={() => handleDelete(report.id)}
+              >
+                <DeleteOutlinedIcon />
               </IconButton>
             </div>
           </CardActionArea>
           <CardActions disableSpacing>
-            <div style={{ margin: 'auto' }}> {/* Container to center the icon */}
+            <div style={{ margin: 'auto' }}> 
               <IconButton
                 aria-label="show more"
-                onClick={() => handleExpandClick(report.id)} // Pass report id to handleExpandClick
-                aria-expanded={expandedCards[report.id]} // Use expanded state for the specific card
-                expand={expandedCards[report.id]} // Use expanded state for the specific card
+                onClick={() => handleExpandClick(report.id)} 
+                aria-expanded={expandedCards[report.id]} 
+                expand={expandedCards[report.id]} 
               >
                 <ExpandMoreIcon />
               </IconButton>

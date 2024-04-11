@@ -1,5 +1,5 @@
 import { db } from "../../_utils/firebase";
-import { collection, getDocs, addDoc, query } from "firebase/firestore";
+import { collection, getDocs, addDoc, query, doc, deleteDoc  } from "firebase/firestore";
 
 export const addReport = async(userId, report) => {
     try{
@@ -54,4 +54,23 @@ export const getPublicReports = async () => {
     }
 };
 
+export const deletePublicReport = async (reportId) => {
+    try {
+        const publicReportDoc = doc(db, "publicReports", reportId);
+        await deleteDoc(publicReportDoc);
+    } catch (error) {
+        console.error("Error deleting public report:", error);
+        throw error;
+    }
+};
 
+
+export const deleteReport = async (userId, reportId) => {
+    try {
+        const userReportDoc = doc(db, `users/${userId}/reports`, reportId);
+        await deleteDoc(userReportDoc);
+    } catch (error) {
+        console.error("Error deleting user report:", error);
+        throw error;
+    }
+};

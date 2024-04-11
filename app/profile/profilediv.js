@@ -61,9 +61,11 @@ export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports,h
             </figure>
 
             <div style={profileDescStyle}>
-                <button onClick={handleTogglePrivatePosts}>Show/Hide Private Posts</button>
-                <button onClick={handleTogglePublicPosts}>Show/Hide Public Posts</button>
-                <button onClick={handleToggleAllReports}>Show/Hide All Reports</button>
+                <button onClick={handleTogglePrivatePosts}>Show Private Posts</button>
+                <br/>
+                <button onClick={handleTogglePublicPosts}>Show Public Posts</button>
+                <br/>
+                <button onClick={handleToggleAllReports}>Show All Reports</button>
             </div>
         </div>
     );

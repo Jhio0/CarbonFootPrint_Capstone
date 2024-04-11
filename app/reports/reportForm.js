@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { UserAuth } from "../context/AuthContext.js";
 import { useLocation } from './LocationContext';
-import { addReport, getReports } from "./_services/reports-service.js";
+import { addReport, addPublicReport, getReports } from "./_services/reports-service.js";
 import { FaLocationDot } from "react-icons/fa6";
 import { CiCalendarDate } from "react-icons/ci";
 import { IoIosCheckmark } from "react-icons/io";
@@ -14,6 +14,8 @@ export default function ReportForm() {
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
     const [date, setDate] = useState("");
+    const [author, setAuthor] = useState("");
+    const [isPrivate, setPrivate] = useState(false);
     const { location, setLocation } = useLocation(); // Destructure location and setLocation from useLocation() hook
     const [reports, setReports] = useState([]);
     const [reportsUtil, newReportsUtil] = useState(reports);
@@ -69,20 +71,30 @@ export default function ReportForm() {
             text: text,
             date: date,
             location: location,
+            private: isPrivate,
+            author: user.displayName, // Assuming displayName is available in your user object
+            uid: user.uid, 
         };
     
         try {
-            const reportId = await addReport(user.uid, report);
-            console.log("Successfully added report")
-            console.log('Report added with ID:', reportId);
-            handleAddReport(report);
+            console.log("Submitting report", report);
+            
+            if (isPrivate === true) {
+                // If the report is private, call addReport
+                const reportId = await addReport(user.uid, report);
+                console.log('Private report added with ID:', reportId);
+            } else {
+                // If the report is not private, call addPublicReport
+                const reportId = await addPublicReport(user.uid, report);
+                console.log('Public report added with ID:', reportId);
+            }
+    
+            // Reset form fields after submission
             setTitle("");
             setText("");
             setDate("");
-            setLocation("");
-            toast.success("Success Notification !", {
-                position: "top-center",
-            });
+            setLocation(""); // Clear the location after submission
+            setPrivate(false); // Reset the isPrivate state
         } catch (error) {
             console.error('Error submitting report:', error);
             // Handle the error appropriately in your UI
@@ -134,6 +146,12 @@ export default function ReportForm() {
                 <div className="mt-1 flex shadow-md">
                     <span className="inline-flex items-center px-3 rounded-none border border-r-0 border-gray-900 dark:border-gray-100"><FaLocationDot /></span>
                     <input type="text" id="location" value={location} onChange={(e) => setLocation(e.target.value)}  className="flex-1 block w-full sm:text-sm rounded-none border border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"/>
+                </div>
+            </div>
+            <div className="mb-5">
+                <label htmlFor="location" className="text-lg flex justify-between items-end"><span>Private</span></label>
+                <div className="mt-1 flex shadow-md">
+                    <input type="checkbox" id="location" value={isPrivate} onChange={(e) => setPrivate(e.target.checked)}  className="flex-1 block w-full sm:text-sm rounded-none border border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"/>
                 </div>
             </div>
             <div>

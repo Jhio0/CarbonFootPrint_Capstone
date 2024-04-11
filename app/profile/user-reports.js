@@ -5,9 +5,9 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { CardActionArea, CardActions, Collapse, Menu, MenuItem } from '@mui/material'; // Import MenuItem
-import { getReports } from '../reports/_services/reports-service';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'; // Importing DeleteOutlinedIcon
+import { CardActionArea, CardActions, Collapse,} from '@mui/material'; // Import MenuItem
+import { getReports, deleteReport } from '../reports/_services/reports-service';
 import { UserAuth } from "../context/AuthContext.js";
 
 export const UserReports = () => {
@@ -17,9 +17,15 @@ export const UserReports = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
 
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
+  const handleDelete = async (reportId) => {
+    try {
+      await deleteReport(user.uid, reportId);
+      setReports(reports.filter(report => report.id !== reportId));
+    } catch (error) {
+      console.error('Error deleting report:', error);
+    }
   };
+  
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -78,24 +84,13 @@ export const UserReports = () => {
               >
                 {report.title}
               </Typography>
-              <IconButton
+              <IconButton 
                 aria-label="settings"
                 style={{ position: 'absolute', top: 5, right: 5, color: 'white' }}
-                onClick={handleClick} // Add onClick handler
+                onClick={() => handleDelete(report.id)}
               >
-                <MoreVertIcon />
+                <DeleteOutlinedIcon />
               </IconButton>
-              <Menu
-                id="settings-menu"
-                anchorEl={anchorEl} // Use anchorEl to position the menu
-                open={open}
-                onClose={handleClose}
-                MenuListProps={{
-                  'aria-labelledby': 'settings',
-                }}
-              >
-                <MenuItem onClick={handleClose}>Delete</MenuItem>
-              </Menu>
             </div>
           </CardActionArea>
           <CardActions disableSpacing>
