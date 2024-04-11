@@ -6,7 +6,7 @@ export default function Footer() {
   
             {/* Logo */}
             <div className="w-100">
-            <h1 className="text-white font-extrabold text-2xl text-center italic">© ClimateChart 2024</h1>   
+            <h1 className="text-white font-extrabold text-2xl text-center italic">© CarbonChart 2024</h1>   
             </div>
   
       </footer>
