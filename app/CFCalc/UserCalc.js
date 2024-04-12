@@ -135,6 +135,9 @@
     const [fetchRecommendation, setFetchRecommendation] = useState(false);
 
     const [currentUser, setCurrentUser] = useState(null);
+
+
+   
     //firebase
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -469,7 +472,7 @@
         {activeTab === "Vehicle" && (
            <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
            {/* MapRouting content */}
-           <MapRoutingWithNoSSR />
+           <MapRoutingWithNoSSR setDistance={setMileage}  />
          </div>
         )}
         {activeTab === "Flights" && (

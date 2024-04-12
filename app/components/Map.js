@@ -40,7 +40,7 @@ export default function Map() {
       try {
         const provider = new OpenStreetMapProvider();
         // Fetch emissions data for North American countries
-        const responseNorthAmerica = await fetch('https://api.climatetrace.org/v4/assets?continent=NA');
+        const responseNorthAmerica = await fetch('https://api.climatetrace.org/v4/assets?');
         const { assets: assetsNorthAmerica } = await responseNorthAmerica.json();
   
         // Define a function to fetch emissions data for a single country with a delay
