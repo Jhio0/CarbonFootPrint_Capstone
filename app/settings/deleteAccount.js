@@ -19,7 +19,7 @@ const DeleteAccountComponent = () => {
   };
 
   return (
-    <div>
+    <div className="p-4">
       {showPopup && (
         <div
           className="absolute top-20 left-1/2 transform -translate-x-1/2 bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded"
@@ -32,12 +32,12 @@ const DeleteAccountComponent = () => {
           </span>
         </div>
       )}
-      <h2 className="text-xl font-semibold mb-4 text-black">Delete Account</h2>
+      <h2 className="text-xl font-semibold mb-4">Delete Account</h2>
       <p className="mb-4 text-black">
         Are you sure you want to delete your account? This action cannot be
         undone.
       </p>
-      <button className="btn btn-danger mt-5" onClick={handleDeleteAccount}>
+      <button className="btn btn-primary mt-4"onClick={handleDeleteAccount}>
         Delete Account
       </button>
     </div>

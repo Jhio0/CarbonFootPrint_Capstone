@@ -4,7 +4,7 @@ import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import { ProfileDiv1 } from './profilediv';
 import { ProfileDiv2 } from './profilediv2';
-import { UserAuth } from '../context/AuthContext'; // Assuming you have an AuthContext
+import { UserAuth } from '../context/AuthContext';  
 import { useRouter } from 'next/navigation';  
 
 export default function Profile() {

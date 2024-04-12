@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
-import firebase from 'firebase/app'; // Import firebase
+import { Typography, Button } from '@mui/material';
+import firebase from 'firebase/app'; 
 import { auth } from '../_utils/firebase';
 
-export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports,handleTogglePublicPosts  }) => {
-    const [displayName, setDisplayName] = useState(null); // State to store user's display name
-    const [photoURL, setPhotoURL] = useState(null); // State to store user's photo URL
+export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports, handleTogglePublicPosts }) => {
+    const [displayName, setDisplayName] = useState(null); 
+    const [photoURL, setPhotoURL] = useState(null); 
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
-            // This function will be called whenever the authentication state changes
+            
             if (user) {
-                // If a user is logged in, set their display name and photo URL
+                
                 setDisplayName(user.displayName);
-                setPhotoURL(user.photoURL); // Set the photo URL
+                setPhotoURL(user.photoURL); 
             } else {
-                // If no user is logged in, set displayName and photoURL to null
+                
                 setDisplayName(null);
                 setPhotoURL(null);
             }
         });
-    
-        // Cleanup function: Unsubscribe from the auth state listener when the component unmounts
+
+        
         return () => unsubscribe();
-    }, []); // Empty dependency array means this effect runs only once, after the component mounts
+    }, []); 
 
     const profileDivContainerStyle = {
-        backgroundColor: '#212d33',        
+        backgroundColor: '#212d33',
         borderRadius: '6px',
         width: '100%',
         display: 'inline-Block',
@@ -35,21 +35,28 @@ export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports,h
 
     const nameStyle = {
         containerSpacing: '2',
-        padding: '20px',
+        display: 'flex',
+        justifyContent: 'center', 
+        alignItems: 'center', 
     }
 
     const profileImageStyle = {
         marginTop: '17px',
         display: 'flex',
-        justifyContent: 'center', // Center horizontally
-        alignItems: 'center', // Center vertically
-        borderRadius: '50%' // Apply border radius to make it circular
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        borderRadius: '50%' 
     }
-    
+
     const profileDescStyle = {
-        padding:'20px',
+        padding: '20px',
+        display: 'flex',
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        flexDirection: 'column',
+
     }
-    
+
     return (
         <div style={profileDivContainerStyle}>
             <div style={nameStyle}>
@@ -65,11 +72,11 @@ export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports,h
             </figure>
 
             <div style={profileDescStyle}>
-                <button onClick={handleTogglePrivatePosts}>Show Private Posts</button>
-                <br/>
-                <button onClick={handleTogglePublicPosts}>Show Public Posts</button>
-                <br/>
-                <button onClick={handleToggleAllReports}>Show All Reports</button>
+                <Button variant="contained" color="primary" onClick={handleTogglePrivatePosts}>Show Private Posts</Button>
+                <br />
+                <Button variant="contained" color="primary" onClick={handleTogglePublicPosts}>Show Public Posts</Button>
+                <br />
+                <Button variant="contained" color="primary" onClick={handleToggleAllReports}>Show All Reports</Button>
             </div>
         </div>
     );

@@ -5,8 +5,8 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'; // Importing DeleteOutlinedIcon
-import { CardActionArea, CardActions, Collapse,} from '@mui/material'; // Import MenuItem
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';  
+import { CardActionArea, CardActions, Collapse,} from '@mui/material';  
 import { getReports, deleteReport } from '../reports/_services/reports-service';
 import { UserAuth } from "../context/AuthContext.js";
 

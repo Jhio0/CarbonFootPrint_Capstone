@@ -15,6 +15,12 @@ const ChangePasswordComponent = () => {
   const handleChangePassword = async () => {
     try {
       const user = auth.currentUser;
+      // Check if the user's email is null (Google user)
+      if (!user.email) {
+        setError("Changing password is not applicable for Google users.");
+        return;
+      }
+      
       const credential = EmailAuthProvider.credential(
         user.email,
         currentPassword
@@ -29,7 +35,6 @@ const ChangePasswordComponent = () => {
       setSuccess(""); // Clear any previous success message
     }
   };
-
   return (
     <div className="p-4">
       <h2 className="text-xl font-semibold mb-4">Change Password</h2>

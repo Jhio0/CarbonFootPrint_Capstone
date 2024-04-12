@@ -131,8 +131,8 @@ export default function ReportForm() {
                 </div>
             </div>
             <div className="mb-5">
-                <label htmlFor="message" className="text-lg flex justify-between items-end"><span>Message</span></label>
-                <textarea name="message" id="message" cols="30" rows="10" className="shadow-md mt-1 block w-full sm:text-sm rounded-none border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"></textarea>
+                <label htmlFor="message" className="text-lg flex justify-between items-end"><span>Text</span></label>
+                <textarea name="message" id="message" cols="30" rows="10" value={text} onChange={(e) => setText(e.target.value)} className="shadow-md mt-1 block w-full sm:text-sm rounded-none border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"></textarea>
             </div>
             <div className="mb-5">
                 <label htmlFor="date" className="text-lg flex justify-between items-end"><span>Date</span></label>
