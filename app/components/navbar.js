@@ -24,7 +24,7 @@ import { UserAuth } from '../context/AuthContext';
 const pages = ['logIn','signUp', 'feed', 'news'];
 const pagesauth = ['CFCalc', 'reports', 'forum', 'feed', 'news']
 
-const settings = ['Profile', 'Account', 'Dashboard', 'Logout',];
+const settings = ['Profile', 'Settings', 'Logout',];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = useState(null);
@@ -170,15 +170,46 @@ function ResponsiveAppBar() {
               <>
                 {/* Code for authenticated user */}
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-                  {pagesauth.map((page) => (
-                    <Button
-                      key={page}
-                      onClick={handleCloseNavMenu}
-                      sx={{ my: 2, color: 'white', display: 'block', '&:hover': { backgroundColor: 'secondary.main' } }}
-                    >
-                      <Link href={`/${page}`}>{page}</Link>
-                    </Button>
-                  ))}
+                {pagesauth.map((page) => {
+                    switch (page) {
+                      case 'CFCalc':
+                        return (
+                          <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                            <Link href="/CFCalc">CFCalc</Link>
+                          </Button>
+                        );
+                      case 'reports':
+                        return (
+                          <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                            <Link href="/reports">Reports</Link>
+                          </Button>
+                        );
+                        case 'forum':
+                          return (
+                            <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                              <Link href="/forum">Forum</Link>
+                            </Button>
+                          );
+                        case 'feed':
+                          return (
+                            <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                              <Link href="/feed">Feed</Link>
+                            </Button>
+                          );
+                        case 'news':
+                          return (
+                            <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                              <Link href="/news">News</Link>
+                            </Button>
+                          );
+                      default:
+                        return (
+                          <Button key={page} onClick={handleCloseNavMenu} sx={{ my: 2, color: 'white', display: 'block' }}>
+                            {page}
+                          </Button>
+                        );
+                    }
+                    })}
                 </Box>
                 <Box sx={{ flexGrow: 0 }}>
                   <Tooltip title="Open settings">
@@ -204,18 +235,26 @@ function ResponsiveAppBar() {
                   >
                     {settings.map((setting) => {
                       switch (setting) {
+                        case 'Profile':
+                          return (
+                            <MenuItem key={setting}>
+                              <Link href="/profile">
+                                <Typography textAlign="center">Profile</Typography>
+                              </Link>
+                            </MenuItem>
+                          );
+                          case 'Settings':
+                            return (
+                              <MenuItem key={setting}>
+                                <Link href="/settings">
+                                  <Typography textAlign="center">Settings</Typography>
+                                </Link>
+                              </MenuItem>
+                            );
                         case 'Logout':
                           return (
                             <MenuItem key={setting} onClick={handleSignOut}>
-                              <Typography textAlign="center">{setting}</Typography>
-                            </MenuItem>
-                          );
-                        case 'Login':
-                          return (
-                            <MenuItem key={setting}>
-                              <Link href="/logIn">
-                                <Typography textAlign="center">{setting}</Typography>
-                              </Link>
+                              <Typography textAlign="center">logOut</Typography>
                             </MenuItem>
                           );
                         default:

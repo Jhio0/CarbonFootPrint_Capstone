@@ -2,11 +2,13 @@
 import { useContext, createContext, useState, useEffect } from 'react';
 import { signInWithEmailAndPassword, signOut, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { auth } from '../_utils/firebase';
+import { useRouter } from 'next/navigation';  
 
 const AuthContext = createContext();
 
 export const AuthContextProvider = ({ children }) => {
   const [user, setUser] = useState(null);
+  const router = useRouter();
 
    const googleSignIn = () => {
     const provider = new GoogleAuthProvider();
@@ -15,7 +17,10 @@ export const AuthContextProvider = ({ children }) => {
   
   const logOut = () => {
     signOut(auth);
+    router.push('/');
+
   };
+
 
   const onLogin = async (email, password) => {
     try {
