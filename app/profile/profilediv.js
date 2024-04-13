@@ -5,28 +5,28 @@ import { auth } from '../_utils/firebase';
 
 export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports, handleTogglePublicPosts }) => {
     const [displayName, setDisplayName] = useState(null); 
-    const [photoURL, setPhotoURL] = useState(null); 
+    const [photoURL, setPhotoURL] = useState(null);
+    const [buttonClicked, setButtonClicked] = useState({
+        privatePosts: false,
+        publicPosts: false,
+        allReports: false
+    });
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
-            
             if (user) {
-                
                 setDisplayName(user.displayName);
                 setPhotoURL(user.photoURL); 
             } else {
-                
                 setDisplayName(null);
                 setPhotoURL(null);
             }
         });
-
-        
         return () => unsubscribe();
     }, []); 
 
     const profileDivContainerStyle = {
-        backgroundColor: '#212d33',
+        backgroundColor: '#1E1E1C',
         borderRadius: '6px',
         width: '100%',
         display: 'inline-Block',
@@ -37,30 +37,51 @@ export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports, 
         containerSpacing: '2',
         display: 'flex',
         justifyContent: 'center', 
-        alignItems: 'center', 
-    }
+        alignItems: 'center',
+        paddingTop: '50px', 
+        color: 'white'
+
+    };
 
     const profileImageStyle = {
         marginTop: '17px',
         display: 'flex',
         justifyContent: 'center', 
         alignItems: 'center', 
-        borderRadius: '50%' 
+        borderRadius: '50%',
+
     }
 
     const profileDescStyle = {
-        padding: '20px',
+        paddingTop: '30px', 
         display: 'flex',
         justifyContent: 'center', 
         alignItems: 'center', 
         flexDirection: 'column',
-
     }
+
+    const buttonStyle = {
+        padding: '10px 15px',
+        cursor: 'pointer',
+        borderRadius: '8px',
+        marginBottom: '10px',
+        backgroundColor: '#2E3B46',  
+        color: '#FFFFFF',  
+        width: '200px',
+    };
+
+    const handleClick = (button) => {
+        setButtonClicked(prevState => ({
+            privatePosts: button === 'privatePosts' ? !prevState.privatePosts : false,
+            publicPosts: button === 'publicPosts' ? !prevState.publicPosts : false,
+            allReports: button === 'allReports' ? !prevState.allReports : false
+        }));
+    };
 
     return (
         <div style={profileDivContainerStyle}>
             <div style={nameStyle}>
-                <Typography variant="h6">{displayName ? displayName : 'User'}</Typography>
+                <Typography variant="h5">{displayName ? displayName : 'User'}</Typography>
             </div>
 
             <figure style={profileImageStyle}>
@@ -72,11 +93,38 @@ export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports, 
             </figure>
 
             <div style={profileDescStyle}>
-                <Button variant="contained" color="primary" onClick={handleTogglePrivatePosts}>Show Private Posts</Button>
+                <Button 
+                    variant="contained" 
+                    style={{ ...buttonStyle, backgroundColor: buttonClicked.privatePosts ? '#4CAF50' : '#2E3B46' }} 
+                    onClick={() => {
+                        handleClick('privatePosts');
+                        handleTogglePrivatePosts();
+                    }}
+                >
+                    Show Private Posts
+                </Button>
                 <br />
-                <Button variant="contained" color="primary" onClick={handleTogglePublicPosts}>Show Public Posts</Button>
+                <Button 
+                    variant="contained" 
+                    style={{ ...buttonStyle, backgroundColor: buttonClicked.publicPosts ? '#4CAF50' : '#2E3B46' }} 
+                    onClick={() => {
+                        handleClick('publicPosts');
+                        handleTogglePublicPosts();
+                    }}
+                >
+                    Show Public Posts
+                </Button>
                 <br />
-                <Button variant="contained" color="primary" onClick={handleToggleAllReports}>Show All Reports</Button>
+                <Button 
+                    variant="contained" 
+                    style={{ ...buttonStyle, backgroundColor: buttonClicked.allReports ? '#4CAF50' : '#2E3B46' }} 
+                    onClick={() => {
+                        handleClick('allReports');
+                        handleToggleAllReports();
+                    }}
+                >
+                    Show All Reports
+                </Button>
             </div>
         </div>
     );

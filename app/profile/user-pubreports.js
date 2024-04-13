@@ -9,6 +9,8 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { CardActionArea, CardActions, Collapse, } from '@mui/material';
 import { getPublicReports, deletePublicReport } from '../reports/_services/reports-service';
 import { UserAuth } from "../context/AuthContext.js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const UserPubReports = () => {
   const [reports, setReports] = useState([]);
@@ -20,6 +22,7 @@ export const UserPubReports = () => {
   const handleDelete = async (reportId) => {
     try {
       await deletePublicReport(reportId);
+      toast.success("Successfully deleted report.", { position: "top-center" });
       setReports(reports.filter(report => report.id !== reportId));
     } catch (error) {
       console.error('Error deleting report:', error);
@@ -126,6 +129,19 @@ export const UserPubReports = () => {
           </Collapse>
         </Card>
       ))}
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </>
+    
   );
 };

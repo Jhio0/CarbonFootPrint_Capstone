@@ -254,7 +254,7 @@ function ResponsiveAppBar() {
                         case 'Logout':
                           return (
                             <MenuItem key={setting} onClick={handleSignOut}>
-                              <Typography textAlign="center">logOut</Typography>
+                              <Typography textAlign="center">Logout</Typography>
                             </MenuItem>
                           );
                         default:

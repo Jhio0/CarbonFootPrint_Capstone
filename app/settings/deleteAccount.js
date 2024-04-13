@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { Button } from '@mui/material';
 import { deleteUser } from "firebase/auth";
 import { auth } from "../_utils/firebase"; // Make sure this path is correct for your project structure
 
@@ -18,6 +19,16 @@ const DeleteAccountComponent = () => {
     }
   };
 
+  const buttonStyle = {
+    padding: '10px 15px',
+    cursor: 'pointer',
+    borderRadius: '8px',
+    marginBottom: '10px',
+    backgroundColor: 'red',  
+    color: '#FFFFFF',  
+    width: '200px',
+};
+
   return (
     <div className="p-4">
       {showPopup && (
@@ -32,14 +43,19 @@ const DeleteAccountComponent = () => {
           </span>
         </div>
       )}
-      <h2 className="text-xl font-semibold mb-4">Delete Account</h2>
-      <p className="mb-4 text-black">
+      <h2 className="text-xl font-semibold mb-4 text-white">Delete Account</h2>
+      <p className="mb-4 text-white">
         Are you sure you want to delete your account? This action cannot be
         undone.
       </p>
-      <button className="btn btn-primary mt-4"onClick={handleDeleteAccount}>
-        Delete Account
-      </button>
+      <div style={{ paddingTop: '20px',}}>
+      <Button
+          onClick={handleDeleteAccount}
+          style={buttonStyle}
+        >
+          Delete Account
+        </Button>
+      </div>
     </div>
   );
 };

@@ -21,6 +21,8 @@ export default function Profile() {
             setLoading(false);
         };
         checkAuthentication();
+        console.log("Currently signed-in user:", user);
+
     }, [user]);
 
     const handleTogglePrivatePosts = () => {
@@ -50,11 +52,11 @@ export default function Profile() {
             {user ? (
                 <Grid container spacing={{ xs: 2, md: 3 }} columns={{ xs: 4, sm: 8, md: 12 }} sx={{ paddingTop: 4, paddingBottom: 4,height: '100%', }}>
                     <Grid item xs={12} sm={11} md={4} lg={3}>
-                    <ProfileDiv1 
-                        handleTogglePrivatePosts={handleTogglePrivatePosts} 
-                        handleToggleAllReports={handleToggleAllReports} 
-                        handleTogglePublicPosts={handleTogglePublicPosts} 
-                    />
+                        <ProfileDiv1 
+                            handleTogglePrivatePosts={handleTogglePrivatePosts} 
+                            handleToggleAllReports={handleToggleAllReports} 
+                            handleTogglePublicPosts={handleTogglePublicPosts} 
+                        />
                     </Grid>
                     <Grid item xs>
                         <ProfileDiv2 

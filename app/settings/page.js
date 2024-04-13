@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 import { auth } from "../_utils/firebase";
 //import { LogInError } from "../_utils/authError/authLoginError";
 
@@ -15,6 +16,10 @@ export default function Settings() {
   const [displayName, setDisplayName] = useState(null); // State to store user's display name
   const [photoURL, setPhotoURL] = useState(null); // State to store user's photo URL
   const [selectedOption, setSelectedOption] = useState(null); // State to store selected option
+  const [buttonClicked, setButtonClicked] = useState({
+    changePassword: false,
+    deleteAccount: false,
+  }); // State to manage clicked state of buttons
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -35,6 +40,13 @@ export default function Settings() {
   }, []);
 
   const handleOptionSelect = (option) => {
+    // Update button clicked state based on the selected option
+    setButtonClicked((prevState) => ({
+      changePassword: option === "changePassword",
+      deleteAccount: option === "deleteAccount",
+    }));
+
+    // Update the selected option
     setSelectedOption(option);
   };
 
@@ -49,22 +61,33 @@ export default function Settings() {
     }
   };
 
-  const profileDivContainerStyle = {
-    backgroundColor: "blue",
-    borderRadius: "6px",
-    width: "100%",
-    display: "inline-Block",
-    height: "100%",
-  };
-
-  const nameStyle = {
-    containerSpacing: "2",
-    padding: "20px",
+  const buttonStyle = {
+    padding: "10px 15px",
+    cursor: "pointer",
+    borderRadius: "8px",
+    marginBottom: "10px",
+    color: "#FFFFFF", 
+    width: "200px", 
   };
 
   const profileDescStyle = {
     padding: "20px",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "column",
   };
+
+  const nameStyle = {
+    containerSpacing: '2',
+    display: 'flex',
+    justifyContent: 'center', 
+    alignItems: 'center',
+    padding: '20px', 
+    color: 'white'
+};
+
+
 
   return (
     <Container>
@@ -76,25 +99,45 @@ export default function Settings() {
           sx={{ paddingTop: 4, paddingBottom: 4, height: "100vh" }}
         >
           <Grid item xs={12} sm={11} md={4} lg={3}>
-            <div style={profileDivContainerStyle}>
+            <div
+              style={{
+                backgroundColor: "#1E1E1C",
+                borderRadius: "6px",
+                width: "100%",
+                display: "inline-Block",
+                height: "100%",
+              }}
+            >
               <div style={nameStyle}>
-                <Typography variant="h6">Settings</Typography>
+                <Typography variant="h5">Settings</Typography>
               </div>
 
               <div style={profileDescStyle}>
-                <Typography
-                  variant="body1"
+                <Button
+                  variant="contained"
+                  style={{
+                    ...buttonStyle,
+                    backgroundColor: buttonClicked.changePassword
+                      ? "#4CAF50"
+                      : "#2E3B46",
+                  }}
                   onClick={() => handleOptionSelect("changePassword")}
                 >
                   Change Password
-                </Typography>
+                </Button>
                 <br />
-                <Typography
-                  variant="body1"
+                <Button
+                  variant="contained"
+                  style={{
+                    ...buttonStyle,
+                    backgroundColor: buttonClicked.deleteAccount
+                      ? "#4CAF50"
+                      : "#2E3B46",
+                  }}
                   onClick={() => handleOptionSelect("deleteAccount")}
                 >
                   Delete Account
-                </Typography>
+                </Button>
                 <br />
               </div>
             </div>
