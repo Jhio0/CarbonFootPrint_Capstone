@@ -20,19 +20,9 @@ const Replies = () => {
             
         const reply= {
         content: content,
-         date: date,
+         date: "",
+         author: author
          };
-
-        //  try { //Send thread to db
-        //     const replyID = await addReply(user.uid, reply);
-        //     console.log(user.uid);
-        //     handleAddThread(thread); 
-        //     setContent("");
-        //     setDate("");
-        // } catch (error) {
-        //     console.error('Error submitting reply:', error);
-        //     // Handle error
-        // }
     };
 
     //POST reply to db.
@@ -54,7 +44,7 @@ const Replies = () => {
                 />
 
                 <button className='modalBtn'
-                 onSubmit={addReply}>SEND</button>
+                 onClick={addReply}>SEND</button>
             </form>
         </main>
     );
