@@ -97,7 +97,7 @@ function ResponsiveAppBar() {
 
   return (
     <ThemeProvider theme={customTheme}>
-      <AppBar position="static">
+      <AppBar position="static" className="border-b-2 border-base-300 shadow-lg">
         <Container maxWidth="xl">
           <Toolbar disableGutters>
             <Link href="/" passHref>

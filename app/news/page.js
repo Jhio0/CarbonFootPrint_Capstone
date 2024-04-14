@@ -31,9 +31,9 @@ export default function NewsItem() {
     }, []);
 
     return (
-        <div className="bg-color-[#1E1E1C]">
-            <h1 className="bg-black text-center text-white font-bold text-2xl pt-3 mx-10 font-serif">News</h1>
-            <div className="flex flex-wrap place-content-center bg-black mx-10 pb-10">
+        <div className="bg-[#1E1E1C]">
+            <h1 className="bg-[#1E1E1C]  text-center text-white font-bold text-2xl pt-3 font-serif">News</h1>
+            <div className="flex flex-wrap place-content-center bg-[#1E1E1C] pb-10">
                 {newsList.map((newsItem) => (
                     <div key={newsItem.id} className="news-container w-2/5 border-4 bg-ferngreen-700 p-4 m-4 border-b-ferngreen-900 border-r-ferngreen-900  border-t-ferngreen-600 border-l-ferngreen-600">
                         <h2 className="text-xl font-bold text-white font-Typography">{newsItem.title}</h2>

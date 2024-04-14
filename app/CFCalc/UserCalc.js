@@ -286,8 +286,8 @@
     };
 
     return (
-      <div className="flex w-full min-h-screen my-5 ">
-        <div className="mx-5 grid w-full h-full card bg-base-300 rounded-box place-items-center">
+      <div className="flex w-full min-h-screen my-5 bg-[#1E1E1C]">
+        <div className="mx-5 grid w-full h-full card bg-[#1E1E1C] rounded-box place-items-center">
           <div role="tablist" className="tabs tabs-bordered mb-5 ">
             {["Location", "Home", "Flights", "Vehicle"].map((tabName) => (
               <button
@@ -430,7 +430,7 @@
           
         </div>
         <div className="divider divider-horizontal"></div> {/*middle line*/}
-        <div className="grid w-full h-full card bg-base-300 rounded-box place-items-center">
+        <div className="grid w-full h-full card bg-[#1E1E1C] rounded-box place-items-center">
           <div className="stats shadow">
             <div className="stat">
               <div className="stat-title">Total Emissions</div>
@@ -458,7 +458,7 @@
         <div className="divider divider-horizontal"></div> 
 
         {activeTab === "Vehicle" && (
-           <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
+           <div className="w-20vh h-[100vh] card bg-[#1E1E1C] rounded-box place-items-center">
            {/* MapRouting content */}
            <MapRoutingWithNoSSR setDistance={setMileage}  />
          </div>
