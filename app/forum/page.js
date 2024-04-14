@@ -127,6 +127,8 @@ const ForumPage = () => {
     setEditContent("");
     loadThreads();
   };
+
+  //Comment so I can push new styling because of conflicts.
   return (
     <>
       <main className="home">
