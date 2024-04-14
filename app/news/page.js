@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
 
-export default function NewsItem({ news }) {
+export default function NewsItem() {
     const [newsList, setNewsList] = useState([]);
 
     const url = 'https://climate-news-feed.p.rapidapi.com/page/1?limit=10';
