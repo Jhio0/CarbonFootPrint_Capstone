@@ -5,21 +5,24 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'; // Importing DeleteOutlinedIcon
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';  
 import { CardActionArea, CardActions, Collapse, } from '@mui/material';
 import { getPublicReports, deletePublicReport } from '../reports/_services/reports-service';
 import { UserAuth } from "../context/AuthContext.js";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export const UserPubReports = () => {
   const [reports, setReports] = useState([]);
-  const { user } = UserAuth(); // Get the user from the auth hook
-  const [expandedCards, setExpandedCards] = useState({}); // State to track expanded cards
+  const { user } = UserAuth();  
+  const [expandedCards, setExpandedCards] = useState({});  
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   
   const handleDelete = async (reportId) => {
     try {
       await deletePublicReport(reportId);
+      toast.success("Successfully deleted report.", { position: "top-center" });
       setReports(reports.filter(report => report.id !== reportId));
     } catch (error) {
       console.error('Error deleting report:', error);
@@ -60,7 +63,7 @@ export const UserPubReports = () => {
 
   return (
     <>
-      {/* Map through the reports array and render a Card component for each report */}
+
       {reports.map((report) => (
         <Card key={report.id} sx={{ width: '100%', marginBottom: '20px' }}>
           <CardActionArea>
@@ -126,6 +129,19 @@ export const UserPubReports = () => {
           </Collapse>
         </Card>
       ))}
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="dark"
+      />
     </>
+    
   );
 };

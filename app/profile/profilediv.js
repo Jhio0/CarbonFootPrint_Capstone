@@ -1,32 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { Typography } from '@mui/material';
-import firebase from 'firebase/app'; // Import firebase
+import { Typography, Button } from '@mui/material';
+import firebase from 'firebase/app'; 
 import { auth } from '../_utils/firebase';
 
-export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports,handleTogglePublicPosts  }) => {
-    const [displayName, setDisplayName] = useState(null); // State to store user's display name
-    const [photoURL, setPhotoURL] = useState(null); // State to store user's photo URL
+export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports, handleTogglePublicPosts }) => {
+    const [displayName, setDisplayName] = useState(null); 
+    const [photoURL, setPhotoURL] = useState(null);
+    const [buttonClicked, setButtonClicked] = useState({
+        privatePosts: false,
+        publicPosts: false,
+        allReports: false
+    });
 
     useEffect(() => {
         const unsubscribe = auth.onAuthStateChanged(user => {
-            // This function will be called whenever the authentication state changes
             if (user) {
-                // If a user is logged in, set their display name and photo URL
                 setDisplayName(user.displayName);
-                setPhotoURL(user.photoURL); // Set the photo URL
+                setPhotoURL(user.photoURL); 
             } else {
-                // If no user is logged in, set displayName and photoURL to null
                 setDisplayName(null);
                 setPhotoURL(null);
             }
         });
-    
-        // Cleanup function: Unsubscribe from the auth state listener when the component unmounts
         return () => unsubscribe();
-    }, []); // Empty dependency array means this effect runs only once, after the component mounts
+    }, []); 
 
     const profileDivContainerStyle = {
-        backgroundColor: '#212d33',        
+        backgroundColor: '#1E1E1C',
         borderRadius: '6px',
         width: '100%',
         display: 'inline-Block',
@@ -35,25 +35,53 @@ export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports,h
 
     const nameStyle = {
         containerSpacing: '2',
-        padding: '20px',
-    }
+        display: 'flex',
+        justifyContent: 'center', 
+        alignItems: 'center',
+        paddingTop: '50px', 
+        color: 'white'
+
+    };
 
     const profileImageStyle = {
         marginTop: '17px',
         display: 'flex',
-        justifyContent: 'center', // Center horizontally
-        alignItems: 'center', // Center vertically
-        borderRadius: '50%' // Apply border radius to make it circular
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        borderRadius: '50%',
+
     }
-    
+
     const profileDescStyle = {
-        padding:'20px',
+        paddingTop: '30px', 
+        display: 'flex',
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        flexDirection: 'column',
     }
-    
+
+    const buttonStyle = {
+        padding: '10px 15px',
+        cursor: 'pointer',
+        borderRadius: '8px',
+        marginBottom: '10px',
+        backgroundColor: '#2E3B46',  
+        color: '#FFFFFF',  
+        width: '200px',
+    };
+
+    const handleClick = (button) => {
+        setButtonClicked(prevState => ({
+            privatePosts: button === 'privatePosts' ? !prevState.privatePosts : false,
+            publicPosts: button === 'publicPosts' ? !prevState.publicPosts : false,
+            allReports: button === 'allReports' ? !prevState.allReports : false
+        }));
+    };
+
     return (
         <div style={profileDivContainerStyle}>
             <div style={nameStyle}>
-                <Typography variant="h6">{displayName ? displayName : 'User'}</Typography>
+                <Typography variant="h5">{displayName ? displayName : 'User'}</Typography>
             </div>
 
             <figure style={profileImageStyle}>
@@ -65,11 +93,38 @@ export const ProfileDiv1 = ({ handleTogglePrivatePosts, handleToggleAllReports,h
             </figure>
 
             <div style={profileDescStyle}>
-                <button onClick={handleTogglePrivatePosts}>Show Private Posts</button>
-                <br/>
-                <button onClick={handleTogglePublicPosts}>Show Public Posts</button>
-                <br/>
-                <button onClick={handleToggleAllReports}>Show All Reports</button>
+                <Button 
+                    variant="contained" 
+                    style={{ ...buttonStyle, backgroundColor: buttonClicked.privatePosts ? '#4CAF50' : '#2E3B46' }} 
+                    onClick={() => {
+                        handleClick('privatePosts');
+                        handleTogglePrivatePosts();
+                    }}
+                >
+                    Show Private Posts
+                </Button>
+                <br />
+                <Button 
+                    variant="contained" 
+                    style={{ ...buttonStyle, backgroundColor: buttonClicked.publicPosts ? '#4CAF50' : '#2E3B46' }} 
+                    onClick={() => {
+                        handleClick('publicPosts');
+                        handleTogglePublicPosts();
+                    }}
+                >
+                    Show Public Posts
+                </Button>
+                <br />
+                <Button 
+                    variant="contained" 
+                    style={{ ...buttonStyle, backgroundColor: buttonClicked.allReports ? '#4CAF50' : '#2E3B46' }} 
+                    onClick={() => {
+                        handleClick('allReports');
+                        handleToggleAllReports();
+                    }}
+                >
+                    Show All Reports
+                </Button>
             </div>
         </div>
     );

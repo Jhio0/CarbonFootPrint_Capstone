@@ -12,8 +12,7 @@
   import { onAuthStateChanged } from "firebase/auth";
 
   //maps
-  import MapRouting from "./MapRouting";
-  import AirportMapRouting from "./AirpotMapRoutin"
+
 
   import dynamic from 'next/dynamic';
 
@@ -21,9 +20,9 @@
     ssr: false
   });
 
-  const AirportMapRoutingWithNoSSR = dynamic(() => import("./AirpotMapRoutin"), {
-    ssr: false
-  });
+  // const AirportMapRoutingWithNoSSR = dynamic(() => import("./AirpotMapRoutin"), {
+  //   ssr: false
+  // });
 
   const emissionFactors = {
     Canada: {
@@ -135,6 +134,9 @@
     const [fetchRecommendation, setFetchRecommendation] = useState(false);
 
     const [currentUser, setCurrentUser] = useState(null);
+
+
+   
     //firebase
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -469,15 +471,10 @@
         {activeTab === "Vehicle" && (
            <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
            {/* MapRouting content */}
-           <MapRoutingWithNoSSR />
+           <MapRoutingWithNoSSR setDistance={setMileage}  />
          </div>
         )}
-        {activeTab === "Flights" && (
-           <div className="w-20vh h-[100vh] card bg-base-300 rounded-box place-items-center">
-           {/* AirportmapRouting content */}
-           <AirportMapRoutingWithNoSSR />
-         </div>
-        )}
+
 
         <ToastContainer
             position="top-center"

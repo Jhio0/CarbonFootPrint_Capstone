@@ -70,7 +70,7 @@ function debounce(func, wait, immediate) {
 }
 
   return (
-    <div style={{ height: '100vh', width: '100vh' }}>
+    <div style={{ height: '100vh', width: '89vh' }}>
       <MapContainer center={[20, 0]} zoom={6}>
         <TileLayer 
           attribution='&copy; <a href=7"https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'

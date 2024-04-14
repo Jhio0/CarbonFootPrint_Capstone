@@ -8,8 +8,8 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { UserAuth } from "../context/AuthContext.js";
 import firebase from 'firebase/app';
-import 'firebase/firestore'; // Import Firestore
-import 'firebase/auth'; // Import Firebase Auth
+import 'firebase/firestore';  
+import 'firebase/auth';  
 import { getDoc, doc } from "firebase/firestore";
 import { db } from '../_utils/firebase.js';
 
@@ -22,11 +22,11 @@ export const UserEmissions = () => {
     }, [user]);
 
     const fetchEmissionsData = async () => {
-        const useremission = doc(db, "emissionsData", user.uid); // Use `db` from firebase instead of firestore
+        const useremission = doc(db, "emissionsData", user.uid);  
         const emissionSnap = await getDoc(useremission);
         console.log(emissionSnap.data());
 
-        setEmission(emissionSnap.data()); // Set the emission state with data retrieved
+        setEmission(emissionSnap.data());  
     };
 
     if (!emission) {

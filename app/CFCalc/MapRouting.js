@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, useMap } from 'react-leaflet';
 import L from 'leaflet';
 import '../mapStyling/leaflet.css';
-
+import '../mapStyling/leafletroutingmachine.css'
 
 
 import 'leaflet-routing-machine';
@@ -18,19 +18,18 @@ import './routingstyling.css';
 
 
 
-const MapRouting = () => {
+const MapRouting = ({setDistance}) => {
   const [startWaypoint, setStartWaypoint] = useState(null);
-  const [distance, setDistance] = useState(null); // State to store distance
-
+  // State to store distance
   
   return (
-    <div style={{ height: '100vh', width: '100vh' }}>
+    <div style={{ height: '100vh', width: '77vh' }}>
       <MapContainer center={[20, 0]} zoom={6}>
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url={`https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=97162abb-de48-4413-a227-44ce4cfb0cd3`}
         />
-        <Routing startWaypoint={startWaypoint} setDistance={setDistance}/>
+        <Routing startWaypoint={startWaypoint} setDistanceKM={setDistance}/>
         <LeafletLocateControl setStartWaypoint={setStartWaypoint} />
       </MapContainer>
     </div>
@@ -75,7 +74,7 @@ const LeafletLocateControl = ({ setStartWaypoint }) => {
   return null;
 };
 
-const Routing = ({ startWaypoint,  setDistance }) => {
+const Routing = ({ startWaypoint,  setDistanceKM }) => {
   const map = useMap();
   const [routingControl, setRoutingControl] = useState(null);
   const [isRoutingControlVisible, setIsRoutingControlVisible] = useState(true);
@@ -115,7 +114,7 @@ const Routing = ({ startWaypoint,  setDistance }) => {
 
       // You can save the distance to a variable here or perform any other action
       console.log('Distance:', distanceInKm.toFixed(2), 'kilometers');
-      setDistance(distanceInKm);
+      setDistanceKM(distanceInKm);
     });
 
 
@@ -124,7 +123,7 @@ const Routing = ({ startWaypoint,  setDistance }) => {
         map.removeControl(routing);
       }
     };
-  }, [map, startWaypoint]);
+  }, [map, startWaypoint, setDistanceKM]);
 
   
 

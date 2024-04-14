@@ -43,8 +43,8 @@ export const PublicReports = () => {
   return (
     <>
       {sortedReports.map((report) => (
-        <Card key={report.id} sx={{ width: '100%', marginBottom: '20px' }}>
-          <CardHeader
+        <Card key={report.id} sx={{ width: '100%', marginBottom: '20px', marginTop: '20px' }}>
+          <CardHeader sx={{backgroundColor: '#16A34A', color: 'white'}}
             title={report.author}
           />
           <CardActionArea>

@@ -5,11 +5,12 @@ import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined'; // Importing DeleteOutlinedIcon
-import { CardActionArea, CardActions, Collapse,} from '@mui/material'; // Import MenuItem
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';  
+import { CardActionArea, CardActions, Collapse,} from '@mui/material';  
 import { getReports, deleteReport } from '../reports/_services/reports-service';
 import { UserAuth } from "../context/AuthContext.js";
-
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 export const UserReports = () => {
   const [reports, setReports] = useState([]);
   const { user } = UserAuth();
@@ -20,13 +21,13 @@ export const UserReports = () => {
   const handleDelete = async (reportId) => {
     try {
       await deleteReport(user.uid, reportId);
+      toast.success("Successfully deleted report.", { position: "top-center" });
       setReports(reports.filter(report => report.id !== reportId));
     } catch (error) {
       console.error('Error deleting report:', error);
     }
   };
   
-
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -123,6 +124,18 @@ export const UserReports = () => {
           </Collapse>
         </Card>
       ))}
+        <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+            theme="dark"
+        />
     </>
   );
 };

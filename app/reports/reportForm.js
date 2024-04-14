@@ -72,7 +72,7 @@ export default function ReportForm() {
             date: date,
             location: location,
             private: isPrivate,
-            author: user.displayName, // Assuming displayName is available in your user object
+            author: user.displayName || "Anonymous", // Set author as user.displayName if available, otherwise as "Anonymous"
             uid: user.uid, 
         };
     
@@ -83,10 +83,12 @@ export default function ReportForm() {
                 // If the report is private, call addReport
                 const reportId = await addReport(user.uid, report);
                 console.log('Private report added with ID:', reportId);
+                toast.success("Successfully saved private report.", { position: "top-center" });
             } else {
                 // If the report is not private, call addPublicReport
                 const reportId = await addPublicReport(user.uid, report);
                 console.log('Public report added with ID:', reportId);
+                toast.success("Successfully saved public report.", { position: "top-center" });
             }
     
             // Reset form fields after submission
@@ -131,8 +133,8 @@ export default function ReportForm() {
                 </div>
             </div>
             <div className="mb-5">
-                <label htmlFor="message" className="text-lg flex justify-between items-end"><span>Message</span></label>
-                <textarea name="message" id="message" cols="30" rows="10" className="shadow-md mt-1 block w-full sm:text-sm rounded-none border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"></textarea>
+                <label htmlFor="message" className="text-lg flex justify-between items-end"><span>Text</span></label>
+                <textarea name="message" id="message" cols="30" rows="10" value={text} onChange={(e) => setText(e.target.value)} className="shadow-md mt-1 block w-full sm:text-sm rounded-none border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"></textarea>
             </div>
             <div className="mb-5">
                 <label htmlFor="date" className="text-lg flex justify-between items-end"><span>Date</span></label>
@@ -151,7 +153,7 @@ export default function ReportForm() {
             <div className="mb-5">
                 <label htmlFor="location" className="text-lg flex justify-between items-end"><span>Private</span></label>
                 <div className="mt-1 flex shadow-md">
-                    <input type="checkbox" id="location" value={isPrivate} onChange={(e) => setPrivate(e.target.checked)}  className="flex-1 block w-full sm:text-sm rounded-none border border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"/>
+                    <input type="checkbox" id="location" checked={isPrivate} onChange={(e) => setPrivate(e.target.checked)}  className="flex-1 block w-full sm:text-sm rounded-none border border-gray-900 dark:border-gray-100 bg-white dark:bg-gray-900"/>
                 </div>
             </div>
             <div>
