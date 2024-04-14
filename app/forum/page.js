@@ -214,70 +214,67 @@ const ForumPage = () => {
   return (
     <>
       <main className="home">
-        <div className="bg-gray-800 py-4 px-4 rounded-md">
+        <div className="bg-[#1E1E1C] py-4 px-4 rounded-md">
+          <div className="flex flex-col items-center">
           <div>
-            <h1 className="text-2xl text-white">Create a Thread</h1>
+            <h1 className=" mb-4 mr-8 text-2xl text-white space-y-2">Create a Thread</h1>
           </div>
           <form onSubmit={handleSubmit}>
-            <div className="p-2">
+            <div className="p-2 space-y-4">
               <div>
-                <label htmlFor="date" className="text-white">
-                  Title:
+                <label htmlFor="date" className="text-white ">
+                  Title
                 </label>
               </div>
               <div>
                 <textarea
                   id="title"
-                  placeholder="Title here"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="text-black textarea"
+                  className="bg-white text-black textarea"
                 />
               </div>
             </div>
-            <div className="p-2">
+            <div className="p-2 space-y-4">
               <div>
                 <label htmlFor="content" className="text-white">
-                  Content:
+                  Content
                 </label>
               </div>
-              <div>
+              <div >
                 <textarea
                   id="content"
-                  placeholder="Write your stuff here"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="text-black textarea"
+                  className="mr-10 h-[150px] bg-white text-black textarea"
                 />
               </div>
             </div>
+            <div className="">
             <button
-              style={{
-                color: "black",
-                backgroundColor: "white",
-                marginLeft: "0.8rem",
-              }}
-              className="py-4 px-6 text-white"
+              className="mt-2 mx-4 bg-[#79A93D] hover:bg-[#3F6B2F] text-white font-bold py-2 px-4 rounded py-4 px-6"
               onSubmit={addThread}
               type="submit"
             >
               CREATE THREAD
             </button>
+            </div>
           </form>
-          <div className="threadsContainer m-2 py-2 ">
+          </div>
+          <div className="threadsContainer m-2 py-2">
             {/* Display threads here  */}
-            {threads && threads.map((thread) => (
+            {threads.map((thread) => (
               <div
                 key={thread.id}
-                className="p-3 bg-gray-500 rounded-md m-3 text-white"
+                className="p-3 bg-[#1E1E1C] m-3 text-white border-t-2 border-[#343430]"
               >
                 <h2>{thread.title}</h2>
                 <p>{thread.content}</p>
                 {user.uid === thread.threadUid && (
-                <><div>
+                <><div className="grid grid-cols-12">
                     <Button
                       key={thread.id}
-                      className=" m-2 text-decoration-none btn btn-sm btn-success flex-row"
+                      className="m-2 text-decoration-none btn btn-sm btn-success bg-[#79A93D] hover:bg-[#3F6B2F]"
                       onClick={() => handleEditClick(thread, thread.id)}
                     >
                       Edit
@@ -289,17 +286,15 @@ const ForumPage = () => {
                         <textarea
                           id="editTitle"
                           value={editTitle}
-                          placeholder="New title here"
                           onChange={(e) => setEditTitle(e.target.value)}
                           className="text-black textarea" />
                         <label>Content:</label>
                         <textarea
                           id="editContent"
-                          placeholder="New content here"
                           value={editContent}
                           onChange={(e) => setEditContent(e.target.value)}
                           className="text-black textarea" />
-                        <button className="m-2 text-decoration-none btn btn-sm btn-success flex-row"
+                        <button className="m-2 text-white btn btn-sm btn-success bg-[#79A93D] hover:bg-[#3F6B2F]"
                           onClick={(e) => handleEditSubmit(thread)}>
                           Save
                         </button>
@@ -308,14 +303,15 @@ const ForumPage = () => {
                         >Cancel</button>
                       </div>
                     )}
-                  </div><div>
+                    <div>
                       <Button
-                        className="m-2 text-decoration-none btn btn-sm btn-success flex-row"
+                        className="m-2 text-decoration-none btn btn-sm btn-success  bg-[#79A93D] hover:bg-[#3F6B2F] flex-row"
                         onClick={(e) => handleDeleteClick(thread)}
                       >
                         Delete
                       </Button>
-                    </div></>
+                    </div>
+                  </div></>
                 )}
                 <p>{thread.date}</p>
               </div>
