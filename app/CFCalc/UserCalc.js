@@ -135,8 +135,6 @@
 
     const [currentUser, setCurrentUser] = useState(null);
 
-
-   
     //firebase
     useEffect(() => {
       const unsubscribe = onAuthStateChanged(auth, (user) => {
@@ -187,16 +185,16 @@
         toast.error("Error saving emissions data.", { position: "top-center" });
       }
     };
-
+    
     useEffect(() => {
       updateTotalEmissions(); // This recalculates total emissions whenever relevant states change
     }, [
       electricityEmission,
       naturalGasEmission,
-      flightEmissions,
+      flightEmissions,  // Ensure this is included to trigger updates
       vehicleEmissions,
-      totalEmissions,
     ]);
+    
 
     const updateTotalEmissions = () => {
       const updatedTotalEmissions =
@@ -208,20 +206,11 @@
     };
 
     // Update to handle flight emissions
-    const handleFlightEmissionsChange = (emissions) => {
+    const handleFlightEmissionsChange = (newEmission) => {
 
-      const isValid = flights.every(flight => flight.airportCode.match(/^[A-Z]{3}$/));
+      const updatedEmissions = parseFloat(flightEmissions) + parseFloat(newEmission);
 
-      if (!isValid) {
-        console.error("One or more airport codes are invalid.");
-        toast.error("One or more airport codes are invalid.", { position: "top-center" });
-        return; // Prevent further execution
-      }
-    
-      // Proceed with calculation if all airport codes are valid
-      console.log("All airport codes are valid. Calculating Emissions.");
-
-      setFlightEmissions(emissions);
+      setFlightEmissions(updatedEmissions);
       updateTotalEmissions();
     };
 
