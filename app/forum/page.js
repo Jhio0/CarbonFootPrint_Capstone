@@ -231,7 +231,7 @@ const ForumPage = () => {
                   placeholder="Title here"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="text-black textarea"
+                  className="text-white textarea"
                 />
               </div>
             </div>
@@ -247,7 +247,7 @@ const ForumPage = () => {
                   placeholder="Write your stuff here"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="text-black textarea"
+                  className="text-white textarea"
                 />
               </div>
             </div>
@@ -291,14 +291,14 @@ const ForumPage = () => {
                           value={editTitle}
                           placeholder="New title here"
                           onChange={(e) => setEditTitle(e.target.value)}
-                          className="text-black textarea" />
+                          className="text-white textarea" />
                         <label>Content:</label>
                         <textarea
                           id="editContent"
                           placeholder="New content here"
                           value={editContent}
                           onChange={(e) => setEditContent(e.target.value)}
-                          className="text-black textarea" />
+                          className="text-white textarea" />
                         <button className="m-2 text-decoration-none btn btn-sm btn-success flex-row"
                           onClick={(e) => handleEditSubmit(thread)}>
                           Save
