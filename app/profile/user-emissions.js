@@ -26,7 +26,19 @@ export const UserEmissions = () => {
         const emissionSnap = await getDoc(useremission);
         console.log(emissionSnap.data());
 
-        setEmission(emissionSnap.data());  
+        // Apply toFixed to each field
+        const data = emissionSnap.data();
+        if (data) {
+          setEmission({
+            totalEmissions: data.totalEmissions.toFixed(2),
+            electricityEmission: data.electricityEmission.toFixed(2),
+            naturalGasEmission: data.naturalGasEmission.toFixed(2),
+            flightEmissions: data.flightEmissions.toFixed(2),
+            vehicleEmissions: data.vehicleEmissions.toFixed(2),
+          });
+        } else {
+          setEmission({});
+        }
     };
 
     if (!emission) {
