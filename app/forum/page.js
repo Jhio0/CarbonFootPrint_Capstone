@@ -231,7 +231,7 @@ const ForumPage = () => {
                   id="title"
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="bg-white text-black textarea"
+                  className="text-black bg-white textarea"
                 />
               </div>
             </div>
@@ -246,7 +246,7 @@ const ForumPage = () => {
                   id="content"
                   value={content}
                   onChange={(e) => setContent(e.target.value)}
-                  className="mr-10 h-[150px] bg-white text-black textarea"
+                  className="text-black bg-white textarea"
                 />
               </div>
             </div>
@@ -287,19 +287,19 @@ const ForumPage = () => {
                           id="editTitle"
                           value={editTitle}
                           onChange={(e) => setEditTitle(e.target.value)}
-                          className="text-black textarea" />
+                          className="text-black bg-white textarea" />
                         <label>Content:</label>
                         <textarea
                           id="editContent"
                           value={editContent}
                           onChange={(e) => setEditContent(e.target.value)}
-                          className="text-black textarea" />
-                        <button className="m-2 text-white btn btn-sm btn-success bg-[#79A93D] hover:bg-[#3F6B2F]"
+                          className="text-black bg-white textarea" />
+                        <button className="m-2 text-decoration-none btn btn-sm btn-success  bg-[#79A93D] hover:bg-[#3F6B2F] flex-row"
                           onClick={(e) => handleEditSubmit(thread)}>
                           Save
                         </button>
                         <button
-                          className="m-2 text-decoration-none btn btn-sm btn-success flex-row"
+                          className="m-2 text-decoration-none btn btn-sm btn-success  bg-[#79A93D] hover:bg-[#3F6B2F] flex-row"
                         >Cancel</button>
                       </div>
                     )}
