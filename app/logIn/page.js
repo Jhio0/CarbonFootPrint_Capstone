@@ -31,7 +31,6 @@ export default function LogIn() {
 
     const backgroundStyle = {
         background: `url('loginbi.gif')`,  
-        backgroundSize: 'cover',
     };
 
     
