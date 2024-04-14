@@ -30,11 +30,9 @@ export default function LogIn() {
     console.log('User:', user);
 
     const backgroundStyle = {
-        background: `url('loginbi.gif')`,  
+        background: `url(&apos;loginbi.gif&apos;)`,  
+        backgroundSize: 'cover',
     };
-
-    
-    
     const gridContainerStyle = {
         display: 'grid',
         height: '100vh',
@@ -89,7 +87,7 @@ export default function LogIn() {
                     <div style={LogInDisplayStyle}>
                         <Typography variant="h3" style={LogInDisplayH1}>Welcome to Carbon Chart</Typography>
                         <br/>
-                        <Typography variant="h6" style={LogInDisplayH2}>Log in to your account to track and manage your carbon emissions. Together, let's make a positive impact on the environment!</Typography>
+                        <Typography variant="h6" style={LogInDisplayH2}>Log in to your account to track and manage your carbon emissions. Together, let&apos;s make a positive impact on the environment!</Typography>
                     </div>
                 </Grid>
             </Grid>

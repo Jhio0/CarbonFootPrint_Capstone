@@ -12,8 +12,7 @@
   import { onAuthStateChanged } from "firebase/auth";
 
   //maps
-  import MapRouting from "./MapRouting";
-  import AirportMapRouting from "./AirpotMapRoutin"
+
 
   import dynamic from 'next/dynamic';
 
@@ -21,9 +20,9 @@
     ssr: false
   });
 
-  const AirportMapRoutingWithNoSSR = dynamic(() => import("./AirpotMapRoutin"), {
-    ssr: false
-  });
+  // const AirportMapRoutingWithNoSSR = dynamic(() => import("./AirpotMapRoutin"), {
+  //   ssr: false
+  // });
 
   const emissionFactors = {
     Canada: {
