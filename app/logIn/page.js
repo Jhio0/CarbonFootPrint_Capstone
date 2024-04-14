@@ -30,9 +30,12 @@ export default function LogIn() {
     console.log('User:', user);
 
     const backgroundStyle = {
-        background: `url(&apos;loginbi.gif&apos;)`,  
+        background: 'url("loginbi.gif")',  
         backgroundSize: 'cover',
     };
+
+    
+    
     const gridContainerStyle = {
         display: 'grid',
         height: '100vh',
