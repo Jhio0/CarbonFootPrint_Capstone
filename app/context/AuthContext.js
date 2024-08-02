@@ -1,0 +1,54 @@
+"use client"
+import { useContext, createContext, useState, useEffect } from 'react';
+import { signInWithEmailAndPassword, signOut, onAuthStateChanged, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { auth } from '../_utils/firebase';
+import { useRouter } from 'next/navigation';  
+
+const AuthContext = createContext();
+
+export const AuthContextProvider = ({ children }) => {
+  const [user, setUser] = useState(null);
+  const router = useRouter();
+
+   const googleSignIn = () => {
+    const provider = new GoogleAuthProvider();
+    return signInWithPopup(auth, provider);
+  };
+  
+  const logOut = () => {
+    signOut(auth);
+    router.push('/');
+
+  };
+
+
+  const onLogin = async (email, password) => {
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const loggedInUser = userCredential.user;
+      console.log(loggedInUser);
+      setUser(loggedInUser);
+    } catch (error) {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.error(errorCode, errorMessage);
+    }
+  };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  return (
+    <AuthContext.Provider value={{ user, logOut, onLogin, googleSignIn }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const UserAuth = () => {
+  return useContext(AuthContext);
+};
